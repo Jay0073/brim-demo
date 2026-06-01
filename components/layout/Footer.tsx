@@ -5,7 +5,12 @@ import { NAV_LINKS, SITE } from "@/lib/site";
 
 export function Footer() {
   return (
-    <footer className="border-t border-white/10 bg-ink px-6 pb-10 pt-16">
+    <footer className="relative bg-ink px-6 pb-10 pt-16">
+      {/* Signature stripe band across the top edge. */}
+      <div
+        aria-hidden
+        className="brim-stripes-fine absolute inset-x-0 top-0 h-2.5 opacity-90"
+      />
       <div className="mx-auto flex max-w-6xl flex-col gap-12">
         {/* Wordmark */}
         <Link
@@ -48,7 +53,7 @@ export function Footer() {
 
           {/* Halal badge */}
           <div className="flex flex-col gap-2 sm:items-end">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-paper">
+            <span className="glass inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-widest text-paper">
               <span aria-hidden className="text-brim">
                 ●
               </span>

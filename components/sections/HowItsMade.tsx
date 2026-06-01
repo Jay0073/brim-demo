@@ -180,24 +180,40 @@ export function HowItsMade() {
       id="how-its-made"
       className="relative h-dvh overflow-hidden bg-ink"
     >
+      {/* Monochrome frame: bold diagonal strips, pushed out of focus (blur +
+          vignette) so the vibrant burger in the center is the sharp subject. */}
+      <div
+        className="brim-stripes absolute inset-0 scale-110 blur-[6px] opacity-80"
+        aria-hidden
+      />
+      <div className="absolute inset-0 bg-ink/30" aria-hidden />
+      <div className="brim-vignette absolute inset-0" aria-hidden />
+      {/* Warm pool of light under the food. */}
+      <div
+        aria-hidden
+        className="absolute left-1/2 top-1/2 h-[55vh] w-[55vh] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brim/10 blur-[100px]"
+      />
+
       {/* Section label */}
-      <p className="pointer-events-none absolute inset-x-0 top-24 text-center font-display text-xs uppercase tracking-[0.5em] text-ash">
-        How it&apos;s made
-      </p>
+      <div className="pointer-events-none absolute inset-x-0 top-24 z-10 flex justify-center">
+        <span className="glass-dark rounded-full px-4 py-1.5 font-display text-[0.7rem] uppercase tracking-[0.4em] text-paper">
+          How it&apos;s made
+        </span>
+      </div>
 
       {/* Phase caption cards (one visible per phase while scrolling) */}
       {PHASES.map((p) => (
         <div
           key={p.id}
-          className={`phase-card card-${p.id} absolute flex max-w-[16rem] flex-col gap-2 px-2 ${p.pos}`}
+          className={`phase-card card-${p.id} glass absolute z-10 flex max-w-[17rem] flex-col gap-2 rounded-2xl p-5 shadow-xl shadow-black/30 ${p.pos}`}
         >
           <span className="text-xs font-semibold uppercase tracking-[0.3em] text-brim">
             {p.kicker}
           </span>
-          <h3 className="font-display text-4xl uppercase leading-[0.95] tracking-tight text-paper sm:text-5xl">
+          <h3 className="font-display text-4xl uppercase leading-[0.95] text-paper sm:text-5xl">
             {p.title}
           </h3>
-          <p className="text-sm leading-relaxed text-ash">{p.copy}</p>
+          <p className="text-sm leading-relaxed text-paper/75">{p.copy}</p>
         </div>
       ))}
 

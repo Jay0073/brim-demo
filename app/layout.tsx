@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
-import { Anton, Inter } from "next/font/google";
+import { Bricolage_Grotesque, Inter } from "next/font/google";
 import "./globals.css";
 import { SITE } from "@/lib/site";
 import { SmoothScroll } from "@/components/providers/SmoothScroll";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 
-// Display face: Anton ships a single weight (400) — must be specified.
-const anton = Anton({
-  variable: "--font-anton",
+// Display face: Bricolage Grotesque is variable — full weight range available,
+// so heading weight is controlled via CSS (.font-display → 800).
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
   subsets: ["latin"],
-  weight: "400",
 });
 
 // Body / UI face: Inter is variable, no weight needed.
@@ -32,7 +32,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${anton.variable} ${inter.variable}`}
+      className={`${bricolage.variable} ${inter.variable}`}
       suppressHydrationWarning
     >
       <body className="min-h-dvh bg-ink text-paper antialiased">

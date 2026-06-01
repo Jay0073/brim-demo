@@ -12,8 +12,8 @@ export function Navbar() {
   return (
     <header className="pointer-events-none fixed inset-x-0 top-4 z-50 flex justify-center px-4">
       <nav
-        className="pointer-events-auto flex items-center gap-1 rounded-full border border-white/10
-                   bg-white/[0.06] p-1.5 pr-2 shadow-lg shadow-black/30 backdrop-blur-md"
+        className="glass-dark pointer-events-auto flex items-center gap-1 rounded-full p-1.5 pr-2
+                   shadow-xl shadow-black/40 ring-1 ring-white/5"
       >
         {/* Logo → home */}
         <Link

@@ -12,12 +12,22 @@ export function Hero() {
       id="hero"
       className="relative flex h-dvh items-center justify-center overflow-hidden"
     >
-      {/* Signature B/W strip backdrop + vignette to protect the center. */}
-      <div className="brim-stripes absolute inset-0" aria-hidden />
+      {/* Signature bold B/W diagonal strips, softly out of focus so the
+          (future) food reads sharp against them. */}
+      <div
+        className="brim-stripes absolute inset-0 scale-105 blur-[2px]"
+        aria-hidden
+      />
+      {/* Edge vignette + a soft dark glow pooled in the center to seat the
+          burger and keep the white type legible over white stripes. */}
       <div className="brim-vignette absolute inset-0" aria-hidden />
+      <div
+        aria-hidden
+        className="absolute left-1/2 top-1/2 h-[62vh] w-[82vw] -translate-x-1/2 -translate-y-1/2 rounded-full bg-black/55 blur-3xl"
+      />
 
       {/* Giant statement type sitting behind the (future) burger. */}
-      <h1 className="pointer-events-none absolute z-10 text-center font-display text-[18vw] leading-[0.85] tracking-tight text-paper/95 sm:text-[15vw]">
+      <h1 className="pointer-events-none absolute z-10 text-center font-display text-[16vw] uppercase leading-[0.85] text-paper [text-shadow:0_4px_40px_rgba(0,0,0,0.6)] sm:text-[13vw]">
         THEY ARE
         <br />
         JUICY

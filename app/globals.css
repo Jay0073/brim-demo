@@ -63,23 +63,70 @@ html.lenis body {
 /*  Reusable brand helpers                                             */
 /* ------------------------------------------------------------------ */
 
-/* Horizontal black/white strips — the signature Brim backdrop. */
+/* Display headings always render heavy + tight — the Brim "frame" voice. */
+.font-display {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+/* Signature Brim backdrop: bold, EQUAL black & white diagonal strips.
+   This is the monochrome "frame" the food sits inside. */
 .brim-stripes {
   background-image: repeating-linear-gradient(
-    180deg,
-    #000 0,
-    #000 26px,
-    #131313 26px,
-    #131313 52px
+    45deg,
+    #050505 0,
+    #050505 40px,
+    #fafafa 40px,
+    #fafafa 80px
+  );
+}
+
+/* A finer, lower-contrast variant for dense areas / texture. */
+.brim-stripes-fine {
+  background-image: repeating-linear-gradient(
+    45deg,
+    #0a0a0a 0,
+    #0a0a0a 14px,
+    #ededed 14px,
+    #ededed 28px
   );
 }
 
 /* Radial vignette so the stripes never overpower the food in center. */
 .brim-vignette {
   background: radial-gradient(
-    ellipse 70% 60% at 50% 45%,
+    ellipse 64% 58% at 50% 48%,
     transparent 0%,
-    rgba(0, 0, 0, 0.55) 70%,
-    rgba(0, 0, 0, 0.9) 100%
+    rgba(0, 0, 0, 0.45) 58%,
+    rgba(0, 0, 0, 0.92) 100%
   );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Glassmorphism — frosted panels for nav / footer / cards.          */
+/*  Two tints so glass reads over both light & dark stripe areas.     */
+/* ------------------------------------------------------------------ */
+.glass {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.14),
+    rgba(255, 255, 255, 0.04)
+  );
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.glass-dark {
+  background: rgba(10, 10, 10, 0.5);
+  backdrop-filter: blur(18px) saturate(125%);
+  -webkit-backdrop-filter: blur(18px) saturate(125%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.glass-light {
+  background: rgba(246, 245, 243, 0.6);
+  backdrop-filter: blur(18px) saturate(125%);
+  -webkit-backdrop-filter: blur(18px) saturate(125%);
+  border: 1px solid rgba(10, 10, 10, 0.08);
 }

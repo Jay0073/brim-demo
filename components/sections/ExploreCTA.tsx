@@ -10,22 +10,24 @@ const CTAS = [
 
 export function ExploreCTA() {
   return (
-    <section className="border-t border-white/10 bg-ink">
+    // Bright white section — balances the dark hero / How-It's-Made above and
+    // the dark footer below, so the page reads black AND white, equally.
+    <section className="bg-paper text-ink">
       {CTAS.map((c) => (
         <Link
           key={c.href}
           href={c.href}
-          className="group relative flex items-center justify-between gap-6 overflow-hidden border-b border-white/10 px-6 py-14 md:px-12 md:py-24"
+          className="group relative flex items-center justify-between gap-6 overflow-hidden border-b border-ink/10 px-6 py-14 md:px-12 md:py-24"
         >
-          {/* slide-up fill */}
+          {/* slide-up black fill */}
           <span
             aria-hidden
-            className="absolute inset-0 -translate-y-full bg-brim transition-transform duration-500 ease-out group-hover:translate-y-0"
+            className="absolute inset-0 -translate-y-full bg-ink transition-transform duration-500 ease-out group-hover:translate-y-0"
           />
-          <span className="relative max-w-[85%] font-display text-[8.5vw] uppercase leading-[0.9] tracking-tight text-paper transition-colors duration-300 group-hover:text-ink md:text-[5.5vw]">
+          <span className="relative max-w-[85%] font-display text-[8.5vw] uppercase leading-[0.9] text-ink transition-colors duration-300 group-hover:text-paper md:text-[5.5vw]">
             {c.label}
           </span>
-          <span className="relative shrink-0 font-display text-4xl text-paper transition-all duration-300 group-hover:translate-x-2 group-hover:text-ink md:text-6xl">
+          <span className="relative shrink-0 font-display text-4xl text-ink transition-all duration-300 group-hover:translate-x-2 group-hover:text-paper md:text-6xl">
             ↗
           </span>
         </Link>
