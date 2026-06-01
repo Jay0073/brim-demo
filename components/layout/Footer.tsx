@@ -40,7 +40,7 @@ export function Footer() {
           {/* Contact */}
           <div className="flex flex-col gap-2">
             <h2 className="mb-1 text-xs font-semibold uppercase tracking-widest text-ash">
-              Visit & Contact
+              Registered Address
             </h2>
             <p className="text-sm text-paper/80">{SITE.contact.address}</p>
             <a

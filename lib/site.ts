@@ -8,8 +8,12 @@ export const SITE = {
   description:
     "100% grass-fed, strictly Halal smash burgers. Franchises across the UK & Pakistan.",
   contact: {
-    email: "hello@brimburgers.com",
-    address: "Unit 1, Brim House, Manchester, UK",
+    email: "info@brimburgers.com",
+    franchiseEmail: "franchise@brimburgers.com",
+    phone: "0203 442 9794",
+    phoneHours: "Office hours · 9–5",
+    address:
+      "1c Amberside, Wood Lane, Hemel Hempstead, Hertfordshire, United Kingdom, HP2 4TP",
   },
 } as const;
 

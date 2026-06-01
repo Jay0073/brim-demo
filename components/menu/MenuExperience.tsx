@@ -1,0 +1,281 @@
+"use client";
+
+// Interactive menu. Category pills are SCROLL navigation (smooth-scroll +
+// scrollspy) so nothing is hidden — you browse the whole menu by scrolling.
+// Search + dietary chips are the real filters. "Surprise me" jumps to a random
+// item and flashes it.
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useLenis } from "lenis/react";
+import {
+  MENU,
+  DIET_FILTERS,
+  itemMatchesQuery,
+  itemMatchesDiet,
+  type DietTag,
+} from "@/lib/menu";
+import { MenuItemCard } from "./MenuItemCard";
+import { SizeGuide } from "./SizeGuide";
+import { BuildYourOwn } from "./BuildYourOwn";
+
+export function MenuExperience() {
+  const lenis = useLenis();
+  const [query, setQuery] = useState("");
+  const [diets, setDiets] = useState<DietTag[]>([]);
+  const [activeId, setActiveId] = useState(MENU[0].id);
+  const [surprise, setSurprise] = useState<string | null>(null);
+
+  const barRef = useRef<HTMLDivElement>(null);
+  const topRef = useRef<HTMLDivElement>(null);
+  const startedFiltering = useRef(false);
+
+  const isFiltering = query.trim() !== "" || diets.length > 0;
+
+  const sections = useMemo(
+    () =>
+      MENU.map((cat) => ({
+        ...cat,
+        filtered: cat.items.filter(
+          (it) =>
+            itemMatchesQuery(it, cat.name, query) && itemMatchesDiet(it, diets)
+        ),
+      })),
+    [query, diets]
+  );
+
+  const visibleSections = sections.filter((c) => c.filtered.length > 0);
+  const visibleIds = new Set(visibleSections.map((c) => c.id));
+  const total = visibleSections.reduce((n, c) => n + c.filtered.length, 0);
+
+  // Offset so a scrolled-to header lands just below the sticky bar.
+  const scrollOffset = () => -((barRef.current?.offsetHeight ?? 96) + 92);
+
+  function scrollToEl(el: Element | null) {
+    if (!el) return;
+    if (lenis) lenis.scrollTo(el as HTMLElement, { offset: scrollOffset(), duration: 1.05 });
+    else (el as HTMLElement).scrollIntoView({ behavior: "smooth" });
+  }
+
+  function goToCategory(id: string) {
+    setActiveId(id);
+    scrollToEl(document.getElementById(`cat-${id}`));
+  }
+
+  // Scrollspy: highlight the pill of whichever section is up top.
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      (entries) => {
+        const top = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+        const id = top?.target.getAttribute("data-cat");
+        if (id) setActiveId(id);
+      },
+      {
+        rootMargin: `-${(barRef.current?.offsetHeight ?? 96) + 96}px 0px -55% 0px`,
+        threshold: 0,
+      }
+    );
+    document.querySelectorAll("[data-cat]").forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
+  }, [visibleSections.length]);
+
+  // When a filter first kicks in, pull the user up to the results.
+  useEffect(() => {
+    if (isFiltering && !startedFiltering.current) {
+      startedFiltering.current = true;
+      scrollToEl(topRef.current);
+    } else if (!isFiltering) {
+      startedFiltering.current = false;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFiltering]);
+
+  const toggleDiet = (d: DietTag) =>
+    setDiets((prev) => (prev.includes(d) ? prev.filter((x) => x !== d) : [...prev, d]));
+
+  const clearAll = () => {
+    setQuery("");
+    setDiets([]);
+  };
+
+  function surpriseMe() {
+    const all = MENU.flatMap((c) => c.items);
+    const pick = all[Math.floor(Math.random() * all.length)];
+    setQuery("");
+    setDiets([]);
+    setSurprise(pick.slug);
+    setTimeout(() => scrollToEl(document.getElementById(`item-${pick.slug}`)), 60);
+    setTimeout(() => setSurprise(null), 2400);
+  }
+
+  return (
+    <div className="mx-auto max-w-6xl px-4 sm:px-6">
+      {/* ── Sticky control bar (opaque + compact) ────────────────────────── */}
+      <div
+        ref={barRef}
+        className="sticky top-20 z-30 -mx-4 border-b border-ink/10 bg-paper/95 px-4 py-2.5 backdrop-blur-md sm:-mx-6 sm:px-6"
+      >
+        <div className="flex flex-col gap-2.5">
+          {/* Search + surprise */}
+          <div className="flex gap-2">
+            <div className="relative flex-1">
+              <svg
+                viewBox="0 0 24 24"
+                className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/40"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2.2}
+                strokeLinecap="round"
+              >
+                <circle cx="11" cy="11" r="7" />
+                <path d="m20 20-3.2-3.2" />
+              </svg>
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                type="search"
+                aria-label="Search the menu"
+                placeholder="Search “spicy”, “cheesy”, “veggie”, “shake”…"
+                className="w-full rounded-xl border border-ink/10 bg-white py-2.5 pl-10 pr-4 text-sm text-ink outline-none placeholder:text-ink/40 focus:border-ink/30"
+              />
+            </div>
+            <button
+              onClick={surpriseMe}
+              className="shrink-0 rounded-xl bg-ink px-3.5 text-sm font-semibold uppercase tracking-wide text-paper transition-colors hover:bg-brim hover:text-ink sm:px-4"
+            >
+              🎲<span className="ml-1.5 hidden sm:inline">Surprise me</span>
+            </button>
+          </div>
+
+          {/* Category pills — scroll navigation */}
+          <div className="-mx-1 flex gap-1.5 overflow-x-auto px-1 [scrollbar-width:none]">
+            {MENU.map((c) => {
+              const active = activeId === c.id;
+              const empty = !visibleIds.has(c.id);
+              return (
+                <button
+                  key={c.id}
+                  onClick={() => goToCategory(c.id)}
+                  disabled={empty}
+                  className={`shrink-0 rounded-full px-3.5 py-1.5 text-sm font-semibold uppercase tracking-wide transition-colors ${
+                    active
+                      ? "bg-ink text-paper"
+                      : empty
+                      ? "cursor-not-allowed text-ink/25"
+                      : "bg-ink/[0.04] text-ink/60 hover:bg-ink/10 hover:text-ink"
+                  }`}
+                >
+                  {c.name}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Dietary chips */}
+          <div className="flex flex-wrap items-center gap-1.5">
+            {DIET_FILTERS.map((f) => {
+              const active = diets.includes(f.id);
+              return (
+                <button
+                  key={f.id}
+                  onClick={() => toggleDiet(f.id)}
+                  aria-pressed={active}
+                  className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide transition-colors ${
+                    active
+                      ? "bg-brim text-ink"
+                      : "text-ink/55 ring-1 ring-ink/15 hover:text-ink hover:ring-ink/40"
+                  }`}
+                >
+                  {f.label}
+                </button>
+              );
+            })}
+            {isFiltering && (
+              <span className="ml-auto flex items-center gap-3 text-xs">
+                <span className="font-medium text-ink/45">
+                  {total} {total === 1 ? "result" : "results"}
+                </span>
+                <button
+                  onClick={clearAll}
+                  className="font-semibold uppercase tracking-wide text-ink/55 underline-offset-2 hover:text-ink hover:underline"
+                >
+                  Clear all
+                </button>
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div ref={topRef} />
+
+      {/* ── Results ──────────────────────────────────────────────────────── */}
+      {total === 0 ? (
+        <div className="py-24 text-center">
+          <p className="font-display text-4xl uppercase text-ink">Nothing on the grill</p>
+          <p className="mt-3 text-ink/55">
+            No bites match{query ? ` “${query}”` : " those filters"}. Try “cheesy”
+            or “spicy”.
+          </p>
+          <button
+            onClick={clearAll}
+            className="mt-6 rounded-full bg-ink px-6 py-3 text-sm font-semibold uppercase tracking-wide text-paper transition-colors hover:bg-brim hover:text-ink"
+          >
+            Reset the menu
+          </button>
+        </div>
+      ) : (
+        <div className="space-y-16 py-10 sm:py-14">
+          {visibleSections.map((cat) => (
+            <section
+              key={cat.id}
+              id={`cat-${cat.id}`}
+              data-cat={cat.id}
+              className="scroll-mt-44"
+            >
+              <header className="mb-6">
+                <div className="flex items-end justify-between gap-4">
+                  <h2 className="font-display text-4xl uppercase leading-none text-ink sm:text-6xl">
+                    {cat.name}
+                  </h2>
+                  <span className="shrink-0 pb-1 text-sm font-medium text-ink/40">
+                    {cat.filtered.length}{" "}
+                    {cat.filtered.length === 1 ? "item" : "items"}
+                  </span>
+                </div>
+                <div className="mt-3 h-1 w-16 rounded-full bg-brim" />
+                <p className="mt-3 text-ink/60">{cat.tagline}</p>
+              </header>
+
+              {cat.id === "burgers" && !isFiltering && (
+                <div className="mb-6">
+                  <SizeGuide />
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {cat.filtered.map((it) => (
+                  <div
+                    key={it.slug}
+                    id={`item-${it.slug}`}
+                    className={`rounded-3xl transition-all duration-300 ${
+                      it.featured ? "sm:col-span-2" : ""
+                    } ${surprise === it.slug ? "ring-4 ring-brim ring-offset-2 ring-offset-paper" : ""}`}
+                  >
+                    <MenuItemCard item={it} />
+                  </div>
+                ))}
+              </div>
+
+              {cat.id === "burgers" && !isFiltering && (
+                <div className="mt-6">
+                  <BuildYourOwn />
+                </div>
+              )}
+            </section>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

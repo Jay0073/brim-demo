@@ -1,0 +1,115 @@
+import type { MenuItem } from "@/lib/menu";
+import { SpiceMeter } from "./SpiceMeter";
+
+// Placeholder shown until a real product shot exists. To use a photo, set
+// `image: "/menu/<slug>.jpg"` on the item (drop the file in /public/menu).
+function Placeholder({ name, dark }: { name: string; dark: boolean }) {
+  return (
+    <div
+      className={`relative grid h-full w-full place-items-center overflow-hidden ${
+        dark ? "bg-black" : "bg-zinc-100"
+      }`}
+    >
+      <div
+        className={`brim-stripes-fine absolute inset-0 ${
+          dark ? "opacity-[0.08]" : "opacity-[0.05]"
+        }`}
+        aria-hidden
+      />
+      <span
+        className={`font-display text-7xl uppercase ${
+          dark ? "text-white/15" : "text-ink/10"
+        }`}
+      >
+        {name.charAt(0)}
+      </span>
+      <span
+        className={`absolute bottom-2 right-3 text-[0.6rem] uppercase tracking-[0.3em] ${
+          dark ? "text-white/30" : "text-ink/25"
+        }`}
+      >
+        Brim
+      </span>
+    </div>
+  );
+}
+
+export function MenuItemCard({ item }: { item: MenuItem }) {
+  const dark = !!item.featured;
+
+  return (
+    <article
+      className={`group flex h-full flex-col overflow-hidden rounded-3xl transition-all duration-300 hover:-translate-y-1 ${
+        dark
+          ? "bg-ink text-paper shadow-xl shadow-black/30"
+          : "bg-white text-ink shadow-sm ring-1 ring-ink/10 hover:shadow-xl hover:shadow-black/10"
+      }`}
+    >
+      {/* Image / placeholder */}
+      <div className="relative aspect-[4/3] overflow-hidden">
+        {item.image ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={item.image}
+            alt={item.name}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        ) : (
+          <Placeholder name={item.name} dark={dark} />
+        )}
+        {item.badge && (
+          <span className="absolute left-3 top-3 rounded-full bg-brim px-3 py-1 text-[0.65rem] font-bold uppercase tracking-wider text-ink shadow">
+            {item.badge}
+          </span>
+        )}
+      </div>
+
+      {/* Body */}
+      <div className="flex flex-1 flex-col gap-2.5 p-5">
+        <div className="flex items-start justify-between gap-3">
+          <h3 className="font-display text-2xl uppercase leading-[0.95] sm:text-3xl">
+            {item.name}
+          </h3>
+          {item.spice ? <SpiceMeter level={item.spice} className="shrink-0 pt-1" /> : null}
+        </div>
+
+        {item.description && (
+          <p
+            className={`text-sm leading-relaxed ${
+              dark ? "text-paper/75" : "text-ink/65"
+            }`}
+          >
+            {item.description}
+          </p>
+        )}
+
+        {item.variants && item.variants.length > 0 && (
+          <ul className="mt-1 flex flex-wrap gap-1.5">
+            {item.variants.map((v) => (
+              <li
+                key={v}
+                className={`rounded-full px-2.5 py-1 text-xs font-medium ${
+                  dark
+                    ? "bg-white/10 text-paper/80"
+                    : "bg-ink/[0.06] text-ink/70"
+                }`}
+              >
+                {v}
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {item.tags.includes("veggie") && (
+          <span
+            className={`mt-auto w-fit pt-1 text-[0.7rem] font-semibold uppercase tracking-[0.2em] ${
+              dark ? "text-emerald-300/80" : "text-emerald-600"
+            }`}
+          >
+            🌱 Plant-friendly
+          </span>
+        )}
+      </div>
+    </article>
+  );
+}

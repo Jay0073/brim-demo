@@ -35,7 +35,7 @@ export default function RootLayout({
       className={`${bricolage.variable} ${inter.variable}`}
       suppressHydrationWarning
     >
-      <body className="min-h-dvh bg-ink text-paper antialiased">
+      <body className="min-h-dvh bg-ink text-paper antialiased" suppressHydrationWarning>
         <SmoothScroll>
           <Navbar />
           <main>{children}</main>

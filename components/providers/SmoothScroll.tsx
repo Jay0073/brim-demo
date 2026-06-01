@@ -5,10 +5,20 @@
 // pinned "How It's Made" sequence — otherwise pinned sections jitter).
 import { ReactLenis, type LenisRef } from "lenis/react";
 import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 
 export function SmoothScroll({ children }: { children: React.ReactNode }) {
   const lenisRef = useRef<LenisRef>(null);
+  const pathname = usePathname();
+
+  // On route change, jump to the very top INSTANTLY (no smooth animation —
+  // otherwise Lenis visibly scrolls up from the previous position).
+  useEffect(() => {
+    lenisRef.current?.lenis?.scrollTo(0, { immediate: true, force: true });
+    // Pins/triggers were measured for the old page — recompute for the new one.
+    requestAnimationFrame(() => ScrollTrigger.refresh());
+  }, [pathname]);
 
   useEffect(() => {
     // Drive Lenis from GSAP's ticker instead of its own RAF (autoRaf: false).

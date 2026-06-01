@@ -71,8 +71,8 @@ const CAPTIONS = [
   {
     cls: "cap-6",
     at: 0.86,
-    side: "bottom" as const,
-    pos: "bottom-[12%] left-1/2 items-center text-center",
+    side: "right" as const,
+    pos: "right-5 top-[32%] items-end text-right md:right-14",
     kicker: "06 — The Brim",
     title: "THE BIG JUICY BRIM",
     copy: "Crowned and ready. The burger that earns the queue. That, right there, is a Brim.",
@@ -171,52 +171,59 @@ export function HowItsMade() {
         render(count - 1);
         gsap.set(".intro", { opacity: 0 });
         gsap.set(".cap", { opacity: 0 });
-        gsap.set(".cap-6", { opacity: 1, xPercent: -50 });
+        gsap.set(".cap-6", { opacity: 1 });
+        gsap.set(canvasRef.current, { opacity: 1 });
       });
 
       mm.add("(prefers-reduced-motion: no-preference)", () => {
         const frame = { i: 0 };
         gsap.set(".cap", { opacity: 0 });
-        gsap.set(".cap-6", { xPercent: -50 }); // own the X transform (centred)
         gsap.set(".intro", { opacity: 1 });
+        gsap.set(canvasRef.current, { opacity: 0 });
 
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: section,
             start: "top top",
-            end: `+=${count * 16}`, // ~16px of scroll per frame
+            end: `+=${count * 28}`, // ~28px of scroll per frame
             scrub: 1,
             pin: true,
             anticipatePin: 1,
           },
         });
 
-        // Frame scrubber spans the whole timeline (length = 1).
+        // Fade the canvas in as the intro fades out (from 0 to 0.08)
+        tl.to(canvasRef.current, { opacity: 1, duration: 0.08, ease: "power1.inOut" }, 0);
+        tl.to(".intro", { opacity: 0, y: -40, duration: 0.08, ease: "power2.in" }, 0);
+
+        // Frame scrubber starts scrubbing at 0.08 scroll progress
         tl.to(
           frame,
           {
             i: count - 1,
             ease: "none",
-            duration: 1,
+            duration: 0.92,
             onUpdate: () => render(frame.i),
           },
-          0
+          0.08
         );
 
-        // Intro headline greets at the top, then clears as the cook begins.
-        tl.to(".intro", { opacity: 0, y: -40, duration: 0.05, ease: "power2.in" }, 0.05);
-
         // Captions fade in then out (except the last, which stays).
-        CAPTIONS.forEach((c) => {
+        CAPTIONS.forEach((c, idx) => {
+          const isLast = idx === CAPTIONS.length - 1;
           const fromX = c.side === "left" ? -40 : c.side === "right" ? 40 : 0;
-          if (c.side === "bottom") {
+          
+          if (isLast) {
+            // The last caption stays visible
+            const fromY = c.side === "bottom" ? 40 : 20;
             tl.fromTo(
               `.${c.cls}`,
-              { opacity: 0, y: 40 },
-              { opacity: 1, y: 0, duration: 0.06, ease: "power2.out" },
+              { opacity: 0, x: fromX, y: fromY },
+              { opacity: 1, x: 0, y: 0, duration: 0.06, ease: "power2.out" },
               c.at
             );
           } else {
+            // Other captions fade in, then fade out
             tl.fromTo(
               `.${c.cls}`,
               { opacity: 0, x: fromX, y: 20 },
@@ -247,7 +254,7 @@ export function HowItsMade() {
       {/* Sequence canvas. Saturated + lifted a touch so the food pops. */}
       <canvas
         ref={canvasRef}
-        className="absolute inset-0 z-10 h-full w-full"
+        className="absolute inset-0 z-10 h-full w-full opacity-0"
         style={{ filter: "saturate(1.22) contrast(1.06) brightness(1.04)" }}
       />
 
