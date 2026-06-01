@@ -1,276 +1,276 @@
 "use client";
 
 // ─────────────────────────────────────────────────────────────────────────
-//  HOW IT'S MADE — the core attraction.
-//  A pinned section whose scroll scrubs a GSAP timeline that assembles a
-//  burger in the center, beef → Brim, across 4 phases. Bold captions fade in
-//  on alternating sides as each phase plays.
+//  HOW IT'S MADE — Apple-style scroll-scrubbed image sequence.
 //
-//  The burger is built from stacked, absolutely-positioned LAYER divs
-//  (CSS-drawn for now). Each layer carries `data-layer` so GSAP can manage it,
-//  and is trivially swappable for a transparent cutout <img> later — just keep
-//  the className + data-layer and replace the inner visual.
+//  Scroll pins the section and scrubs a preloaded JPG frame sequence onto a
+//  <canvas> (no <img> swapping → no layout thrash). Bold captions fade in /
+//  out around the centre as the burger goes beef → smash → cheese → melt.
+//
+//  Frames live in /public/sequence/ and are produced by
+//  scripts/extract-frames.mjs (npm run frames). The frame count is read from
+//  /public/sequence/manifest.json at runtime, so re-extracting with different
+//  footage needs no change here.
 // ─────────────────────────────────────────────────────────────────────────
-import { useRef } from "react";
-import { gsap, useGSAP } from "@/lib/gsap";
+import { useEffect, useRef, useState } from "react";
+import { gsap } from "@/lib/gsap";
 
-type Phase = {
-  id: number;
-  kicker: string;
-  title: string;
-  copy: string;
-  /** position + alignment of the caption card */
-  pos: string;
-};
+type Manifest = { count: number; pattern: string };
 
-const PHASES: Phase[] = [
+const SEQ_DIR = "/sequence";
+const framePath = (i: number) => `${SEQ_DIR}/frame-${String(i).padStart(4, "0")}.jpg`;
+
+// Caption beats, placed along scroll progress (0–1). Side controls the slide-in
+// direction + anchor; copy matches the footage (raw → smash → cheese → melt).
+const CAPTIONS = [
   {
-    id: 1,
-    kicker: "Phase 01",
+    cls: "cap-1",
+    at: 0.1,
+    side: "left" as const,
+    pos: "left-6 top-[24%] items-start text-left md:left-16",
+    kicker: "01 — The Beef",
     title: "100% GRASS-FED",
-    copy: "A single ball of 100% grass-fed, strictly Halal beef. No fillers. Never frozen.",
-    pos: "left-6 top-[18%] items-start text-left md:left-16",
+    copy: "Never frozen. Ground fresh and hand-formed, every single morning.",
   },
   {
-    id: 2,
-    kicker: "Phase 02",
-    title: "THE SMASH",
-    copy: "Pressed hard onto a screaming-hot griddle for that lacy, caramelised crust.",
-    pos: "right-6 top-[34%] items-end text-right md:right-16",
+    cls: "cap-2",
+    at: 0.37,
+    side: "right" as const,
+    pos: "right-6 top-[32%] items-end text-right md:right-16",
+    kicker: "02 — The Smash",
+    title: "THE PERFECT SMASH",
+    copy: "Pressed onto a screaming-hot griddle for a lacy, caramelised crust.",
   },
   {
-    id: 3,
-    kicker: "Phase 03",
-    title: "THE PERFECT MELT",
-    copy: "Aged cheese draped over the patty until it melts into every single edge.",
-    pos: "left-6 top-[56%] items-start text-left md:left-16",
+    cls: "cap-3",
+    at: 0.63,
+    side: "left" as const,
+    pos: "left-6 top-[58%] items-start text-left md:left-16",
+    kicker: "03 — The Cheese",
+    title: "REAL AGED CHEESE",
+    copy: "A full slice draped on while the patty is still sizzling hot.",
   },
   {
-    id: 4,
-    kicker: "Phase 04",
-    title: "THE BIG JUICY BRIM",
-    copy: "Crowned with house sauce, pickles and a toasted bun. That's a Brim.",
-    pos: "right-6 top-[70%] items-end text-right md:right-16",
+    cls: "cap-4",
+    at: 0.86,
+    side: "bottom" as const,
+    pos: "bottom-[12%] left-1/2 items-center text-center",
+    kicker: "04 — The Melt",
+    title: "MELTED TO PERFECTION",
+    copy: "Folded into every edge. That, right there, is a Brim.",
   },
 ];
 
 export function HowItsMade() {
-  const root = useRef<HTMLElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const imagesRef = useRef<HTMLImageElement[]>([]);
+  const renderRef = useRef<(i: number) => void>(() => {});
+  const frameRef = useRef(0);
+  const [count, setCount] = useState(0);
+  const [ready, setReady] = useState(false);
 
-  useGSAP(
-    () => {
+  // ── 1. Load manifest + preload every frame into memory ────────────────────
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`${SEQ_DIR}/manifest.json`)
+      .then((r) => r.json() as Promise<Manifest>)
+      .then((m) => {
+        if (cancelled) return;
+        const n = m.count;
+        const imgs: HTMLImageElement[] = new Array(n);
+        let loaded = 0;
+        for (let i = 0; i < n; i++) {
+          const img = new Image();
+          img.onload = () => {
+            loaded++;
+            if (i === 0) renderRef.current(0); // show first frame ASAP
+            if (loaded === n && !cancelled) setReady(true);
+          };
+          img.src = framePath(i + 1);
+          imgs[i] = img;
+        }
+        imagesRef.current = imgs;
+        setCount(n);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // ── 2. Canvas drawing + scroll scrubbing (runs once frames are known) ─────
+  useEffect(() => {
+    if (!count) return;
+    if (!canvasRef.current || !sectionRef.current) return;
+    const canvas = canvasRef.current;
+    const section = sectionRef.current;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    // Draw a frame "cover"-style (fill, centre-crop) at CSS pixel size.
+    function drawCover(img: HTMLImageElement) {
+      const cw = canvas.clientWidth;
+      const ch = canvas.clientHeight;
+      const ir = img.naturalWidth / img.naturalHeight;
+      const cr = cw / ch;
+      let dw: number, dh: number;
+      if (cr > ir) {
+        dw = cw;
+        dh = cw / ir;
+      } else {
+        dh = ch;
+        dw = ch * ir;
+      }
+      ctx!.clearRect(0, 0, cw, ch);
+      ctx!.drawImage(img, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
+    }
+
+    function render(i: number) {
+      const idx = Math.max(0, Math.min(count - 1, Math.round(i)));
+      frameRef.current = idx;
+      const img = imagesRef.current[idx];
+      if (img && img.complete && img.naturalWidth) drawCover(img);
+    }
+    renderRef.current = render;
+
+    function resize() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = canvas.clientWidth * dpr;
+      canvas.height = canvas.clientHeight * dpr;
+      ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+      render(frameRef.current);
+    }
+    resize();
+    const ro = new ResizeObserver(resize);
+    ro.observe(canvas);
+
+    // GSAP scope for easy cleanup.
+    const gtx = gsap.context(() => {
       const mm = gsap.matchMedia();
 
-      // ── Reduced motion: present everything assembled, no pin, no scrub. ──
+      // Reduced motion: rest on the final frame, show only the last caption.
       mm.add("(prefers-reduced-motion: reduce)", () => {
-        gsap.set("[data-layer]", { opacity: 1, xPercent: -50, scale: 1, y: 0 });
-        gsap.set(".phase-card", { opacity: 1, y: 0 });
+        render(count - 1);
+        gsap.set(".cap", { opacity: 0 });
+        gsap.set(".cap-4", { opacity: 1, xPercent: -50 });
       });
 
-      // ── Full experience ─────────────────────────────────────────────────
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        // All layers are centered horizontally via xPercent so GSAP owns the
-        // full transform (avoids fighting a Tailwind -translate-x class).
-        gsap.set("[data-layer]", { xPercent: -50, opacity: 0 });
-
-        // Entrance / "ball" states — ingredients arc in from off-stage.
-        gsap.set(".l-bun-btm", { y: 140 });
-        gsap.set(".l-patty", {
-          y: -260,
-          scaleX: 0.55,
-          scaleY: 1.5, // tall, narrow → reads as a raw beef ball
-          transformOrigin: "center bottom",
-        });
-        gsap.set(".l-cheese", { y: -240, x: 60, rotation: 12, scaleX: 0.4 });
-        gsap.set(".l-sauce", { scaleX: 0, transformOrigin: "center center" });
-        gsap.set(".l-pickle", { y: -160, x: -40, rotation: -30 });
-        gsap.set(".l-bun-top", { y: -320, scale: 1.1 });
-        gsap.set(".phase-card", { opacity: 0, y: 28 });
+        const frame = { i: 0 };
+        gsap.set(".cap", { opacity: 0 });
+        gsap.set(".cap-4", { xPercent: -50 }); // own the X transform (centred)
 
         const tl = gsap.timeline({
-          defaults: { ease: "power3.out" },
           scrollTrigger: {
-            trigger: root.current,
+            trigger: section,
             start: "top top",
-            end: "+=3800",
+            end: `+=${count * 22}`, // ~22px of scroll per frame
             scrub: 1,
             pin: true,
             anticipatePin: 1,
           },
         });
 
-        // PHASE 1 — bottom bun settles, beef ball drops in.
-        tl.addLabel("p1")
-          .to(".l-bun-btm", { opacity: 1, y: 0, duration: 0.5 }, "p1")
-          .to(
-            ".l-patty",
-            { opacity: 1, y: 0, duration: 0.7, ease: "back.out(1.2)" },
-            "p1+=0.15"
-          )
-          .to(".card-1", { opacity: 1, y: 0, duration: 0.4 }, "p1+=0.1")
-          .to(".card-1", { opacity: 0, y: -28, duration: 0.4 }, "p1+=1.05");
+        // The frame scrubber spans the whole timeline (length = 1).
+        tl.to(
+          frame,
+          {
+            i: count - 1,
+            ease: "none",
+            duration: 1,
+            onUpdate: () => render(frame.i),
+          },
+          0
+        );
 
-        // PHASE 2 — THE SMASH: ball flattens onto the griddle.
-        tl.addLabel("p2", "p1+=1.4")
-          .to(
-            ".l-patty",
-            {
-              scaleX: 1,
-              scaleY: 1,
-              duration: 0.45,
-              ease: "power4.out",
-            },
-            "p2"
-          )
-          .to(
-            ".l-bun-btm",
-            { scaleX: 1.05, duration: 0.12, yoyo: true, repeat: 1 },
-            "p2+=0.05"
-          )
-          .to(".card-2", { opacity: 1, y: 0, duration: 0.4 }, "p2")
-          .to(".card-2", { opacity: 0, y: -28, duration: 0.4 }, "p2+=1.05");
-
-        // PHASE 3 — THE MELT: cheese arcs in and drapes over the patty.
-        tl.addLabel("p3", "p2+=1.4")
-          .to(
-            ".l-cheese",
-            {
-              opacity: 1,
-              x: 0,
-              y: 0,
-              rotation: 0,
-              scaleX: 1,
-              duration: 0.6,
-              ease: "power2.out",
-            },
-            "p3"
-          )
-          .to(".card-3", { opacity: 1, y: 0, duration: 0.4 }, "p3")
-          .to(".card-3", { opacity: 0, y: -28, duration: 0.4 }, "p3+=1.05");
-
-        // PHASE 4 — THE CROWN: sauce, pickles, top bun.
-        tl.addLabel("p4", "p3+=1.4")
-          .to(".l-sauce", { opacity: 1, scaleX: 1, duration: 0.35 }, "p4")
-          .to(
-            ".l-pickle",
-            {
-              opacity: 1,
-              x: 0,
-              y: 0,
-              rotation: 0,
-              duration: 0.4,
-              stagger: 0.08,
-            },
-            "p4+=0.1"
-          )
-          .to(
-            ".l-bun-top",
-            { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: "back.out(1.1)" },
-            "p4+=0.25"
-          )
-          .to(".card-4", { opacity: 1, y: 0, duration: 0.4 }, "p4+=0.2");
+        // Captions fade in then out (except the last, which stays).
+        CAPTIONS.forEach((c) => {
+          const fromX = c.side === "left" ? -40 : c.side === "right" ? 40 : 0;
+          if (c.side === "bottom") {
+            tl.fromTo(
+              `.${c.cls}`,
+              { opacity: 0, y: 40 },
+              { opacity: 1, y: 0, duration: 0.07, ease: "power2.out" },
+              c.at
+            );
+          } else {
+            tl.fromTo(
+              `.${c.cls}`,
+              { opacity: 0, x: fromX, y: 20 },
+              { opacity: 1, x: 0, y: 0, duration: 0.07, ease: "power2.out" },
+              c.at
+            ).to(
+              `.${c.cls}`,
+              { opacity: 0, y: -24, duration: 0.07, ease: "power2.in" },
+              c.at + 0.16
+            );
+          }
+        });
       });
-    },
-    { scope: root }
-  );
+    }, section);
+
+    return () => {
+      ro.disconnect();
+      gtx.revert();
+    };
+  }, [count]);
 
   return (
     <section
-      ref={root}
+      ref={sectionRef}
       id="how-its-made"
-      className="relative h-dvh overflow-hidden bg-ink"
+      className="relative h-dvh overflow-hidden bg-black"
     >
-      {/* Monochrome frame: bold diagonal strips, pushed out of focus (blur +
-          vignette) so the vibrant burger in the center is the sharp subject. */}
-      <div
-        className="brim-stripes absolute inset-0 scale-110 blur-[6px] opacity-80"
-        aria-hidden
-      />
-      <div className="absolute inset-0 bg-ink/30" aria-hidden />
-      <div className="brim-vignette absolute inset-0" aria-hidden />
-      {/* Warm pool of light under the food. */}
-      <div
-        aria-hidden
-        className="absolute left-1/2 top-1/2 h-[55vh] w-[55vh] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brim/10 blur-[100px]"
-      />
+      {/* The sequence canvas (opaque, full-bleed). */}
+      <canvas ref={canvasRef} className="absolute inset-0 z-10 h-full w-full" />
+
+      {/* Faint endless wordmark — a watermark over the footage (the canvas is
+          opaque, so it has to sit above it to be seen), kept subtle via low
+          opacity + soft-light blend, and faded at the edges by the vignette. */}
+      <div className="pointer-events-none absolute inset-0 z-[15] flex items-center overflow-hidden mix-blend-soft-light">
+        <div className="animate-marquee flex whitespace-nowrap font-display text-[20vw] uppercase leading-none text-white/15">
+          <span>Brim Burgers&nbsp;—&nbsp;Brim Burgers&nbsp;—&nbsp;Brim Burgers&nbsp;—&nbsp;</span>
+          <span aria-hidden>
+            Brim Burgers&nbsp;—&nbsp;Brim Burgers&nbsp;—&nbsp;Brim Burgers&nbsp;—&nbsp;
+          </span>
+        </div>
+      </div>
+
+      {/* Vignette to seat the footage into pure black at the edges. */}
+      <div className="brim-vignette pointer-events-none absolute inset-0 z-20" aria-hidden />
 
       {/* Section label */}
-      <div className="pointer-events-none absolute inset-x-0 top-24 z-10 flex justify-center">
+      <div className="pointer-events-none absolute inset-x-0 top-24 z-30 flex justify-center">
         <span className="glass-dark rounded-full px-4 py-1.5 font-display text-[0.7rem] uppercase tracking-[0.4em] text-paper">
           How it&apos;s made
         </span>
       </div>
 
-      {/* Phase caption cards (one visible per phase while scrolling) */}
-      {PHASES.map((p) => (
+      {/* Captions */}
+      {CAPTIONS.map((c) => (
         <div
-          key={p.id}
-          className={`phase-card card-${p.id} glass absolute z-10 flex max-w-[17rem] flex-col gap-2 rounded-2xl p-5 shadow-xl shadow-black/30 ${p.pos}`}
+          key={c.cls}
+          className={`cap ${c.cls} glass pointer-events-none absolute z-30 flex max-w-[17rem] flex-col gap-2 rounded-2xl p-5 opacity-0 shadow-xl shadow-black/40 ${c.pos}`}
         >
           <span className="text-xs font-semibold uppercase tracking-[0.3em] text-brim">
-            {p.kicker}
+            {c.kicker}
           </span>
           <h3 className="font-display text-4xl uppercase leading-[0.95] text-paper sm:text-5xl">
-            {p.title}
+            {c.title}
           </h3>
-          <p className="text-sm leading-relaxed text-paper/75">{p.copy}</p>
+          <p className="text-sm leading-relaxed text-paper/75">{c.copy}</p>
         </div>
       ))}
 
-      {/* ── Center burger stage ──────────────────────────────────────────── */}
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-        <div className="relative h-[320px] w-[300px]">
-          {/* soft plate glow under the burger */}
-          <div
-            aria-hidden
-            className="absolute bottom-4 left-1/2 h-10 w-[260px] -translate-x-1/2 rounded-[50%] bg-brim/20 blur-2xl"
-          />
-
-          {/* bottom bun */}
-          <div
-            data-layer
-            className="l-bun-btm absolute bottom-2 left-1/2 h-10 w-[230px] rounded-b-[44px] rounded-t-md bg-gradient-to-b from-amber-300 to-amber-600 shadow-lg shadow-black/40"
-          />
-          {/* patty (ball → smashed) */}
-          <div
-            data-layer
-            className="l-patty absolute bottom-[40px] left-1/2 h-9 w-[244px] rounded-[20px] bg-gradient-to-b from-[#6b3a22] to-[#2a160c] shadow-md shadow-black/50"
-          />
-          {/* cheese */}
-          <div
-            data-layer
-            className="l-cheese absolute bottom-[64px] left-1/2 h-6 w-[256px] rounded-[10px] bg-gradient-to-b from-amber-300 to-yellow-500 shadow-sm shadow-black/30"
-          >
-            {/* drips */}
-            <span className="absolute -bottom-2 left-6 h-4 w-3 rounded-b-full bg-yellow-500" />
-            <span className="absolute -bottom-3 right-10 h-5 w-3 rounded-b-full bg-yellow-500" />
-          </div>
-          {/* sauce line */}
-          <div
-            data-layer
-            className="l-sauce absolute bottom-[84px] left-1/2 h-2 w-[230px] rounded-full bg-brim"
-          />
-          {/* pickles */}
-          <div
-            data-layer
-            className="l-pickle absolute bottom-[78px] left-1/2 flex w-[200px] justify-between"
-          >
-            <span className="h-4 w-4 rounded-full bg-lime-600 ring-2 ring-lime-800/40" />
-            <span className="h-4 w-4 rounded-full bg-lime-600 ring-2 ring-lime-800/40" />
-            <span className="h-4 w-4 rounded-full bg-lime-600 ring-2 ring-lime-800/40" />
-          </div>
-          {/* top bun (dome) */}
-          <div
-            data-layer
-            className="l-bun-top absolute bottom-[92px] left-1/2 h-24 w-[252px] rounded-[120px_120px_28px_28px] bg-gradient-to-b from-amber-200 to-amber-500 shadow-xl shadow-black/40"
-          >
-            {/* sesame */}
-            <span className="absolute left-1/2 top-5 h-1.5 w-2.5 -translate-x-1/2 rounded-full bg-amber-100/80" />
-            <span className="absolute left-1/3 top-8 h-1.5 w-2.5 rounded-full bg-amber-100/70" />
-            <span className="absolute right-1/3 top-9 h-1.5 w-2.5 rounded-full bg-amber-100/70" />
-          </div>
+      {/* Loading veil until all frames are in memory (prevents flicker). */}
+      {!ready && (
+        <div className="absolute inset-0 z-40 grid place-items-center bg-black">
+          <span className="font-display text-sm uppercase tracking-[0.4em] text-paper/60">
+            Firing up the griddle…
+          </span>
         </div>
-      </div>
+      )}
     </section>
   );
 }

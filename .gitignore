@@ -24,6 +24,10 @@
 .DS_Store
 *.pem
 
+# raw source video — large + a placeholder commercial; not for the repo.
+# The frame sequence in /public/sequence is generated via `npm run frames`.
+/assets/*.mp4
+
 # debug
 npm-debug.log*
 yarn-debug.log*

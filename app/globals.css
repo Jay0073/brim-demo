@@ -130,3 +130,24 @@ html.lenis body {
   -webkit-backdrop-filter: blur(18px) saturate(125%);
   border: 1px solid rgba(10, 10, 10, 0.08);
 }
+
+/* ------------------------------------------------------------------ */
+/*  Marquee — faint endless wordmark behind the scroll sequence.       */
+/* ------------------------------------------------------------------ */
+@keyframes brim-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: brim-marquee 30s linear infinite;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
+}
