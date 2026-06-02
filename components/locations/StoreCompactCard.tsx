@@ -30,7 +30,7 @@ export function StoreCompactCard({
           onOpen?.();
         }
       }}
-      className="glass-dark animate-fade group cursor-pointer overflow-hidden rounded-3xl shadow-2xl shadow-black/50 outline-none transition-colors hover:bg-white/[0.06] focus-visible:ring-2 focus-visible:ring-brim"
+      className="glass-dark animate-fade group cursor-pointer overflow-hidden rounded-3xl shadow-2xl shadow-black/50 outline-none transition-colors hover:bg-white/[0.06] focus-visible:ring-2 focus-visible:ring-white"
     >
       <div className="relative">
         <StorePhoto store={store} className="aspect-[16/10] w-full" />

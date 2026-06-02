@@ -35,9 +35,9 @@ export function StoreDetailCard({
           onSelect();
         }
       }}
-      className={`group glass-dark relative w-[21rem] shrink-0 cursor-pointer overflow-hidden rounded-3xl outline-none transition-all duration-300 focus-visible:ring-2 focus-visible:ring-brim sm:w-[27rem] ${
+      className={`group glass-dark relative w-[21rem] shrink-0 cursor-pointer overflow-hidden rounded-3xl outline-none transition-all duration-300 focus-visible:ring-2 focus-visible:ring-white sm:w-[27rem] ${
         active
-          ? "scale-[1.015] shadow-2xl shadow-black/50 ring-2 ring-brim/70"
+          ? "scale-[1.015] shadow-2xl shadow-black/50 ring-2 ring-white/80"
           : "opacity-65 hover:opacity-100"
       }`}
     >
