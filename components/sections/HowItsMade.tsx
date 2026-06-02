@@ -299,15 +299,17 @@ export function HowItsMade() {
       {CAPTIONS.map((c) => (
         <div
           key={c.cls}
-          className={`cap ${c.cls} glass pointer-events-none absolute z-30 flex max-w-[21rem] flex-col gap-3 rounded-3xl p-6 opacity-0 shadow-2xl shadow-black/50 ${c.pos}`}
+          className={`cap ${c.cls}  pointer-events-none absolute z-30 flex w-[calc(100%-2.5rem)] sm:w-[24rem] md:w-[28rem] flex-col gap-3 md:gap-4 rounded-3xl p-7 md:p-9  ${c.pos}`}
         >
-          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-brim">
+          <span className="text-xs md:text-sm font-bold uppercase tracking-[0.32em] text-brim">
             {c.kicker}
           </span>
-          <h3 className="font-display text-4xl uppercase leading-[0.92] text-paper sm:text-5xl">
+          <h3 className="font-display text-4xl sm:text-5xl md:text-6xl uppercase leading-[0.92] text-paper">
             {c.title}
           </h3>
-          <p className="text-[0.95rem] leading-relaxed text-paper/80">{c.copy}</p>
+          <p className="text-[1rem] md:text-[1.12rem] font-semibold leading-relaxed text-paper/95">
+            {c.copy}
+          </p>
         </div>
       ))}
 
