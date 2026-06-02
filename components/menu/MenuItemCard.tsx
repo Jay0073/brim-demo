@@ -1,4 +1,5 @@
 import type { MenuItem } from "@/lib/menu";
+import { asset } from "@/lib/asset";
 import { SpiceMeter } from "./SpiceMeter";
 
 // Placeholder shown until a real product shot exists. To use a photo, set
@@ -50,7 +51,7 @@ export function MenuItemCard({ item }: { item: MenuItem }) {
         {item.image ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={item.image}
+            src={asset(item.image)}
             alt={item.name}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />

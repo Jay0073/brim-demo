@@ -14,15 +14,28 @@
 // ─────────────────────────────────────────────────────────────────────────
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "@/lib/gsap";
+import { asset } from "@/lib/asset";
 
 type Manifest = { count: number; pattern: string };
 
 const SEQ_DIR = "/sequence";
-const framePath = (i: number) => `${SEQ_DIR}/frame-${String(i).padStart(4, "0")}.jpg`;
+// asset() prefixes the deploy basePath — required for raw Image()/fetch on Pages.
+const framePath = (i: number) =>
+  asset(`${SEQ_DIR}/frame-${String(i).padStart(4, "0")}.jpg`);
 
 // Caption beats placed along scroll progress (0–1). `side` controls slide-in
 // direction + anchor; copy matches what's on screen at that moment.
-const CAPTIONS = [
+type Caption = {
+  cls: string;
+  at: number;
+  side: "left" | "right" | "bottom";
+  pos: string;
+  kicker: string;
+  title: string;
+  copy: string;
+};
+
+const CAPTIONS: Caption[] = [
   {
     cls: "cap-1",
     at: 0.08,
@@ -91,7 +104,7 @@ export function HowItsMade() {
   // ── 1. Load manifest + preload every frame into memory ────────────────────
   useEffect(() => {
     let cancelled = false;
-    fetch(`${SEQ_DIR}/manifest.json`)
+    fetch(asset(`${SEQ_DIR}/manifest.json`))
       .then((r) => r.json() as Promise<Manifest>)
       .then((m) => {
         if (cancelled) return;
