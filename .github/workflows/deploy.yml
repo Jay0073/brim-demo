@@ -37,6 +37,8 @@ jobs:
 
       - name: Build static site
         run: npm run build
+        env:
+          GITHUB_PAGES: "true" # Applies the /brim-demo basePath for Pages hosting
 
       - name: Upload production-ready static assets
         uses: actions/upload-pages-artifact@v3

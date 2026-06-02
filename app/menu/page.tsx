@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SITE } from "@/lib/site";
+import { asset } from "@/lib/asset";
 import { MenuExperience } from "@/components/menu/MenuExperience";
 
 export const metadata: Metadata = {
@@ -31,7 +32,10 @@ export default function MenuPage() {
         </p>
         <div className="mt-7 flex flex-col items-center gap-3">
           <a
-            href="#"
+            href={asset("/BRIM-Allergen-Menu.pdf")}
+            target="_blank"
+            rel="noopener noreferrer"
+            download
             className="rounded-full bg-ink px-6 py-3 text-sm font-semibold uppercase tracking-wide text-paper transition-colors hover:bg-brim hover:text-ink"
           >
             Download the allergen menu

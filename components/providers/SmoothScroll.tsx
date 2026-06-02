@@ -7,6 +7,7 @@ import { ReactLenis, type LenisRef } from "lenis/react";
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { registerLenis } from "@/lib/scroll";
 
 export function SmoothScroll({ children }: { children: React.ReactNode }) {
   const lenisRef = useRef<LenisRef>(null);
@@ -32,9 +33,13 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
     const lenis = lenisRef.current?.lenis;
     lenis?.on("scroll", ScrollTrigger.update);
 
+    // Expose Lenis for programmatic smooth scrolling (see lib/scroll.ts).
+    registerLenis(lenis ?? null);
+
     return () => {
       gsap.ticker.remove(update);
       lenis?.off("scroll", ScrollTrigger.update);
+      registerLenis(null);
     };
   }, []);
 

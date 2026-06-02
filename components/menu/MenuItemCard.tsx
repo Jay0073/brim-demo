@@ -46,8 +46,15 @@ export function MenuItemCard({ item }: { item: MenuItem }) {
           : "bg-white text-ink shadow-sm ring-1 ring-ink/10 hover:shadow-xl hover:shadow-black/10"
       }`}
     >
-      {/* Image / placeholder */}
-      <div className="relative aspect-[4/3] overflow-hidden">
+      {/* Image / placeholder. Featured tiles keep their big 4:3 hero shot;
+          regular tiles let the image GROW (flex-1) to absorb any extra height
+          when the grid row is stretched by a taller neighbour — so the space
+          fills with food, not whitespace. */}
+      <div
+        className={`relative overflow-hidden ${
+          dark ? "aspect-[4/3]" : "min-h-[14rem] flex-1"
+        }`}
+      >
         {item.image ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -65,8 +72,9 @@ export function MenuItemCard({ item }: { item: MenuItem }) {
         )}
       </div>
 
-      {/* Body */}
-      <div className="flex flex-1 flex-col gap-2.5 p-5">
+      {/* Body — content-height on regular tiles (the image takes the slack);
+          featured tiles keep flex-1 so their copy fills the taller card. */}
+      <div className={`flex flex-col gap-2.5 p-5 ${dark ? "flex-1" : ""}`}>
         <div className="flex items-start justify-between gap-3">
           <h3 className="font-display text-2xl uppercase leading-[0.95] sm:text-3xl">
             {item.name}

@@ -1,0 +1,535 @@
+{
+  "burgerSizes": [
+    { "layers": 1, "oz": "4oz", "name": "Standard", "note": "Single smash" },
+    { "layers": 2, "oz": "8oz", "name": "Serious", "note": "Double stack" },
+    { "layers": 3, "oz": "12oz", "name": "Smashing", "note": "Triple threat" }
+  ],
+  "buildYourOwn": {
+    "rule": "Choose any 4 toppings plus 2 sauces (rashers excluded).",
+    "toppings": [
+      "Lettuce",
+      "Grilled Onions",
+      "American Cheese",
+      "Onion Rings",
+      "Caramelised Onions",
+      "Gherkins",
+      "Cheddar Cheese",
+      "Hash Brown",
+      "Jalapeño",
+      "Pineapple",
+      "Cheese Sauce",
+      "Chilli Jam",
+      "Tomatoes",
+      "Fried Egg",
+      "Grilled Mushrooms"
+    ],
+    "sauces": [
+      "BRIM Burger Sauce",
+      "Signature Sauce",
+      "Sweet Chilli",
+      "BBQ North",
+      "Wild West",
+      "Habañero"
+    ],
+    "extra": "Add rashers anytime."
+  },
+  "dietFilters": [
+    { "id": "spicy", "label": "🌶 Spicy" },
+    { "id": "veggie", "label": "Veggie" },
+    { "id": "chicken", "label": "Chicken" },
+    { "id": "beef", "label": "Beef" },
+    { "id": "cheesy", "label": "Cheesy" },
+    { "id": "sweet", "label": "Sweet" }
+  ],
+  "searchSynonyms": {
+    "spicy": ["chilli", "chili", "hot", "jalapeño", "jalapeno", "habañero", "habanero", "fiery", "heat", "kick", "🌶"],
+    "hot": ["spicy", "chilli", "jalapeño", "habañero", "fiery"],
+    "veggie": ["vegetarian", "vegan", "plant", "plant-based", "meat-free", "meatless"],
+    "vegan": ["veggie", "plant", "plant-based"],
+    "cheese": ["cheesy", "cheddar", "american", "monterey", "mozzarella"],
+    "cheesy": ["cheese", "cheddar", "american"],
+    "beef": ["patty", "smash", "burger", "steak"],
+    "chicken": ["tender", "fillet", "breaded", "poultry", "turkey"],
+    "sweet": ["chocolate", "vanilla", "caramel", "biscoff", "nutella", "oreo", "dessert", "shake", "milkshake"],
+    "shake": ["milkshake", "sweet", "thick"],
+    "cold": ["shake", "milkshake", "ice", "drink", "cola", "fizzy"],
+    "drink": ["coke", "cola", "sprite", "fanta", "lilt", "water", "soda", "fizzy", "evian"],
+    "dessert": ["brownie", "sweet", "ice cream", "chocolate", "shake"],
+    "fries": ["chips", "fry"],
+    "dog": ["hotdog", "frankfurter", "sausage"],
+    "bbq": ["barbecue", "smoky", "smokey", "bacon", "rasher"],
+    "bacon": ["rasher", "rashers", "turkey", "smoky"],
+    "loaded": ["topped", "covered", "fully", "stacked"],
+    "kids": ["jr", "junior", "child", "little", "baby"],
+    "child": ["kids", "jr", "junior", "little", "baby"]
+  },
+  "categories": [
+    {
+      "id": "burgers",
+      "name": "Burgers",
+      "tagline": "Smashed, never frozen — the reason you walked in.",
+      "items": [
+        {
+          "slug": "brim-burger",
+          "name": "Brim Burger",
+          "image": "/menu/brim-burger.jpg",
+          "description": "Double American cheese, lettuce, tomatoes, gherkins, BRIM Burger Sauce & Signature Sauce in a seeded brioche bun.",
+          "tags": ["beef", "cheesy"],
+          "badge": "The original",
+          "featured": true
+        },
+        {
+          "slug": "bbq-rasher",
+          "name": "BBQ Rasher",
+          "image": "/menu/bbq-rasher.jpg",
+          "description": "Double cheese, rashers of bacon, two onion rings, lettuce, caramelised onions, BBQ North & our BRIM Burger Sauce in a seeded brioche bun.",
+          "tags": ["beef", "cheesy"],
+          "keywords": ["bacon", "smoky", "bbq"]
+        },
+        {
+          "slug": "veggie-burger",
+          "name": "Veggie Burger",
+          "image": "/menu/the-chicken-run.jpg",
+          "description": "A plant-based patty layered with lettuce and onion, topped with our Signature Sauce and Burger Sauce, all in a seeded bun.",
+          "tags": ["veggie"],
+          "badge": "Plant-based",
+          "keywords": ["vegan", "meat-free"]
+        },
+        {
+          "slug": "brim-maniac",
+          "name": "BRIM Maniac",
+          "image": "/menu/brim-maniac.jpg",
+          "description": "20oz of patties, 5 cheese layers, caramelised onions, chilli jam, our BRIM Burger Sauce with 3 slices of turkey bacon & 2 onion rings in a seeded brioche bun.",
+          "tags": ["beef", "cheesy"],
+          "spice": 1,
+          "badge": "20oz of chaos",
+          "featured": true,
+          "keywords": ["biggest", "challenge", "stack"]
+        },
+        {
+          "slug": "the-meltdown",
+          "name": "The Meltdown",
+          "image": "/menu/the-meltdown.jpg",
+          "description": "Hot cheese sauce, lettuce, onion, tomato & BRIM Burger Sauce in a seeded brioche bun.",
+          "tags": ["veggie", "cheesy"],
+          "keywords": ["cheese sauce", "meat-free"]
+        },
+        {
+          "slug": "smashed-shrooms",
+          "name": "Smashed Shrooms",
+          "image": "/menu/smashed-shrooms.jpg",
+          "description": "Grilled mushrooms & grilled onions, double cheese, ketchup, BRIM Burger Sauce & our Signature Sauce in a seeded brioche bun.",
+          "tags": ["veggie", "cheesy"],
+          "keywords": ["mushroom"]
+        },
+        {
+          "slug": "oklahoma-onion-smash",
+          "name": "Oklahoma Onion Smash",
+          "image": "/menu/oklahoma-onion-smash.webp",
+          "description": "Onions smashed into a beef patty, cheese slice, gherkins, lettuce, caramelised onion, mustard & BRIM Burger Sauce in a brioche bun.",
+          "tags": ["beef", "cheesy"],
+          "keywords": ["onion", "smash"]
+        },
+        {
+          "slug": "fiery-brimstone",
+          "name": "Fiery BRIMstone",
+          "image": "/menu/fiery-brimstone.jpg",
+          "description": "Jalapeños, double cheese, lettuce, Habañero Sauce & BRIM Burger Sauce in a seeded brioche bun.",
+          "tags": ["beef", "cheesy", "spicy"],
+          "spice": 3,
+          "badge": "Bring water"
+        },
+        {
+          "slug": "sweet-chilli-time",
+          "name": "Sweet Chilli Time",
+          "image": "/menu/sweet-chilli-time.webp",
+          "description": "Chilli jam, double cheese, lettuce, tomato, Sweet Chilli Sauce & BRIM Burger Sauce.",
+          "tags": ["beef", "cheesy", "spicy"],
+          "spice": 1,
+          "keywords": ["sweet"]
+        },
+        {
+          "slug": "hawaiian-heaven",
+          "name": "Hawaiian Heaven",
+          "image": "/menu/hawaiian-heaven.jpg",
+          "description": "Turkey rashers, grilled pineapple, lettuce, onion & tomato, topped with our BRIM Burger Sauce in a seeded brioche bun.",
+          "tags": ["chicken"],
+          "badge": "Pineapple belongs",
+          "keywords": ["turkey", "pineapple", "sweet"]
+        },
+        {
+          "slug": "the-chicken-run",
+          "name": "The Chicken Run",
+          "image": "/menu/the-chicken-run.jpg",
+          "description": "Breaded chicken fillet, Monterey Jack cheese, lettuce, tomato & Signature Sauce in a seeded brioche bun.",
+          "tags": ["chicken", "cheesy"],
+          "badge": "Crispy & golden"
+        },
+        {
+          "slug": "chicken-meltdown",
+          "name": "Chicken Meltdown",
+          "image": "/menu/chicken-meltdown.webp",
+          "description": "Breaded chicken fillet, hot cheese sauce, cheese slice, lettuce, onion & tomato, Signature Sauce & BRIM Burger Sauce in a seeded brioche bun.",
+          "tags": ["chicken", "cheesy"],
+          "keywords": ["cheese sauce"]
+        },
+        {
+          "slug": "chipotle-chicken",
+          "name": "Chipotle Chicken",
+          "image": "/menu/chipotle-chicken.jpg",
+          "description": "Breaded chicken fillet, jalapeños, cheese slice, chipotle glaze, lettuce, sliced onions, BRIM Burger Sauce & Signature Sauce in a seeded brioche bun.",
+          "tags": ["chicken", "cheesy", "spicy"],
+          "spice": 1,
+          "badge": "Chipotle glazed",
+          "keywords": ["chipotle", "jalapeno"]
+        }
+      ]
+    },
+    {
+      "id": "sandos",
+      "name": "Sandos",
+      "tagline": "Brioche-loaf sandos, stacked and sauced.",
+      "items": [
+        {
+          "slug": "big-juicy-sando",
+          "name": "Big Juicy Sando",
+          "image": "/menu/big-juicy-sando.jpg",
+          "description": "Sliced brioche loaf filled with two beef patties, cheddar cheese, grilled onions & mushrooms, Signature Sauce and BRIM Burger Sauce.",
+          "tags": ["beef", "cheesy", "spicy"],
+          "spice": 1,
+          "keywords": ["sando", "sandwich"]
+        },
+        {
+          "slug": "hot-smoke-sando",
+          "name": "The Hot Smoke Sando",
+          "image": "/menu/hot-smoke-sando.jpg",
+          "description": "Sliced brioche loaf filled with two beef patties, cheddar cheese, smokey BBQ sauce, Signature Sauce and jalapeños.",
+          "tags": ["beef", "cheesy", "spicy"],
+          "spice": 2,
+          "keywords": ["sando", "bbq", "smoky"]
+        },
+        {
+          "slug": "brim-sando",
+          "name": "Brim Sando",
+          "image": "/menu/brim-sando.jpg",
+          "description": "Sliced brioche loaf filled with breaded chicken fillet or two beef patties, cheddar cheese, Signature Sauce, thin burger sauce and spring onions.",
+          "tags": ["chicken", "beef", "cheesy"],
+          "keywords": ["sando", "sandwich"]
+        }
+      ]
+    },
+    {
+      "id": "brim-box",
+      "name": "Brim Box",
+      "tagline": "One box. Total carnage.",
+      "items": [
+        {
+          "slug": "loaded-box",
+          "name": "Loaded",
+          "image": "/menu/loaded-box.jpg",
+          "description": "Fries, a beef patty covered with hot cheese sauce, burger sauce, signature sauce & American cheese, topped with crispy onions and chives.",
+          "tags": ["beef", "cheesy"],
+          "featured": true,
+          "badge": "Fork required"
+        }
+      ]
+    },
+    {
+      "id": "hot-dogs",
+      "name": "Hot Dogs",
+      "tagline": "Not your average frank.",
+      "items": [
+        {
+          "slug": "classic-hot-dog",
+          "name": "Classic Hot Dog",
+          "image": "/menu/classic-hot-dog.jpg",
+          "description": "Ketchup & melted cheese in a brioche roll.",
+          "tags": ["cheesy"]
+        },
+        {
+          "slug": "loaded-dog",
+          "name": "Loaded Dog",
+          "image": "/menu/classic-hot-dog.jpg",
+          "description": "Frankfurter with turkey rashers, grilled onions, melted cheese, ketchup, chives and Wild West Sauce in a brioche roll, topped with crispy onions.",
+          "tags": ["cheesy", "chicken"],
+          "keywords": ["turkey", "loaded"]
+        },
+        {
+          "slug": "smokin-dog",
+          "name": "Smokin’ Dog",
+          "image": "/menu/smokin-dog.jpg",
+          "description": "Jalapeño, melted cheese, Habañero Hot Sauce, ketchup, chives & crispy onions in a brioche roll.",
+          "tags": ["cheesy", "spicy"],
+          "spice": 2
+        },
+        {
+          "slug": "street-dog",
+          "name": "Street Dog",
+          "image": "/menu/smokin-dog.jpg",
+          "description": "Grilled onions, melted cheese, ketchup, chives, Wild West Sauce in a brioche roll, topped with crispy onions.",
+          "tags": ["cheesy"]
+        }
+      ]
+    },
+    {
+      "id": "brim-tots",
+      "name": "Brim Tots",
+      "tagline": "Tiny. Crispy. Dangerous.",
+      "items": [
+        {
+          "slug": "classic-tots",
+          "name": "Classic Tots",
+          "image": "/menu/classic-tots.jpg",
+          "description": "Breaded potato tots covered in BBQ sauce, our Wild West Sauce & topped with spring onions.",
+          "tags": ["veggie"]
+        },
+        {
+          "slug": "cheesy-tots",
+          "name": "Cheesy Tots",
+          "image": "/menu/cheesy-tots.jpg",
+          "description": "Breaded potato tots covered in hot cheese sauce & topped with crispy onions.",
+          "tags": ["veggie", "cheesy"]
+        },
+        {
+          "slug": "hot-tots",
+          "name": "Hot Tots",
+          "image": "/menu/cheesy-tots.jpg",
+          "description": "Breaded potato tots covered in BRIM Signature Sauce, jalapeño & cheese sauce.",
+          "tags": ["veggie", "cheesy", "spicy"],
+          "spice": 2
+        },
+        {
+          "slug": "loaded-tots",
+          "name": "Loaded Tots",
+          "image": "/menu/loaded-tots.jpg",
+          "description": "Crispy tots loaded with your choice of beef or chicken, hot cheese sauce, BRIM Burger Sauce & Signature Sauce, topped with crispy onions and chives.",
+          "tags": ["beef", "chicken", "cheesy"],
+          "badge": "Chicken or beef",
+          "keywords": ["loaded", "chicken", "beef"]
+        }
+      ]
+    },
+    {
+      "id": "fries",
+      "name": "Fries",
+      "tagline": "Skin-on, hand-cut, fully loaded.",
+      "items": [
+        {
+          "slug": "skin-on-fries",
+          "name": "Skin-On Fries",
+          "image": "/menu/skin-on-fries.jpg",
+          "description": "Our classic skin-on fries. Add a seasoning:",
+          "variants": ["Herb & Garlic Salt", "Cayenne & Oregano"],
+          "tags": ["veggie"],
+          "keywords": ["chips"]
+        },
+        {
+          "slug": "curly-fries",
+          "name": "Curly Fries",
+          "image": "/menu/curly-fries.webp",
+          "tags": ["veggie"],
+          "keywords": ["chips", "curly"]
+        },
+        {
+          "slug": "sweet-potato-fries",
+          "name": "Sweet Potato Fries",
+          "image": "/menu/sweet-potato-fries.jpg",
+          "tags": ["veggie", "sweet"]
+        },
+        {
+          "slug": "cheesy-fries",
+          "name": "Cheesy Fries",
+          "image": "/menu/cheesy-fries.jpg",
+          "tags": ["veggie", "cheesy"]
+        },
+        {
+          "slug": "commando-fries",
+          "name": "Commando Fries",
+          "image": "/menu/commando-fries.jpg",
+          "description": "Hot cheese sauce, Wild West Sauce, topped with crispy roasted onions.",
+          "tags": ["veggie", "cheesy"]
+        },
+        {
+          "slug": "dynamite-fries",
+          "name": "Dynamite Fries",
+          "image": "/menu/dynamite-fries.jpg",
+          "description": "Hot cheese sauce, jalapeño, Habañero Hot Sauce & crispy roasted onions, topped with chives.",
+          "tags": ["veggie", "cheesy", "spicy"],
+          "spice": 3,
+          "badge": "Handle with care"
+        }
+      ]
+    },
+    {
+      "id": "sides",
+      "name": "Sides",
+      "tagline": "The supporting cast that steals the show.",
+      "items": [
+        { "slug": "chicken-tenders", "name": "Chicken Tenders", "image": "/menu/chicken-tenders.jpg", "tags": ["chicken"] },
+        { "slug": "onion-rings", "name": "Onion Rings", "image": "/menu/onion-rings.jpg", "tags": ["veggie"] },
+        {
+          "slug": "cheese-stuffed-rings",
+          "name": "Cheese Stuffed Rings",
+          "image": "/menu/cheese-stuffed-rings.jpg",
+          "tags": ["veggie", "cheesy"]
+        },
+        {
+          "slug": "mac-cheese-bites",
+          "name": "Mac & Cheese Bites",
+          "image": "/menu/mac-cheese-bites.jpg",
+          "tags": ["veggie", "cheesy"]
+        },
+        {
+          "slug": "mozzarella-dippers",
+          "name": "Mozzarella Dippers",
+          "image": "/menu/mozzarella-dippers.jpg",
+          "description": "Crispy golden mozzarella dippers with a molten cheese pull.",
+          "tags": ["veggie", "cheesy"],
+          "keywords": ["mozzarella", "cheese"]
+        },
+        {
+          "slug": "volcanic-cheese-bites",
+          "name": "Volcanic Cheese Bites",
+          "image": "/menu/volcanic-cheese-bites.jpg",
+          "tags": ["veggie", "cheesy", "spicy"],
+          "spice": 2
+        }
+      ]
+    },
+    {
+      "id": "dips",
+      "name": "Dips",
+      "tagline": "Dunk responsibly.",
+      "items": [
+        {
+          "slug": "dips",
+          "name": "Dips",
+          "image": "/menu/dips.jpg",
+          "description": "Cool, classic, dunk-anything sauces.",
+          "variants": ["BRIM Burger Sauce", "Sweet Chilli", "BBQ North"],
+          "tags": []
+        },
+        {
+          "slug": "dips-with-a-kick",
+          "name": "With a Kick",
+          "image": "/menu/dips-with-a-kick.jpg",
+          "description": "For when you want it to bite back.",
+          "variants": ["Signature Sauce", "Wild West", "Habañero"],
+          "tags": ["spicy"],
+          "spice": 2
+        }
+      ]
+    },
+    {
+      "id": "jr-brim",
+      "name": "Jr Brim",
+      "tagline": "Little legends eat here too.",
+      "items": [
+        {
+          "slug": "chicken-little",
+          "name": "Chicken Little",
+          "image": "/menu/chicken-little.jpg",
+          "description": "Chicken tenders, fries & a drink.",
+          "tags": ["chicken"],
+          "keywords": ["kids", "junior"]
+        },
+        {
+          "slug": "baby-burger",
+          "name": "Baby Burger",
+          "image": "/menu/bbq-rasher.jpg",
+          "description": "2oz kids burger (plain with ketchup), fries & a drink.",
+          "tags": ["beef"],
+          "keywords": ["kids", "junior"]
+        }
+      ]
+    },
+    {
+      "id": "shakes",
+      "name": "Shakes",
+      "tagline": "Thick enough to stand a spoon in.",
+      "items": [
+        {
+          "slug": "classic-shakes",
+          "name": "Classic Shakes",
+          "image": "/menu/classic-shakes.webp",
+          "description": "The timeless four, blended thick.",
+          "variants": ["Chocolate", "Vanilla", "Strawberry", "Banana"],
+          "tags": ["sweet"]
+        },
+        {
+          "slug": "brim-shakes",
+          "name": "BRIM Shakes",
+          "image": "/menu/brim-shakes.jpg",
+          "description": "Loaded, indulgent, dessert-in-a-cup specials.",
+          "variants": [
+            "Lotus Biscoff",
+            "Salted Caramel",
+            "Kinder Bueno White",
+            "Ferrero Rocher & Nutella",
+            "Reese’s",
+            "Oreo"
+          ],
+          "tags": ["sweet"],
+          "featured": true,
+          "badge": "Fan favourite"
+        }
+      ]
+    },
+    {
+      "id": "desserts",
+      "name": "Desserts",
+      "tagline": "Save room. Trust us.",
+      "items": [
+        {
+          "slug": "brim-brownie-special",
+          "name": "BRIM Brownie Special",
+          "image": "/menu/brim-brownie-special.jpg",
+          "description": "Hot layered brownies infused with ice cream & hot chocolate sauce.",
+          "tags": ["sweet"],
+          "featured": true,
+          "badge": "Best warm"
+        },
+        {
+          "slug": "san-sabastian-cheesecake",
+          "name": "San Sabastian Cheesecake",
+          "image": "/menu/san-sabastian-cheesecake.jpg",
+          "description": "A baked vanilla cheesecake served with your choice of raspberry, salted caramel or chocolate sauce.",
+          "variants": ["Raspberry", "Salted Caramel", "Chocolate"],
+          "tags": ["sweet"],
+          "keywords": ["cheesecake", "dessert"]
+        }
+      ]
+    },
+    {
+      "id": "drinks",
+      "name": "Drinks",
+      "tagline": "Wash it all down.",
+      "items": [
+        {
+          "slug": "drinks",
+          "name": "Drinks",
+          "image": "/menu/drinks.jpg",
+          "description": "Ice-cold and ready.",
+          "variants": [
+            "Coca Cola",
+            "Diet Coke",
+            "Sprite",
+            "Orange Fanta",
+            "Lilt",
+            "Evian Water"
+          ],
+          "tags": []
+        },
+        {
+          "slug": "ice-tea",
+          "name": "Ice Tea",
+          "image": "/menu/ice-tea.jpg",
+          "description": "Iced tea, three ways.",
+          "variants": ["Peach", "Raspberry", "Lemon"],
+          "tags": [],
+          "keywords": ["tea", "iced", "cold"]
+        }
+      ]
+    }
+  ]
+}
