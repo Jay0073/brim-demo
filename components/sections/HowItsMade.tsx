@@ -70,7 +70,7 @@ const CAPTIONS: Caption[] = [
     pos: "right-5 top-[30%] items-end text-right md:right-14",
     kicker: "04 — The Melt",
     title: "MELTED TO PERFECTION",
-    copy: "It softens, slumps and folds into every ridge and edge of the beef. Not a plastic-y slice in sight.",
+    copy: "It softens, slumps and folds into every ridge and edge of the beef. Nothing stiff or chewy to spoil it.",
   },
   {
     cls: "cap-5",
@@ -79,7 +79,7 @@ const CAPTIONS: Caption[] = [
     pos: "left-5 top-[50%] items-start text-left md:left-14",
     kicker: "05 — The Build",
     title: "SAUCED & STACKED",
-    copy: "House sauce, crisp lettuce, pickles and onion — layered with intent onto a soft, toasted bun.",
+    copy: "House sauce and sweet onions — drizzled and tucked neatly into a soft, toasted bun.",
   },
   {
     cls: "cap-6",
