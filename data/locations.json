@@ -1,0 +1,226 @@
+{
+  "stores": [
+    {
+      "id": "london-shoreditch",
+      "name": "Brim Shoreditch",
+      "neighborhood": "Shoreditch High St",
+      "city": "London",
+      "country": "United Kingdom",
+      "region": "UK",
+      "address": "152 Shoreditch High St, London E1 6JE, United Kingdom",
+      "lat": 51.5246,
+      "lng": -0.0786,
+      "phone": "+44 20 7946 1180",
+      "hours": "12:00 – 23:00 · Mon–Sun",
+      "placeQuery": "Brim Burgers Shoreditch London",
+      "image": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGvWN3B0IWNtpziycugGegFuFec9-g9O3ct1wYsy4iSpg-__5yA-JH6m3lvfrxRoYXESMdb1yGR-C0HW6J6ZuZdewLemNeEoIUQMMcVGiA8-UrZCa8UINfhcODpe_X1gcR6ps9s-p7OSGkc=s1360-w1360-h1020-rw",
+      "rating": 4.7,
+      "reviewCount": 2134,
+      "reviews": [
+        {
+          "author": "Hannah W.",
+          "rating": 5,
+          "relativeTime": "3 days ago",
+          "text": "The smash double is unreal — crispy lacy edges, proper Halal beef, and the brim sauce is dangerously good. Queue moved fast even on a Friday night."
+        },
+        {
+          "author": "Omar R.",
+          "rating": 5,
+          "relativeTime": "2 weeks ago",
+          "text": "Finally a Halal smash spot in Shoreditch that takes the patty seriously. Loaded fries are a full meal on their own. Staff were lovely."
+        },
+        {
+          "author": "Priya N.",
+          "rating": 4,
+          "relativeTime": "1 month ago",
+          "text": "Burgers are excellent and the shakes are thick enough to stand a straw in. Lost a star only because seating fills up quick at peak."
+        }
+      ]
+    },
+    {
+      "id": "lahore-gulberg",
+      "name": "Brim Gulberg",
+      "neighborhood": "Mall 1, Main Blvd Gulberg III",
+      "city": "Lahore",
+      "country": "Pakistan",
+      "region": "Pakistan",
+      "address": "Shop 12, Ground Floor, Mall 1, Main Blvd, Gulberg III, Lahore, Pakistan",
+      "lat": 31.514,
+      "lng": 74.346,
+      "phone": "+92 42 3578 9900",
+      "hours": "13:00 – 02:00 · Mon–Sun",
+      "placeQuery": "Brim Burgers Gulberg Lahore",
+      "image": "/gulberg.png",
+      "rating": 4.8,
+      "reviewCount": 2756,
+      "reviews": [
+        {
+          "author": "Zara H.",
+          "rating": 5,
+          "relativeTime": "4 days ago",
+          "text": "Main Boulevard needed this. Perfectly smashed patties, melty cheese, and a sauce I'd buy by the bottle. Get your Brim on — easily the best burger in Gulberg."
+        },
+        {
+          "author": "Usman T.",
+          "rating": 5,
+          "relativeTime": "1 week ago",
+          "text": "Brought friends from out of town and they were blown away. Fast service, spotless place, and 100% Halal. The Spicy Smash Down is the move."
+        },
+        {
+          "author": "Mahnoor I.",
+          "rating": 4,
+          "relativeTime": "1 month ago",
+          "text": "Big, juicy and delicious every single time. Gets packed in the evenings — go early or be ready to wait for a table."
+        }
+      ]
+    },
+    {
+      "id": "lahore-dha-phase4",
+      "name": "Brim DHA Phase 4",
+      "neighborhood": "Plaza 253 CCA, Phase 4",
+      "city": "Lahore",
+      "country": "Pakistan",
+      "region": "Pakistan",
+      "address": "Plaza 253 CCA, DHA Phase 4, Lahore, Pakistan",
+      "lat": 31.472,
+      "lng": 74.387,
+      "phone": "+92 42 3717 4040",
+      "hours": "13:00 – 02:00 · Mon–Sun",
+      "placeQuery": "Brim Burgers DHA Phase 4 Lahore",
+      "image": "/dha-phase4.jpg",
+      "rating": 4.7,
+      "reviewCount": 1840,
+      "reviews": [
+        {
+          "author": "Hamza S.",
+          "rating": 5,
+          "relativeTime": "2 days ago",
+          "text": "My go-to in DHA. The patty-to-bun ratio is spot on and the shakes are thick. Open late too, which is a lifesaver after work."
+        },
+        {
+          "author": "Aleena F.",
+          "rating": 5,
+          "relativeTime": "3 weeks ago",
+          "text": "Big juicy burgers exactly as advertised. The chicken smash is criminally underrated and everything is properly Halal."
+        },
+        {
+          "author": "Bilal A.",
+          "rating": 4,
+          "relativeTime": "1 month ago",
+          "text": "Great food and a clean, modern space. Parking in CCA can be tight at peak but the burgers more than make up for it."
+        }
+      ]
+    },
+    {
+      "id": "lahore-lakecity",
+      "name": "Brim Lake City",
+      "neighborhood": "Lake City, Block M-3A",
+      "city": "Lahore",
+      "country": "Pakistan",
+      "region": "Pakistan",
+      "address": "Block M-3A, Lake City, Raiwind Road, Lahore, Pakistan",
+      "lat": 31.366,
+      "lng": 74.178,
+      "phone": "+92 42 3520 7700",
+      "hours": "13:00 – 02:00 · Mon–Sun",
+      "placeQuery": "Brim Burgers Lake City Lahore",
+      "image": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEIDjsn5MqQVe4ei5L0GVw9suHsNeSgoG3gUDzEqRFqpa8g15otJEluj9XX8KHPYGsXriseN0yYquGZ50Ejvy0DLPHjYh7C8yqZxErpWisW9XkFJrsXC7f6jiMCV_yPPjHqrMWpZ5L4IyI=s1360-w1360-h1020-rw",
+      "rating": 4.8,
+      "reviewCount": 1320,
+      "reviews": [
+        {
+          "author": "Sana K.",
+          "rating": 5,
+          "relativeTime": "5 days ago",
+          "text": "So glad Brim came to Lake City. No need to drive into town for a proper smash burger anymore. Fresh, juicy and worth every rupee."
+        },
+        {
+          "author": "Daniyal R.",
+          "rating": 5,
+          "relativeTime": "2 weeks ago",
+          "text": "The dynamite fries have a real kick and the burgers are huge. Staff are friendly and the place is spotless. Get your Brim on!"
+        },
+        {
+          "author": "Iqra M.",
+          "rating": 4,
+          "relativeTime": "1 month ago",
+          "text": "Lovely addition to the neighbourhood. Can get busy on weekends so order ahead if you're in a hurry."
+        }
+      ]
+    },
+    {
+      "id": "faisalabad-susan-road",
+      "name": "Brim Faisalabad",
+      "neighborhood": "Susan Road, Madina Town",
+      "city": "Faisalabad",
+      "country": "Pakistan",
+      "region": "Pakistan",
+      "address": "Susan Road, Madina Town, Faisalabad, Pakistan",
+      "lat": 31.4085,
+      "lng": 73.112,
+      "phone": "+92 41 850 6600",
+      "hours": "13:00 – 02:00 · Mon–Sun",
+      "placeQuery": "Brim Burgers Susan Road Faisalabad",
+      "image": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFpmTPTkKPxelg5APejNAZDefpoj3D-MOfQ3oqa17t7RttrB73u4lO_DBGbEaMpnqQTaP-K8qLq8qUGraRaySMB_NKyZj6C8MFYgJvPKWUjkGq3ToPzHLjFVnY2Rwdef_hnPO_SaNYjifkz=s1360-w1360-h1020-rw",
+      "rating": 4.7,
+      "reviewCount": 1490,
+      "reviews": [
+        {
+          "author": "Ahmed N.",
+          "rating": 5,
+          "relativeTime": "6 days ago",
+          "text": "Susan Road just levelled up. Clean, modern, and the burgers are seriously good. The Spicy Smash Down is addictive — finally a proper smash in Faisalabad."
+        },
+        {
+          "author": "Hira B.",
+          "rating": 5,
+          "relativeTime": "2 weeks ago",
+          "text": "My new weekend spot. Quick service, big juicy burgers, and everything is Halal. The shakes are thick and the fries are loaded."
+        },
+        {
+          "author": "Saad K.",
+          "rating": 4,
+          "relativeTime": "1 month ago",
+          "text": "Great food and a nice vibe. A touch pricey but the quality justifies it. Try the double smash."
+        }
+      ]
+    },
+    {
+      "id": "lahore-johar-town",
+      "name": "Brim Johar Town",
+      "neighborhood": "Block R, Phase 2",
+      "city": "Lahore",
+      "country": "Pakistan",
+      "region": "Pakistan",
+      "address": "Block R, Phase 2, Johar Town, Lahore, Pakistan",
+      "lat": 31.466,
+      "lng": 74.272,
+      "phone": "+92 42 3531 2020",
+      "hours": "13:00 – 02:00 · Mon–Sun",
+      "placeQuery": "Brim Burgers Johar Town Lahore",
+      "image": "/image.png",
+      "rating": 4.6,
+      "reviewCount": 980,
+      "reviews": [
+        {
+          "author": "Fatima Z.",
+          "rating": 5,
+          "relativeTime": "3 days ago",
+          "text": "Late-night cravings sorted. Open till 2am, juicy patties, and the loaded fries are unreal. My new Johar Town regular."
+        },
+        {
+          "author": "Talha M.",
+          "rating": 4,
+          "relativeTime": "2 weeks ago",
+          "text": "Solid smash burgers and great milkshakes. The cheese skirt on the patty is a thing of beauty. Gets busy in the evenings."
+        },
+        {
+          "author": "Rabia S.",
+          "rating": 5,
+          "relativeTime": "1 month ago",
+          "text": "Love that the whole menu is Halal. Brought the family and everyone found something. Big, juicy and exactly what we wanted."
+        }
+      ]
+    }
+  ]
+}

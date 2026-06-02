@@ -1,8 +1,13 @@
 // ─────────────────────────────────────────────────────────────────────────
-//  Menu data — single source of truth for the Menu page.
-//  Descriptions are the real Brim copy (they already explain "what's in it").
-//  Tags/spice/keywords power the filters + the lightweight semantic search.
+//  Menu — types, typed views over data/menu.json, and the search engine.
+//
+//  The DATA lives in `data/menu.json` (a single JSON object). This module is
+//  the typed gateway to it: it casts the raw JSON into the interfaces below and
+//  exposes the search helpers. Components import from here, never from the JSON
+//  directly, so the types and the search stay in one place.
 // ─────────────────────────────────────────────────────────────────────────
+
+import menuData from "@/data/menu.json";
 
 export type DietTag =
   | "spicy"
@@ -40,458 +45,272 @@ export interface MenuCategory {
   items: MenuItem[];
 }
 
-// ── Burger size system (the 4oz / 8oz / 12oz ladder) ──────────────────────
-export const BURGER_SIZES = [
-  { layers: 1, oz: "4oz", name: "Standard", note: "Single smash" },
-  { layers: 2, oz: "8oz", name: "Serious", note: "Double stack" },
-  { layers: 3, oz: "12oz", name: "Smashing", note: "Triple threat" },
-] as const;
-
-// ── Build-your-own options ────────────────────────────────────────────────
-export const BUILD_YOUR_OWN = {
-  rule: "Choose any 4 toppings plus 2 sauces (rashers excluded).",
-  toppings: [
-    "Lettuce",
-    "Grilled Onions",
-    "American Cheese",
-    "Onion Rings",
-    "Caramelised Onions",
-    "Gherkins",
-    "Cheddar Cheese",
-    "Hash Brown",
-    "Jalapeño",
-    "Pineapple",
-    "Cheese Sauce",
-    "Chilli Jam",
-    "Tomatoes",
-    "Fried Egg",
-    "Grilled Mushrooms",
-  ],
-  sauces: [
-    "BRIM Burger Sauce",
-    "Signature Sauce",
-    "Sweet Chilli",
-    "BBQ North",
-    "Wild West",
-    "Habañero",
-  ],
-  extra: "Add rashers anytime.",
-};
-
-// ── Dietary filter facets (chips in the control bar) ──────────────────────
-export const DIET_FILTERS: { id: DietTag; label: string }[] = [
-  { id: "spicy", label: "🌶 Spicy" },
-  { id: "veggie", label: "Veggie" },
-  { id: "chicken", label: "Chicken" },
-  { id: "beef", label: "Beef" },
-  { id: "cheesy", label: "Cheesy" },
-  { id: "sweet", label: "Sweet" },
-];
-
-// Synonyms make the search feel "semantic" without a backend: a query token
-// matches if the token OR any of its synonyms appears in the item haystack.
-export const SEARCH_SYNONYMS: Record<string, string[]> = {
-  spicy: ["chilli", "chili", "hot", "jalapeño", "jalapeno", "habañero", "habanero", "fiery", "heat", "🌶"],
-  hot: ["spicy", "chilli", "jalapeño", "habañero", "fiery"],
-  veggie: ["vegetarian", "vegan", "plant", "plant-based", "meat-free", "meatless"],
-  vegan: ["veggie", "plant", "plant-based"],
-  cheese: ["cheesy", "cheddar", "american", "monterey", "mozzarella"],
-  cheesy: ["cheese", "cheddar", "american"],
-  beef: ["patty", "smash", "burger", "steak"],
-  chicken: ["tender", "fillet", "breaded", "poultry", "turkey"],
-  sweet: ["chocolate", "vanilla", "caramel", "biscoff", "nutella", "oreo", "dessert", "shake", "milkshake"],
-  shake: ["milkshake", "sweet", "thick"],
-  fries: ["chips", "fry"],
-  dog: ["hotdog", "frankfurter", "sausage"],
-  kids: ["jr", "junior", "child", "little", "baby"],
-};
-
-export const MENU: MenuCategory[] = [
-  {
-    id: "burgers",
-    name: "Burgers",
-    tagline: "Smashed, never frozen — the reason you walked in.",
-    items: [
-      {
-        slug: "brim-burger",
-        name: "Brim Burger",
-        description:
-          "Double American cheese, lettuce, tomatoes, gherkins, BRIM Burger Sauce & Signature Sauce in a seeded brioche bun.",
-        tags: ["beef", "cheesy"],
-        badge: "The original",
-        featured: true,
-      },
-      {
-        slug: "bbq-rasher",
-        name: "BBQ Rasher",
-        description:
-          "Double cheese, rashers of bacon, two onion rings, lettuce, caramelised onions, BBQ North & our BRIM Burger Sauce in a seeded brioche bun.",
-        tags: ["beef", "cheesy"],
-        keywords: ["bacon", "smoky", "bbq"],
-      },
-      {
-        slug: "veggie-burger",
-        name: "Veggie Burger",
-        description:
-          "A plant-based patty layered with lettuce and onion, topped with our Signature Sauce and Burger Sauce, all in a seeded bun.",
-        tags: ["veggie"],
-        badge: "Plant-based",
-        keywords: ["vegan", "meat-free"],
-      },
-      {
-        slug: "brim-maniac",
-        name: "BRIM Maniac",
-        description:
-          "20oz of patties, 5 cheese layers, caramelised onions, chilli jam, our BRIM Burger Sauce with 3 slices of turkey bacon & 2 onion rings in a seeded brioche bun.",
-        tags: ["beef", "cheesy"],
-        spice: 1,
-        badge: "20oz of chaos",
-        featured: true,
-        keywords: ["biggest", "challenge", "stack"],
-      },
-      {
-        slug: "the-meltdown",
-        name: "The Meltdown",
-        description:
-          "Hot cheese sauce, lettuce, onion, tomato & BRIM Burger Sauce in a seeded brioche bun.",
-        tags: ["veggie", "cheesy"],
-        keywords: ["cheese sauce", "meat-free"],
-      },
-      {
-        slug: "smashed-shrooms",
-        name: "Smashed Shrooms",
-        description:
-          "Grilled mushrooms & grilled onions, double cheese, ketchup, BRIM Burger Sauce & our Signature Sauce in a seeded brioche bun.",
-        tags: ["veggie", "cheesy"],
-        keywords: ["mushroom"],
-      },
-      {
-        slug: "fiery-brimstone",
-        name: "Fiery BRIMstone",
-        description:
-          "Jalapeños, double cheese, lettuce, Habañero Sauce & BRIM Burger Sauce in a seeded brioche bun.",
-        tags: ["beef", "cheesy", "spicy"],
-        spice: 3,
-        badge: "Bring water",
-      },
-      {
-        slug: "sweet-chilli-time",
-        name: "Sweet Chilli Time",
-        description:
-          "Chilli jam, double cheese, lettuce, tomato, Sweet Chilli Sauce & BRIM Burger Sauce.",
-        tags: ["beef", "cheesy", "spicy"],
-        spice: 1,
-        keywords: ["sweet"],
-      },
-      {
-        slug: "hawaiian-heaven",
-        name: "Hawaiian Heaven",
-        description:
-          "Turkey rashers, grilled pineapple, lettuce, onion & tomato, topped with our BRIM Burger Sauce in a seeded brioche bun.",
-        tags: ["chicken"],
-        badge: "Pineapple belongs",
-        keywords: ["turkey", "pineapple", "sweet"],
-      },
-      {
-        slug: "the-chicken-run",
-        name: "The Chicken Run",
-        description:
-          "Breaded chicken fillet, Monterey Jack cheese, lettuce, tomato & Signature Sauce in a seeded brioche bun.",
-        tags: ["chicken", "cheesy"],
-        badge: "Crispy & golden",
-      },
-    ],
-  },
-  {
-    id: "brim-box",
-    name: "Brim Box",
-    tagline: "One box. Total carnage.",
-    items: [
-      {
-        slug: "loaded-box",
-        name: "Loaded",
-        description:
-          "Fries, a beef patty covered with hot cheese sauce, burger sauce, signature sauce & American cheese, topped with crispy onions and chives.",
-        tags: ["beef", "cheesy"],
-        featured: true,
-        badge: "Fork required",
-      },
-    ],
-  },
-  {
-    id: "hot-dogs",
-    name: "Hot Dogs",
-    tagline: "Not your average frank.",
-    items: [
-      {
-        slug: "classic-hot-dog",
-        name: "Classic Hot Dog",
-        description: "Ketchup & melted cheese in a brioche roll.",
-        tags: ["cheesy"],
-      },
-      {
-        slug: "loaded-dog",
-        name: "Loaded Dog",
-        description:
-          "Frankfurter with turkey rashers, grilled onions, melted cheese, ketchup, chives and Wild West Sauce in a brioche roll, topped with crispy onions.",
-        tags: ["cheesy", "chicken"],
-        keywords: ["turkey", "loaded"],
-      },
-      {
-        slug: "smokin-dog",
-        name: "Smokin’ Dog",
-        description:
-          "Jalapeño, melted cheese, Habañero Hot Sauce, ketchup, chives & crispy onions in a brioche roll.",
-        tags: ["cheesy", "spicy"],
-        spice: 2,
-      },
-      {
-        slug: "street-dog",
-        name: "Street Dog",
-        description:
-          "Grilled onions, melted cheese, ketchup, chives, Wild West Sauce in a brioche roll, topped with crispy onions.",
-        tags: ["cheesy"],
-      },
-    ],
-  },
-  {
-    id: "brim-tots",
-    name: "Brim Tots",
-    tagline: "Tiny. Crispy. Dangerous.",
-    items: [
-      {
-        slug: "classic-tots",
-        name: "Classic Tots",
-        description:
-          "Breaded potato tots covered in BBQ sauce, our Wild West Sauce & topped with spring onions.",
-        tags: ["veggie"],
-      },
-      {
-        slug: "cheesy-tots",
-        name: "Cheesy Tots",
-        description:
-          "Breaded potato tots covered in hot cheese sauce & topped with crispy onions.",
-        tags: ["veggie", "cheesy"],
-      },
-      {
-        slug: "hot-tots",
-        name: "Hot Tots",
-        description:
-          "Breaded potato tots covered in BRIM Signature Sauce, jalapeño & cheese sauce.",
-        tags: ["veggie", "cheesy", "spicy"],
-        spice: 2,
-      },
-    ],
-  },
-  {
-    id: "fries",
-    name: "Fries",
-    tagline: "Skin-on, hand-cut, fully loaded.",
-    items: [
-      {
-        slug: "skin-on-fries",
-        name: "Skin-On Fries",
-        description: "Our classic skin-on fries. Add a seasoning:",
-        variants: ["Herb & Garlic Salt", "Cayenne & Oregano"],
-        tags: ["veggie"],
-        keywords: ["chips"],
-      },
-      {
-        slug: "sweet-potato-fries",
-        name: "Sweet Potato Fries",
-        tags: ["veggie", "sweet"],
-      },
-      {
-        slug: "cheesy-fries",
-        name: "Cheesy Fries",
-        tags: ["veggie", "cheesy"],
-      },
-      {
-        slug: "commando-fries",
-        name: "Commando Fries",
-        description:
-          "Hot cheese sauce, Wild West Sauce, topped with crispy roasted onions.",
-        tags: ["veggie", "cheesy"],
-      },
-      {
-        slug: "dynamite-fries",
-        name: "Dynamite Fries",
-        description:
-          "Hot cheese sauce, jalapeño, Habañero Hot Sauce & crispy roasted onions, topped with chives.",
-        tags: ["veggie", "cheesy", "spicy"],
-        spice: 3,
-        badge: "Handle with care",
-      },
-    ],
-  },
-  {
-    id: "sides",
-    name: "Sides",
-    tagline: "The supporting cast that steals the show.",
-    items: [
-      { slug: "chicken-tenders", name: "Chicken Tenders", tags: ["chicken"] },
-      { slug: "onion-rings", name: "Onion Rings", tags: ["veggie"] },
-      {
-        slug: "cheese-stuffed-rings",
-        name: "Cheese Stuffed Rings",
-        tags: ["veggie", "cheesy"],
-      },
-      {
-        slug: "mac-cheese-bites",
-        name: "Mac & Cheese Bites",
-        tags: ["veggie", "cheesy"],
-      },
-      {
-        slug: "volcanic-cheese-bites",
-        name: "Volcanic Cheese Bites",
-        tags: ["veggie", "cheesy", "spicy"],
-        spice: 2,
-      },
-    ],
-  },
-  {
-    id: "dips",
-    name: "Dips",
-    tagline: "Dunk responsibly.",
-    items: [
-      {
-        slug: "dips",
-        name: "Dips",
-        description: "Cool, classic, dunk-anything sauces.",
-        variants: ["BRIM Burger Sauce", "Sweet Chilli", "BBQ North"],
-        tags: [],
-      },
-      {
-        slug: "dips-with-a-kick",
-        name: "With a Kick",
-        description: "For when you want it to bite back.",
-        variants: ["Signature Sauce", "Wild West", "Habañero"],
-        tags: ["spicy"],
-        spice: 2,
-      },
-    ],
-  },
-  {
-    id: "jr-brim",
-    name: "Jr Brim",
-    tagline: "Little legends eat here too.",
-    items: [
-      {
-        slug: "chicken-little",
-        name: "Chicken Little",
-        description: "Chicken tenders, fries & a drink.",
-        tags: ["chicken"],
-        keywords: ["kids", "junior"],
-      },
-      {
-        slug: "baby-burger",
-        name: "Baby Burger",
-        description: "2oz kids burger (plain with ketchup), fries & a drink.",
-        tags: ["beef"],
-        keywords: ["kids", "junior"],
-      },
-    ],
-  },
-  {
-    id: "shakes",
-    name: "Shakes",
-    tagline: "Thick enough to stand a spoon in.",
-    items: [
-      {
-        slug: "classic-shakes",
-        name: "Classic Shakes",
-        description: "The timeless four, blended thick.",
-        variants: ["Chocolate", "Vanilla", "Strawberry", "Banana"],
-        tags: ["sweet"],
-      },
-      {
-        slug: "brim-shakes",
-        name: "BRIM Shakes",
-        description: "Loaded, indulgent, dessert-in-a-cup specials.",
-        variants: [
-          "Lotus Biscoff",
-          "Salted Caramel",
-          "Kinder Bueno White",
-          "Ferrero Rocher & Nutella",
-          "Reese’s",
-          "Oreo",
-        ],
-        tags: ["sweet"],
-        featured: true,
-        badge: "Fan favourite",
-      },
-    ],
-  },
-  {
-    id: "desserts",
-    name: "Desserts",
-    tagline: "Save room. Trust us.",
-    items: [
-      {
-        slug: "brim-brownie-special",
-        name: "BRIM Brownie Special",
-        description:
-          "Hot layered brownies infused with ice cream & hot chocolate sauce.",
-        tags: ["sweet"],
-        featured: true,
-        badge: "Best warm",
-      },
-    ],
-  },
-  {
-    id: "drinks",
-    name: "Drinks",
-    tagline: "Wash it all down.",
-    items: [
-      {
-        slug: "drinks",
-        name: "Drinks",
-        description: "Ice-cold and ready.",
-        variants: [
-          "Coca Cola",
-          "Diet Coke",
-          "Sprite",
-          "Orange Fanta",
-          "Lilt",
-          "Evian Water",
-        ],
-        tags: [],
-      },
-    ],
-  },
-];
-
-// ── Search helper (lightweight "semantic" matching) ───────────────────────
-function haystack(item: MenuItem, categoryName: string): string {
-  return [
-    item.name,
-    item.description ?? "",
-    categoryName,
-    ...(item.variants ?? []),
-    ...item.tags,
-    ...(item.keywords ?? []),
-  ]
-    .join(" ")
-    .toLowerCase();
+export interface BurgerSize {
+  layers: number;
+  oz: string;
+  name: string;
+  note: string;
 }
 
-/** Every query word must match (after synonym expansion) — AND across words. */
+export interface BuildYourOwn {
+  rule: string;
+  toppings: string[];
+  sauces: string[];
+  extra: string;
+}
+
+// ── Typed views over the JSON data object ─────────────────────────────────
+// JSON can't carry literal unions (e.g. `tags` reads back as `string[]`), so we
+// assert the imported shapes onto the interfaces above. The data is validated
+// by hand against these types — keep data/menu.json in step when editing.
+export const MENU = menuData.categories as unknown as MenuCategory[];
+export const BURGER_SIZES = menuData.burgerSizes as BurgerSize[];
+export const BUILD_YOUR_OWN = menuData.buildYourOwn as BuildYourOwn;
+export const DIET_FILTERS = menuData.dietFilters as { id: DietTag; label: string }[];
+export const SEARCH_SYNONYMS = menuData.searchSynonyms as Record<string, string[]>;
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  Search engine — ranked, synonym-aware, typo-tolerant lexical matching.
+//
+//  Not ML embeddings, but it *feels* semantic: query words are expanded through
+//  a synonym map, matched across weighted fields (name beats description beats
+//  category), tolerate small typos via edit distance, and every item gets a
+//  score so the best matches float to the top. Every query word must land
+//  somewhere (AND across words) — so "spicy chicken" needs both.
+// ═══════════════════════════════════════════════════════════════════════════
+
+// How much a hit in each field is worth. Name is king; category is a faint hint.
+const FIELD_WEIGHTS = {
+  name: 10,
+  badge: 7,
+  keywords: 7,
+  tags: 6,
+  description: 4,
+  variants: 4,
+  category: 2,
+} as const;
+
+interface WeightedField {
+  /** Whole field text, lowercased (for substring checks). */
+  text: string;
+  /** Tokenised words of the field (for exact-word + fuzzy checks). */
+  words: string[];
+  weight: number;
+}
+
+// Filler words dropped from a query so natural-language phrasing still works:
+// "something for kids" matches on "kids", "i want it spicy" matches on "spicy".
+// Deliberately excludes food words (e.g. "hot" stays — it means spice).
+const STOPWORDS = new Set([
+  "a", "an", "and", "any", "anything", "are", "as", "at", "be", "best", "bit",
+  "but", "by", "can", "combo", "dish", "dishes", "do", "eat", "find", "food",
+  "for", "get", "give", "good", "has", "have", "i", "im", "in", "is", "it",
+  "just", "like", "looking", "meal", "meals", "menu", "me", "my", "need",
+  "nice", "of", "on", "option", "options", "or", "order", "please", "really",
+  "show", "some", "something", "stuff", "super", "that", "the", "then", "thing",
+  "things", "this", "to", "very", "want", "with", "you", "your",
+]);
+
+/** Strip accents and lowercase so "jalapeno" === "jalapeño", "habanero" too. */
+const DIACRITICS = new RegExp("[\\u0300-\\u036f]", "g");
+function norm(text: string): string {
+  return text.normalize("NFD").replace(DIACRITICS, "").toLowerCase();
+}
+
+/** Normalise, then split on whitespace and the punctuation in menu copy. */
+function words(text: string): string[] {
+  return norm(text)
+    .split(/[\s,.&/()'’"-]+/)
+    .filter(Boolean);
+}
+
+/** Flatten an item into the weighted fields the scorer searches over. */
+function itemFields(item: MenuItem, categoryName: string): WeightedField[] {
+  const raw: [string, number][] = [
+    [item.name, FIELD_WEIGHTS.name],
+    [item.badge ?? "", FIELD_WEIGHTS.badge],
+    [(item.keywords ?? []).join(" "), FIELD_WEIGHTS.keywords],
+    [item.tags.join(" "), FIELD_WEIGHTS.tags],
+    [item.description ?? "", FIELD_WEIGHTS.description],
+    [(item.variants ?? []).join(" "), FIELD_WEIGHTS.variants],
+    [categoryName, FIELD_WEIGHTS.category],
+  ];
+  return raw
+    .filter(([text]) => text.length > 0)
+    .map(([text, weight]) => ({
+      text: text.toLowerCase(),
+      words: words(text),
+      weight,
+    }));
+}
+
+/** Classic Levenshtein edit distance (rolling two-row DP). */
+function levenshtein(a: string, b: string): number {
+  const m = a.length;
+  const n = b.length;
+  if (m === 0) return n;
+  if (n === 0) return m;
+  let prev = Array.from({ length: n + 1 }, (_, i) => i);
+  let curr = new Array<number>(n + 1);
+  for (let i = 1; i <= m; i++) {
+    curr[0] = i;
+    for (let j = 1; j <= n; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      curr[j] = Math.min(prev[j] + 1, curr[j - 1] + 1, prev[j - 1] + cost);
+    }
+    [prev, curr] = [curr, prev];
+  }
+  return prev[n];
+}
+
+/** How many typos to forgive — scales with token length to avoid false hits. */
+function fuzzAllowance(token: string): number {
+  if (token.length <= 3) return 0; // too short — a 1-edit match is basically noise
+  if (token.length <= 6) return 1;
+  return 2;
+}
+
+/**
+ * Best score for one (already lowercased) term in one field.
+ * Exact word > prefix > substring > fuzzy. Synonyms are gently discounted so a
+ * literal match always outranks a synonym match of equal field weight.
+ */
+function termFieldScore(term: string, field: WeightedField, isSynonym: boolean): number {
+  const w = field.weight * (isSynonym ? 0.8 : 1);
+
+  if (field.words.includes(term)) return w; // exact whole-word hit
+  if (field.text.includes(term)) {
+    const prefix = field.words.some((word) => word.startsWith(term));
+    return w * (prefix ? 0.8 : 0.5); // "cheese" in "cheeseburger" vs mid-word
+  }
+
+  const allow = fuzzAllowance(term);
+  if (allow === 0) return 0;
+  let best = 0;
+  for (const word of field.words) {
+    if (Math.abs(word.length - term.length) > allow) continue;
+    const d = levenshtein(word, term);
+    if (d > 0 && d <= allow) best = Math.max(best, w * (d === 1 ? 0.45 : 0.3));
+  }
+  return best;
+}
+
+/** Score one query token (with its synonyms) across all of an item's fields. */
+function tokenScore(token: string, fields: WeightedField[]): number {
+  const terms: [string, boolean][] = [
+    [token, false],
+    ...(SEARCH_SYNONYMS[token] ?? []).map(
+      (s) => [norm(s), true] as [string, boolean]
+    ),
+  ];
+  let total = 0;
+  for (const field of fields) {
+    let bestForField = 0;
+    for (const [term, isSyn] of terms) {
+      bestForField = Math.max(bestForField, termFieldScore(term, field, isSyn));
+    }
+    total += bestForField; // presence in multiple fields compounds
+  }
+  return total;
+}
+
+/** AND-score an item against a list of already-resolved query tokens. */
+function itemQueryScore(
+  item: MenuItem,
+  categoryName: string,
+  tokens: string[]
+): number {
+  const fields = itemFields(item, categoryName);
+  let total = 0;
+  for (const token of tokens) {
+    const s = tokenScore(token, fields);
+    if (s <= 0) return 0; // every token must match somewhere (AND)
+    total += s;
+  }
+  return total;
+}
+
+/** Tokenise a query: split, drop filler, fall back to raw if it's *all* filler. */
+function queryTokens(query: string): string[] {
+  const raw = words(query);
+  const meaningful = raw.filter((t) => !STOPWORDS.has(t));
+  return meaningful.length > 0 ? meaningful : raw;
+}
+
+/**
+ * Keep only tokens that match at least one item *somewhere* in the menu.
+ * This is what lets natural-language queries work: "i want something really
+ * cheesy" keeps "cheesy" (it matches real items) and quietly drops "really"
+ * (it matches nothing), instead of the unknown word nuking every result.
+ */
+function liveTokens(tokens: string[]): string[] {
+  return tokens.filter((tok) =>
+    MENU.some((cat) =>
+      cat.items.some((it) => tokenScore(tok, itemFields(it, cat.name)) > 0)
+    )
+  );
+}
+
+/**
+ * Relevance score for one item against a raw query. 0 means "no match".
+ * Higher is better — sort descending to rank. (Single-item helper; the page
+ * uses {@link rankMenu}, which also filters out menu-wide unknown words.)
+ */
+export function scoreItem(
+  item: MenuItem,
+  categoryName: string,
+  query: string
+): number {
+  const tokens = queryTokens(query);
+  if (tokens.length === 0) return 0;
+  return itemQueryScore(item, categoryName, tokens);
+}
+
+/** Boolean view of {@link scoreItem}. Empty query matches everything. */
 export function itemMatchesQuery(
   item: MenuItem,
   categoryName: string,
   query: string
 ): boolean {
-  const q = query.trim().toLowerCase();
-  if (!q) return true;
-  const hay = haystack(item, categoryName);
-  const tokens = q.split(/\s+/).filter(Boolean);
-  return tokens.every((tok) => {
-    const variants = [tok, ...(SEARCH_SYNONYMS[tok] ?? [])];
-    return variants.some((v) => hay.includes(v));
-  });
+  if (!query.trim()) return true;
+  return scoreItem(item, categoryName, query) > 0;
 }
 
 export function itemMatchesDiet(item: MenuItem, diets: DietTag[]): boolean {
   if (diets.length === 0) return true;
   return diets.some((d) => item.tags.includes(d));
+}
+
+/** A category with its items narrowed (and ranked, when searching) for the UI. */
+export interface RankedCategory extends MenuCategory {
+  filtered: MenuItem[];
+}
+
+/**
+ * The Menu page's one-stop search: applies the query (ranked, synonym-aware,
+ * typo-tolerant, filler-word tolerant) and the dietary chips, returning every
+ * category with its `filtered` items. Categories stay in menu order; items
+ * within a category are ranked best-match-first while searching.
+ */
+export function rankMenu(query: string, diets: DietTag[]): RankedCategory[] {
+  const searching = query.trim().length > 0;
+  // Only keep query words that actually discriminate; unknown filler is dropped.
+  const tokens = searching ? liveTokens(queryTokens(query)) : [];
+
+  return MENU.map((cat) => {
+    const ranked = cat.items
+      .map((it) => ({
+        it,
+        score: tokens.length ? itemQueryScore(it, cat.name, tokens) : 0,
+      }))
+      // A non-empty query with no usable tokens (gibberish) matches nothing;
+      // an empty query keeps everything and only the diet chips filter.
+      .filter(
+        ({ it, score }) =>
+          (searching ? score > 0 : true) && itemMatchesDiet(it, diets)
+      );
+
+    if (tokens.length) ranked.sort((a, b) => b.score - a.score);
+    return { ...cat, filtered: ranked.map((r) => r.it) };
+  });
 }

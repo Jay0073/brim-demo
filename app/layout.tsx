@@ -35,7 +35,12 @@ export default function RootLayout({
       className={`${bricolage.variable} ${inter.variable}`}
       suppressHydrationWarning
     >
-      <body className="min-h-dvh bg-ink text-paper antialiased" suppressHydrationWarning>
+      {/* suppressHydrationWarning: browser extensions inject attributes onto
+          <body> (e.g. bis_register) before React hydrates, which is harmless. */}
+      <body
+        className="min-h-dvh bg-ink text-paper antialiased"
+        suppressHydrationWarning
+      >
         <SmoothScroll>
           <Navbar />
           <main>{children}</main>

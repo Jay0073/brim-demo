@@ -5,7 +5,7 @@ import { FranchiseForm } from "@/components/franchising/FranchiseForm";
 export const metadata: Metadata = {
   title: `Franchising — ${SITE.name}`,
   description:
-    "Bring Brim to your city. Join the club — enquire about a Brim Burgers franchise across the UK & Pakistan.",
+    "Bring Brim to your city. Join the Family — enquire about a Brim Burgers franchise across the UK & Pakistan.",
 };
 
 const WHY_BRIM = [
@@ -38,23 +38,22 @@ export default function FranchisingPage() {
     <div className="bg-paper text-ink">
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <section className="relative flex min-h-[80vh] items-center overflow-hidden bg-black px-6 pb-16 pt-36">
-        <div className="brim-stripes-fine absolute inset-0 opacity-[0.07]" aria-hidden />
+        {/* Signature bold pure black & white diagonal stripes. */}
+        <div className="brim-stripes absolute inset-0" aria-hidden />
+        {/* Dark wash so the white copy stays legible while the stripes read as
+            pure black & white toward the right. */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(ellipse 80% 80% at 50% 35%, transparent 40%, rgba(0,0,0,0.6) 100%)",
-          }}
+          className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black via-black/75 to-transparent"
         />
         <div className="relative mx-auto w-full max-w-5xl text-paper">
           <p className="text-xs font-bold uppercase tracking-[0.4em] text-paper/55">
             Franchising · UK &amp; Pakistan
           </p>
-          <h1 className="mt-5 font-display text-6xl uppercase leading-[0.82] sm:text-8xl">
+          <h1 className="mt-5 font-display text-6xl uppercase leading-[0.82] [text-shadow:0_4px_40px_rgba(0,0,0,0.6)] sm:text-8xl">
             Join the
             <br />
-            club
+            Family
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-paper/70">
             Interested in joining the Brim Burger family as a franchisee? Grass-fed,
@@ -80,17 +79,13 @@ export default function FranchisingPage() {
       {/* ── Why Brim + quote (split pane) ────────────────────────────────── */}
       <section className="mx-auto max-w-6xl px-6 py-20">
         <div className="grid overflow-hidden rounded-3xl ring-1 ring-ink/10 lg:grid-cols-2">
-          {/* Quote pane (dark) */}
-          <div className="relative flex flex-col justify-center overflow-hidden bg-ink p-8 text-paper sm:p-12">
-            <div
-              className="brim-stripes-fine absolute inset-0 opacity-[0.06]"
-              aria-hidden
-            />
-            <blockquote className="relative">
+          {/* Quote pane — solid black with white text. */}
+          <div className="flex flex-col justify-center bg-black p-8 text-white sm:p-12">
+            <blockquote>
               <p className="font-display text-3xl uppercase leading-[1.05] sm:text-5xl">
                 “We didn&apos;t just build a burger. We built a following.”
               </p>
-              <footer className="mt-6 text-xs uppercase tracking-[0.3em] text-paper/50">
+              <footer className="mt-6 text-xs uppercase tracking-[0.3em] text-white/50">
                 — The Brim Burgers Team
               </footer>
             </blockquote>

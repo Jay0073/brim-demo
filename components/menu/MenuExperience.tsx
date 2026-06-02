@@ -2,17 +2,11 @@
 
 // Interactive menu. Category pills are SCROLL navigation (smooth-scroll +
 // scrollspy) so nothing is hidden — you browse the whole menu by scrolling.
-// Search + dietary chips are the real filters. "Surprise me" jumps to a random
-// item and flashes it.
+// Search + dietary chips are the real filters. Search is ranked (best matches
+// float up within each section). "Surprise me" jumps to a random item.
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLenis } from "lenis/react";
-import {
-  MENU,
-  DIET_FILTERS,
-  itemMatchesQuery,
-  itemMatchesDiet,
-  type DietTag,
-} from "@/lib/menu";
+import { MENU, DIET_FILTERS, rankMenu, type DietTag } from "@/lib/menu";
 import { MenuItemCard } from "./MenuItemCard";
 import { SizeGuide } from "./SizeGuide";
 import { BuildYourOwn } from "./BuildYourOwn";
@@ -30,17 +24,8 @@ export function MenuExperience() {
 
   const isFiltering = query.trim() !== "" || diets.length > 0;
 
-  const sections = useMemo(
-    () =>
-      MENU.map((cat) => ({
-        ...cat,
-        filtered: cat.items.filter(
-          (it) =>
-            itemMatchesQuery(it, cat.name, query) && itemMatchesDiet(it, diets)
-        ),
-      })),
-    [query, diets]
-  );
+  // Ranked, synonym-aware, typo-tolerant search + dietary chips (see lib/menu).
+  const sections = useMemo(() => rankMenu(query, diets), [query, diets]);
 
   const visibleSections = sections.filter((c) => c.filtered.length > 0);
   const visibleIds = new Set(visibleSections.map((c) => c.id));
