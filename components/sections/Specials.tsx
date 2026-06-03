@@ -54,7 +54,7 @@ function SpecialCard({ pick, index }: { pick: Pick; index: number }) {
 
   return (
     <Link
-      href="/menu"
+      href={`/menu?item=${item.slug}`}
       aria-label={`${item.name} — see it on the menu`}
       className={`group relative flex flex-col justify-end overflow-hidden rounded-[1.75rem] p-6 shadow-lg shadow-black/15 ring-1 ring-ink/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/25 hover:ring-brim/70 sm:p-7 ${
         tall ? "min-h-[26rem]" : "min-h-[18rem]"

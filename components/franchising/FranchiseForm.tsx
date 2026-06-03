@@ -47,21 +47,21 @@ export function FranchiseForm() {
 
   if (status === "sent") {
     return (
-      <div className="flex flex-col items-center gap-4 rounded-3xl bg-white p-8 text-center ring-1 ring-ink/10">
-        <span className="grid h-14 w-14 place-items-center rounded-full bg-ink text-2xl text-paper">
+      <div className="flex flex-col items-center gap-4 rounded-3xl bg-gradient-to-br from-ink-soft to-ink p-8 text-center shadow-2xl shadow-black/30 ring-1 ring-white/10">
+        <span className="grid h-14 w-14 place-items-center rounded-full bg-paper text-2xl text-ink">
           ✓
         </span>
-        <h3 className="font-display text-3xl uppercase text-ink">Enquiry sent</h3>
-        <p className="max-w-sm text-ink/60">
+        <h3 className="font-display text-3xl uppercase text-paper">Enquiry sent</h3>
+        <p className="max-w-sm text-paper/60">
           Thanks, {values.name.split(" ")[0] || "there"}. Our franchise team will
-          be in touch within <strong className="text-ink">2 working days</strong>.
+          be in touch within <strong className="text-paper">2 working days</strong>.
         </p>
         <button
           onClick={() => {
             setValues(EMPTY);
             setStatus("idle");
           }}
-          className="mt-2 rounded-full border border-ink px-5 py-2.5 text-sm font-semibold uppercase tracking-wide text-ink transition-colors hover:bg-ink hover:text-paper"
+          className="mt-2 rounded-full border border-paper px-5 py-2.5 text-sm font-semibold uppercase tracking-wide text-paper transition-colors hover:bg-paper hover:text-ink"
         >
           Send another
         </button>
@@ -73,7 +73,7 @@ export function FranchiseForm() {
     <form
       onSubmit={handleSubmit}
       noValidate
-      className="rounded-3xl bg-white p-6 ring-1 ring-ink/10 sm:p-8"
+      className="rounded-3xl bg-gradient-to-br from-ink-soft to-ink p-6 shadow-2xl shadow-black/30 ring-1 ring-white/10 sm:p-8"
     >
       <div className="grid gap-5 sm:grid-cols-2">
         <Field
@@ -117,9 +117,9 @@ export function FranchiseForm() {
       <div className="mt-5">
         <label
           htmlFor="message"
-          className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-ink/60"
+          className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-paper/60"
         >
-          Message <span className="text-ink/40">*</span>
+          Message <span className="text-paper/40">*</span>
         </label>
         <textarea
           id="message"
@@ -129,27 +129,27 @@ export function FranchiseForm() {
           aria-invalid={!!errors.message}
           aria-describedby={errors.message ? "message-err" : undefined}
           placeholder="Tell us a little about you, your location and your experience…"
-          className={`w-full resize-y rounded-xl border bg-white px-4 py-3 text-ink outline-none transition-colors placeholder:text-ink/35 ${
+          className={`w-full resize-y rounded-xl border bg-white/5 px-4 py-3 text-paper outline-none transition-colors placeholder:text-paper/35 ${
             errors.message
               ? "border-red-500 focus:border-red-500"
-              : "border-ink/15 focus:border-ink/50"
+              : "border-white/15 focus:border-white/50"
           }`}
         />
         {errors.message && (
-          <p id="message-err" className="mt-1.5 text-xs text-red-600">
+          <p id="message-err" className="mt-1.5 text-xs text-red-400">
             {errors.message}
           </p>
         )}
       </div>
 
       <div className="mt-6 flex flex-col-reverse items-center gap-3 sm:flex-row sm:justify-between">
-        <p className="text-xs text-ink/45">
+        <p className="text-xs text-paper/45">
           We reply to every serious enquiry within 2 working days.
         </p>
         <button
           type="submit"
           disabled={status === "sending"}
-          className="w-full rounded-full bg-ink px-7 py-3.5 text-sm font-semibold uppercase tracking-wide text-paper transition-colors hover:bg-ink/85 disabled:opacity-60 sm:w-auto"
+          className="w-full rounded-full bg-paper px-7 py-3.5 text-sm font-semibold uppercase tracking-wide text-ink transition-colors hover:bg-white disabled:opacity-60 sm:w-auto"
         >
           {status === "sending" ? "Sending…" : "Send message"}
         </button>
@@ -182,9 +182,9 @@ function Field({
     <div>
       <label
         htmlFor={id}
-        className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-ink/60"
+        className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-paper/60"
       >
-        {label} {required && <span className="text-ink/40">*</span>}
+        {label} {required && <span className="text-paper/40">*</span>}
       </label>
       <input
         id={id}
@@ -194,14 +194,14 @@ function Field({
         autoComplete={autoComplete}
         aria-invalid={!!error}
         aria-describedby={error ? `${id}-err` : undefined}
-        className={`w-full rounded-xl border bg-white px-4 py-3 text-ink outline-none transition-colors placeholder:text-ink/35 ${
+        className={`w-full rounded-xl border bg-white/5 px-4 py-3 text-paper outline-none transition-colors placeholder:text-paper/35 ${
           error
             ? "border-red-500 focus:border-red-500"
-            : "border-ink/15 focus:border-ink/50"
+            : "border-white/15 focus:border-white/50"
         }`}
       />
       {error && (
-        <p id={`${id}-err`} className="mt-1.5 text-xs text-red-600">
+        <p id={`${id}-err`} className="mt-1.5 text-xs text-red-400">
           {error}
         </p>
       )}

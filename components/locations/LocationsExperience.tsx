@@ -139,7 +139,7 @@ export function LocationsExperience() {
         </div>
 
         {/* ── Stage: index | globe | tilted glass card — vertically centred ── */}
-        <div className="mt-12 grid gap-8 lg:grid-cols-[minmax(0,16rem)_minmax(0,1fr)_minmax(0,20rem)] lg:items-center">
+        <div className="mt-12 grid gap-8 lg:grid-cols-[minmax(0,16rem)_minmax(0,1fr)_minmax(0,23rem)] lg:items-center">
           {/* INDEX */}
           <nav className="order-2 lg:order-none" aria-label="Store directory">
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-ash">

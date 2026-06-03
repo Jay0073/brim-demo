@@ -112,7 +112,8 @@
           "image": "/menu/the-meltdown.jpg",
           "description": "Hot cheese sauce, lettuce, onion, tomato & BRIM Burger Sauce in a seeded brioche bun.",
           "tags": ["veggie", "cheesy"],
-          "keywords": ["cheese sauce", "meat-free"]
+          "keywords": ["cheese sauce", "meat-free"],
+          "compact": true
         },
         {
           "slug": "smashed-shrooms",
@@ -120,7 +121,8 @@
           "image": "/menu/smashed-shrooms.jpg",
           "description": "Grilled mushrooms & grilled onions, double cheese, ketchup, BRIM Burger Sauce & our Signature Sauce in a seeded brioche bun.",
           "tags": ["veggie", "cheesy"],
-          "keywords": ["mushroom"]
+          "keywords": ["mushroom"],
+          "compact": true
         },
         {
           "slug": "oklahoma-onion-smash",
@@ -128,7 +130,8 @@
           "image": "/menu/oklahoma-onion-smash.webp",
           "description": "Onions smashed into a beef patty, cheese slice, gherkins, lettuce, caramelised onion, mustard & BRIM Burger Sauce in a brioche bun.",
           "tags": ["beef", "cheesy"],
-          "keywords": ["onion", "smash"]
+          "keywords": ["onion", "smash"],
+          "compact": true
         },
         {
           "slug": "fiery-brimstone",
@@ -197,7 +200,8 @@
           "description": "Sliced brioche loaf filled with two beef patties, cheddar cheese, grilled onions & mushrooms, Signature Sauce and BRIM Burger Sauce.",
           "tags": ["beef", "cheesy", "spicy"],
           "spice": 1,
-          "keywords": ["sando", "sandwich"]
+          "keywords": ["sando", "sandwich"],
+          "compact": true
         },
         {
           "slug": "hot-smoke-sando",
@@ -206,7 +210,8 @@
           "description": "Sliced brioche loaf filled with two beef patties, cheddar cheese, smokey BBQ sauce, Signature Sauce and jalapeños.",
           "tags": ["beef", "cheesy", "spicy"],
           "spice": 2,
-          "keywords": ["sando", "bbq", "smoky"]
+          "keywords": ["sando", "bbq", "smoky"],
+          "compact": true
         },
         {
           "slug": "brim-sando",
@@ -214,7 +219,8 @@
           "image": "/menu/brim-sando.jpg",
           "description": "Sliced brioche loaf filled with breaded chicken fillet or two beef patties, cheddar cheese, Signature Sauce, thin burger sauce and spring onions.",
           "tags": ["chicken", "beef", "cheesy"],
-          "keywords": ["sando", "sandwich"]
+          "keywords": ["sando", "sandwich"],
+          "compact": true
         }
       ]
     },
@@ -407,7 +413,8 @@
           "image": "/menu/dips.jpg",
           "description": "Cool, classic, dunk-anything sauces.",
           "variants": ["BRIM Burger Sauce", "Sweet Chilli", "BBQ North"],
-          "tags": []
+          "tags": [],
+          "compact": true
         },
         {
           "slug": "dips-with-a-kick",
@@ -416,7 +423,8 @@
           "description": "For when you want it to bite back.",
           "variants": ["Signature Sauce", "Wild West", "Habañero"],
           "tags": ["spicy"],
-          "spice": 2
+          "spice": 2,
+          "compact": true
         }
       ]
     },

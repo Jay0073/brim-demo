@@ -33,7 +33,7 @@ export function StoreCompactCard({
       className="glass-dark animate-fade group cursor-pointer overflow-hidden rounded-3xl shadow-2xl shadow-black/50 outline-none transition-colors hover:bg-white/[0.06] focus-visible:ring-2 focus-visible:ring-white"
     >
       <div className="relative">
-        <StorePhoto store={store} className="aspect-[16/10] w-full" />
+        <StorePhoto store={store} className="aspect-[4/3] w-full" />
         <div
           className="brim-stripes-fine absolute inset-x-0 top-0 h-1.5 opacity-90"
           aria-hidden
@@ -73,7 +73,7 @@ export function StoreCompactCard({
           target="_blank"
           rel="noopener noreferrer"
           onClick={(e) => e.stopPropagation()}
-          className="inline-flex items-center justify-center gap-1.5 rounded-full border border-white/20 px-5 py-2.5 text-sm font-medium text-paper transition-colors hover:border-brim hover:text-brim"
+          className="inline-flex items-center justify-center gap-1.5 rounded-full border border-white/20 px-5 py-2.5 text-sm font-medium text-paper transition-colors hover:border-white hover:text-white"
         >
           Maps ↗
         </a>

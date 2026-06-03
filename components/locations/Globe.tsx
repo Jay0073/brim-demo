@@ -35,10 +35,53 @@ const TWO_PI = Math.PI * 2;
 const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
 const posMod = (a: number, n: number) => ((a % n) + n) % n;
 
+// How much of the canvas the sphere fills. cobe's default is 1; >1 zooms in.
+const SCALE = 1.12;
+// Mirror cobe's internal geometry so we can place a DOM pin exactly on a marker:
+// the sphere radius (`ee` in cobe) plus the marker elevation we pass below.
+const GLOBE_RADIUS = 0.8;
+const MARKER_ELEVATION = 0.01;
+
 // Convert a lat/lng into the [phi, theta] rotation that brings the point to the
 // front of the globe. (Canonical cobe focus mapping.)
 function locationToAngles(lat: number, lng: number): [number, number] {
   return [Math.PI - ((lng * Math.PI) / 180 - Math.PI / 2), (lat * Math.PI) / 180];
+}
+
+// lat/lng → unit-sphere vector (matches cobe's internal `U`).
+function locationToVector(lat: number, lng: number): [number, number, number] {
+  const phi = (lat * Math.PI) / 180;
+  const lambda = (lng * Math.PI) / 180 - Math.PI;
+  const cosLat = Math.cos(phi);
+  return [-cosLat * Math.cos(lambda), Math.sin(phi), cosLat * Math.sin(lambda)];
+}
+
+// Project a marker to normalized [0,1] canvas coords for the current rotation,
+// replicating cobe's marker vertex transform (square canvas, no offset). Also
+// reports whether the point faces the viewer so the pin can hide on the far side.
+function projectMarker(
+  lat: number,
+  lng: number,
+  phi: number,
+  theta: number,
+): { x: number; y: number; visible: boolean } {
+  const r = GLOBE_RADIUS + MARKER_ELEVATION;
+  const [vx, vy, vz] = locationToVector(lat, lng);
+  const x = vx * r;
+  const y = vy * r;
+  const z = vz * r;
+  const cosT = Math.cos(theta);
+  const sinT = Math.sin(theta);
+  const cosP = Math.cos(phi);
+  const sinP = Math.sin(phi);
+  const sx = cosP * x + sinP * z;
+  const sy = sinP * sinT * x + cosT * y - cosP * sinT * z;
+  const sz = -sinP * cosT * x + sinT * y + cosP * cosT * z;
+  return {
+    x: (sx * SCALE + 1) / 2,
+    y: (-sy * SCALE + 1) / 2,
+    visible: sz >= 0 || sx * sx + sy * sy >= GLOBE_RADIUS * GLOBE_RADIUS,
+  };
 }
 
 function buildMarkers(markers: GlobeMarker[], focusId: string | null) {
@@ -59,6 +102,8 @@ export function Globe({ markers, focusId, className = "" }: GlobeProps) {
   const thetaRef = useRef(0.3);
   const targetThetaRef = useRef(0.3);
   const focusRef = useRef<[number, number] | null>(null);
+  const focusLocRef = useRef<[number, number] | null>(null); // [lat,lng] of focused store
+  const pinRef = useRef<HTMLDivElement>(null);
   const markersRef = useRef(buildMarkers(markers, focusId));
   const draggingRef = useRef(false);
   const lastXRef = useRef(0);
@@ -89,6 +134,7 @@ export function Globe({ markers, focusId, className = "" }: GlobeProps) {
       height: initialSize,
       phi: phiRef.current,
       theta: thetaRef.current,
+      scale: SCALE,
       dark: 1,
       diffuse: 1.2,
       mapSamples: 22000,
@@ -97,7 +143,7 @@ export function Globe({ markers, focusId, className = "" }: GlobeProps) {
       baseColor: [0.21, 0.21, 0.25], // dark slate sphere on the near-black page
       markerColor: MARKER_ACTIVE,
       glowColor: [0.45, 0.5, 0.62], // cool, neutral atmosphere (no orange)
-      markerElevation: 0.01,
+      markerElevation: MARKER_ELEVATION,
       markers: markersRef.current,
     });
     globeRef.current = globe;
@@ -129,6 +175,19 @@ export function Globe({ markers, focusId, className = "" }: GlobeProps) {
         height: size,
         markers: markersRef.current,
       });
+
+      // Ride the DOM pin along with the globe: project the focused store to its
+      // real screen position each frame, and fade it out when it rotates to the
+      // far side. (No focused store → no pin element, so we just skip.)
+      const loc = focusLocRef.current;
+      const pin = pinRef.current;
+      if (loc && pin) {
+        const p = projectMarker(loc[0], loc[1], phiRef.current, thetaRef.current);
+        pin.style.left = `${p.x * 100}%`;
+        pin.style.top = `${p.y * 100}%`;
+        pin.style.opacity = p.visible ? "1" : "0";
+      }
+
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
@@ -156,10 +215,12 @@ export function Globe({ markers, focusId, className = "" }: GlobeProps) {
 
     if (!focusId) {
       focusRef.current = null; // back to idle auto-rotate
+      focusLocRef.current = null; // and drop the pin
       return;
     }
     const target = markers.find((m) => m.id === focusId);
     focusRef.current = target ? locationToAngles(target.lat, target.lng) : null;
+    focusLocRef.current = target ? [target.lat, target.lng] : null;
   }, [markers, focusId]);
 
   const onPointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
@@ -173,7 +234,8 @@ export function Globe({ markers, focusId, className = "" }: GlobeProps) {
 
   const onPointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (!draggingRef.current) return;
-    phiRef.current -= (e.clientX - lastXRef.current) * 0.005;
+    // Drag the surface with the pointer: drag right → globe spins right.
+    phiRef.current += (e.clientX - lastXRef.current) * 0.005;
     targetThetaRef.current = clamp(
       targetThetaRef.current + (e.clientY - lastYRef.current) * 0.005,
       -1,
@@ -209,21 +271,25 @@ export function Globe({ markers, focusId, className = "" }: GlobeProps) {
         style={{ touchAction: "pan-y" }}
       />
 
-      {/* White location pin for the focused store. Focus eases that marker to
-          the globe's front-centre, so a pin anchored at the centre lands on it. */}
+      {/* White location pin for the focused store. The rAF loop drives this
+          wrapper to the marker's real projected position, so it rides the globe
+          as it spins instead of sitting glued to the centre. */}
       {focusId && (
-        <>
+        <div
+          ref={pinRef}
+          aria-hidden
+          className="pointer-events-none absolute z-10 transition-opacity duration-200"
+          style={{ left: "50%", top: "50%", opacity: 0 }}
+        >
           <span
             key={`pt-${focusId}`}
-            aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 z-[9] block size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white"
+            className="absolute left-0 top-0 block size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white"
           >
             <span className="absolute inset-0 animate-ping rounded-full bg-white/60" />
           </span>
           <span
             key={`pin-${focusId}`}
-            aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-full flex-col items-center"
+            className="absolute left-0 top-0 flex -translate-x-1/2 -translate-y-full flex-col items-center"
           >
             <svg
               className="animate-rise drop-shadow-[0_5px_12px_rgba(0,0,0,0.65)]"
@@ -240,7 +306,7 @@ export function Globe({ markers, focusId, className = "" }: GlobeProps) {
               <circle cx="12" cy="12" r="4.4" fill="#0a0a0a" />
             </svg>
           </span>
-        </>
+        </div>
       )}
     </div>
   );

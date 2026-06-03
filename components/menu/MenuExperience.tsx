@@ -21,6 +21,7 @@ export function MenuExperience() {
   const barRef = useRef<HTMLDivElement>(null);
   const topRef = useRef<HTMLDivElement>(null);
   const startedFiltering = useRef(false);
+  const deepLinkDone = useRef(false);
 
   const isFiltering = query.trim() !== "" || diets.length > 0;
 
@@ -74,6 +75,27 @@ export function MenuExperience() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFiltering]);
+
+  // Deep link from the landing-page "Specials": /menu?item=<slug> opens the
+  // menu and scrolls to that item, flashing the same highlight as "Surprise me".
+  // Wait for Lenis (warm from the root provider) so the smooth scroll lands true.
+  useEffect(() => {
+    if (deepLinkDone.current || !lenis) return;
+    const slug = new URLSearchParams(window.location.search).get("item");
+    const exists = !!slug && MENU.some((c) => c.items.some((it) => it.slug === slug));
+    deepLinkDone.current = true;
+    if (!exists) return;
+    const toItem = setTimeout(() => {
+      setSurprise(slug);
+      scrollToEl(document.getElementById(`item-${slug}`));
+    }, 160);
+    const clear = setTimeout(() => setSurprise(null), 2600);
+    return () => {
+      clearTimeout(toItem);
+      clearTimeout(clear);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lenis]);
 
   const toggleDiet = (d: DietTag) =>
     setDiets((prev) => (prev.includes(d) ? prev.filter((x) => x !== d) : [...prev, d]));
