@@ -47,7 +47,7 @@ export function FranchiseForm() {
 
   if (status === "sent") {
     return (
-      <div className="flex flex-col items-center gap-4 rounded-3xl bg-gradient-to-br from-ink-soft to-ink p-8 text-center shadow-2xl shadow-black/30 ring-1 ring-white/10">
+      <div className="glass-dark flex flex-col items-center gap-4 rounded-3xl p-8 text-center shadow-2xl shadow-black/30">
         <span className="grid h-14 w-14 place-items-center rounded-full bg-paper text-2xl text-ink">
           ✓
         </span>
@@ -73,7 +73,7 @@ export function FranchiseForm() {
     <form
       onSubmit={handleSubmit}
       noValidate
-      className="rounded-3xl bg-gradient-to-br from-ink-soft to-ink p-6 shadow-2xl shadow-black/30 ring-1 ring-white/10 sm:p-8"
+      className="glass-dark rounded-3xl p-6 shadow-2xl shadow-black/30 sm:p-8"
     >
       <div className="grid gap-5 sm:grid-cols-2">
         <Field

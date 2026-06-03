@@ -79,14 +79,14 @@ export default function FranchisingPage() {
       {/* ── Why Brim + quote (split pane) ────────────────────────────────── */}
       <section className="mx-auto max-w-6xl px-6 py-20">
         <div className="grid overflow-hidden rounded-3xl ring-1 ring-ink/10 lg:grid-cols-2">
-          {/* Quote pane — signature striped backdrop with a frosted glass panel
-              so the quote holds focus instead of being out-shouted by the
+          {/* Quote pane (left) — signature striped backdrop with a frosted glass
+              panel so the quote holds focus instead of being out-shouted by the
               bright Why-Brim side. */}
           <div className="relative isolate flex flex-col justify-center overflow-hidden bg-black p-8 text-white sm:p-12">
             {/* Brand stripes give the pane texture and identity. */}
             <div
               aria-hidden
-              className="brim-stripes brim-stripes-drift absolute inset-0 -z-20 opacity-90"
+              className="brim-stripes absolute inset-0 -z-20 opacity-90"
             />
             {/* Dark wash keeps the white quote fully legible over the stripes. */}
             <div
@@ -110,7 +110,7 @@ export default function FranchisingPage() {
             </blockquote>
           </div>
 
-          {/* Why-Brim points (light) */}
+          {/* Why-Brim points (right, light) */}
           <div className="divide-y divide-ink/10 bg-paper">
             {WHY_BRIM.map((w) => (
               <div key={w.n} className="flex gap-5 p-6 sm:p-8">
@@ -166,9 +166,21 @@ export default function FranchisingPage() {
             </ul>
           </div>
 
-          {/* Form */}
+          {/* Form — glassy panel over the signature stripes, mirroring the
+              quote pane above so the enquiry card reads as frosted glass rather
+              than a flat black block. */}
           <div className="lg:col-span-3">
-            <FranchiseForm />
+            <div className="relative isolate overflow-hidden rounded-3xl shadow-2xl shadow-black/40">
+              <div
+                aria-hidden
+                className="brim-stripes absolute inset-0 -z-20 opacity-90"
+              />
+              <div
+                aria-hidden
+                className="absolute inset-0 -z-10 bg-gradient-to-br from-black/85 via-black/70 to-black/85"
+              />
+              <FranchiseForm />
+            </div>
           </div>
         </div>
       </section>
