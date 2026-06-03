@@ -13,7 +13,7 @@
       "phone": "+44 1442 256 980",
       "hours": "12:00 – 23:00 · Mon–Sun",
       "placeQuery": "Brim Burgers Hemel Hempstead",
-      "image": "",
+      "image": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAH6VT1MIXSmVXGcFLkBNetClQR_gevjfOMCNmn3Ww7-FRUVVZpvhW_bisv6ctP0CoIfvwU96qSNlcI2v3BHBBwiiYOmRMZmqewMlS-lgtWMFFNfctbAfp35skr5pRWog1bd7C-w=s1360-w1360-h1020-rw",
       "rating": 4.6,
       "reviewCount": 412,
       "reviews": [
@@ -44,7 +44,7 @@
       "phone": "+44 1582 412 770",
       "hours": "12:00 – 23:00 · Mon–Sun",
       "placeQuery": "Brim Burgers Luton",
-      "image": "",
+      "image": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGRJWMbaS7dVhR37q9edvHAoa-ooTcJbQAUN2r1n04yiMgJvr9bNbNMO2gIYN7hgMkkezaCwpQv7C8N0mMJRd1PEiYNFTx086LhtWjsiWgWjVOYSlgsyagd-MXjzzoiPMSZQI4=w289-h312-n-k-no",
       "rating": 4.7,
       "reviewCount": 526,
       "reviews": [
@@ -75,7 +75,7 @@
       "phone": "+44 20 8534 6610",
       "hours": "10:00 – 23:00 · Mon–Sun",
       "placeQuery": "Brim Burgers Westfield Stratford London",
-      "image": "",
+      "image": "/locations/uk-stratford.jpg",
       "rating": 4.5,
       "reviewCount": 1834,
       "reviews": [
@@ -106,7 +106,7 @@
       "phone": "+44 20 8449 3320",
       "hours": "12:00 – 23:00 · Mon–Sun",
       "placeQuery": "Brim Burgers High Barnet London",
-      "image": "",
+      "image": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEKcVhIWe8e9JTo2zKRJmhq56rGvi4Us33jcMq58aM6ICIjef5PT6bDtjWBBSdFh5gABD1yuaruDgR_ZR6zb09f1LvugzVVfP1MvYtMykk_f-uxw8pmEMFkkoW28mpBvRIC0sn7BQ=w289-h312-n-k-no",
       "rating": 4.8,
       "reviewCount": 389,
       "reviews": [
@@ -137,7 +137,7 @@
       "phone": "+44 20 7254 8890",
       "hours": "12:00 – 00:00 · Mon–Sun",
       "placeQuery": "Brim Burgers Dalston London",
-      "image": "",
+      "image": "/locations/uk-dalston.jpg",
       "rating": 4.7,
       "reviewCount": 743,
       "reviews": [
@@ -168,7 +168,7 @@
       "phone": "+44 20 8748 5540",
       "hours": "12:00 – 23:00 · Mon–Sun",
       "placeQuery": "Brim Burgers Hammersmith London",
-      "image": "",
+      "image": "/locations/uk-hammersmith.jpg",
       "rating": 4.6,
       "reviewCount": 658,
       "reviews": [
@@ -199,7 +199,7 @@
       "phone": "+44 20 7485 2200",
       "hours": "12:00 – 23:00 · Mon–Sun",
       "placeQuery": "Brim Burgers Kentish Town London",
-      "image": "",
+      "image": "/locations/uk-kentish-town.jpg",
       "rating": 4.7,
       "reviewCount": 421,
       "reviews": [
@@ -230,7 +230,7 @@
       "phone": "+44 1206 366 410",
       "hours": "12:00 – 23:00 · Mon–Sun",
       "placeQuery": "Brim Burgers Colchester",
-      "image": "",
+      "image": "/locations/uk-colchester.jpg",
       "rating": 4.5,
       "reviewCount": 287,
       "reviews": [
@@ -292,7 +292,7 @@
       "phone": "+92 42 3571 8820",
       "hours": "13:00 – 01:00 · Mon–Sun",
       "placeQuery": "Brim Burgers Mall 1 Gulberg III Lahore",
-      "image": "",
+      "image": "/locations/pk-gulberg-mall-one.jpg",
       "rating": 4.7,
       "reviewCount": 1942,
       "reviews": [
@@ -323,7 +323,7 @@
       "phone": "+92 42 3789 5500",
       "hours": "13:00 – 01:00 · Mon–Sun",
       "placeQuery": "Brim Burgers Raya Commercial DHA Phase 6 Lahore",
-      "image": "",
+      "image": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGNooAUQrI_QXWvRl30yRkj32J43gtx4eoyOV3fJPjP31dEjr5nBgHviuawHTXl_DQeaXXcRWBt2ObIqWaYRZJvN2jJMjOpKmUXmXXzHTpXPYvO7UjyXB_zlFPjFfh3zFHKy-8I=s1360-w1360-h1020-rw",
       "rating": 4.8,
       "reviewCount": 1320,
       "reviews": [
@@ -354,7 +354,7 @@
       "phone": "+92 42 3591 2240",
       "hours": "13:00 – 01:00 · Mon–Sun",
       "placeQuery": "Brim Burgers Model Town Link Road Lahore",
-      "image": "",
+      "image": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEBu1Vi1dW-1d3F0hGu9d1Uca1uAcHWke2wh6s9F77Uu1acjaUWRm4VwAGfg3xH_RoWjO-xNBVp3Iz4lYFnBQYPMJVu2RwsE23zqQlHK_xgUFSjbRl9SOEaH4FTi-VOd9l9KymYc4Zwz0xZ=s1360-w1360-h1020-rw",
       "rating": 4.6,
       "reviewCount": 980,
       "reviews": [
@@ -385,7 +385,7 @@
       "phone": "+92 51 2890 660",
       "hours": "13:00 – 01:00 · Mon–Sun",
       "placeQuery": "Brim Burgers Islamabad",
-      "image": "",
+      "image": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAH2TMxG8gd3vOUn-mO-mhE_FW-DCI59l1m7up4YhbkwH3a-YGoDOnOVfVuTsxfZZpJtQHCUJ4zQqD3FbhUHS7nKG8584E-ImXFlRATfa6ctUXodDkdXTYMDODTpMSBkjgMh-2_GvL9-c0dz=s294-w294-h220-n-k-no",
       "rating": 4.7,
       "reviewCount": 1105,
       "reviews": [
