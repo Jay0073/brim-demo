@@ -48,6 +48,13 @@ export function LocationsExperience() {
     smoothScrollTo(carouselRef.current);
   }
 
+  // Page the branches carousel left/right (the "scroll for more" control).
+  function scrollTrack(dir: 1 | -1) {
+    const track = trackRef.current;
+    if (!track) return;
+    track.scrollBy({ left: dir * track.clientWidth * 0.85, behavior: "smooth" });
+  }
+
   // Centre the active branch within the carousel (horizontal only → never
   // fights Lenis' page scroll).
   useEffect(() => {
@@ -93,7 +100,7 @@ export function LocationsExperience() {
         <header className="relative isolate flex flex-col items-center py-8 text-center">
           <div
             aria-hidden
-            className="loc-band brim-stripes brim-stripes-drift absolute inset-x-0 top-1/2 h-24 -translate-y-1/2 opacity-90"
+            className="loc-band brim-stripes absolute inset-x-0 top-1/2 h-24 -translate-y-1/2 opacity-90"
             style={{ transformOrigin: "center" }}
           />
           <div
@@ -108,7 +115,7 @@ export function LocationsExperience() {
             Locations · {STORES.length} stores · UK &amp; Pakistan
           </p>
           <h1 className="loc-title relative mt-3 font-display text-6xl uppercase leading-[0.82] text-paper [text-shadow:0_6px_40px_rgba(0,0,0,0.85)] sm:text-8xl">
-            Find a Brim
+            Brim Near You
           </h1>
         </header>
 
@@ -145,7 +152,10 @@ export function LocationsExperience() {
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-ash">
               Branches
             </p>
-            <ul className="flex flex-col">
+            <ul
+              data-lenis-prevent
+              className="flex max-h-[25rem] flex-col overflow-y-auto overflow-x-hidden pr-1 [scrollbar-color:rgba(255,255,255,0.2)_transparent] [scrollbar-width:thin] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/20 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar]:w-1.5"
+            >
               {stores.map((s, i) => {
                 const on = s.id === activeId;
                 return (
@@ -232,35 +242,58 @@ export function LocationsExperience() {
           </div>
         </div>
 
-        {/* ── Carousel: all branches + reviews ───────────────────────── */}
+        {/* ── Carousel: all branches + reviews, on a WHITE panel (the dark
+            cards sit on white here; the globe stage above stays dark). ──── */}
         <section ref={carouselRef} className="loc-carousel mt-16 scroll-mt-24" aria-label="All branches">
-          <div className="mb-4 flex items-end justify-between">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brim">
-                Every Brim
-              </p>
-              <h2 className="mt-1 font-display text-2xl uppercase leading-none text-paper sm:text-3xl">
-                Browse the branches
-              </h2>
-            </div>
-            <p className="hidden text-xs text-ash sm:block">
-              Tap a card · scroll for more →
-            </p>
-          </div>
-          <div
-            ref={trackRef}
-            className="flex snap-x snap-mandatory gap-5 overflow-x-auto pb-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-          >
-            {stores.map((s, i) => (
-              <div key={s.id} data-id={s.id} className="snap-center">
-                <StoreDetailCard
-                  store={s}
-                  index={i}
-                  active={s.id === activeId}
-                  onSelect={() => setActiveId(s.id)}
-                />
+          <div className="rounded-[2rem] bg-white px-5 py-7 text-ink sm:px-8 sm:py-9">
+            <div className="mb-5 flex items-end justify-between gap-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brim">
+                  Every Brim · {stores.length} branches
+                </p>
+                <h2 className="mt-1 font-display text-2xl uppercase leading-none text-ink sm:text-3xl">
+                  Browse the branches
+                </h2>
               </div>
-            ))}
+              {/* Scroll-for-more controls — page the carousel left / right. */}
+              <div className="flex shrink-0 items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => scrollTrack(-1)}
+                  aria-label="Scroll branches left"
+                  className="grid h-10 w-10 place-items-center rounded-full text-ink ring-1 ring-ink/15 transition-colors hover:bg-ink hover:text-paper"
+                >
+                  <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
+                    <path d="m14 6-6 6 6 6" />
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => scrollTrack(1)}
+                  aria-label="Scroll branches right"
+                  className="grid h-10 w-10 place-items-center rounded-full text-ink ring-1 ring-ink/15 transition-colors hover:bg-ink hover:text-paper"
+                >
+                  <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
+                    <path d="m10 6 6 6-6 6" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div
+              ref={trackRef}
+              className="flex snap-x snap-mandatory gap-5 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            >
+              {stores.map((s, i) => (
+                <div key={s.id} data-id={s.id} className="snap-center">
+                  <StoreDetailCard
+                    store={s}
+                    index={i}
+                    active={s.id === activeId}
+                    onSelect={() => setActiveId(s.id)}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </section>
       </div>

@@ -26,9 +26,8 @@ export default function MenuPage() {
           The Menu
         </h1>
         <p className="mx-auto mt-5 max-w-xl text-balance text-ink/60">
-          Every patty smashed to order on a screaming-hot griddle. Pick your
-          weight, crank the heat, and whatever you do — don&apos;t skip the
-          loaded fries.
+          Beef pressed thin, seared crisp, and built to your liking. Stack it
+          high, spice it bold, and let the loaded fries do the rest.
         </p>
         <div className="mt-7 flex flex-col items-center gap-3">
           <a

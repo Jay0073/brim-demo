@@ -92,23 +92,6 @@ html.lenis body {
   );
 }
 
-/* Slow diagonal drift so the striped stage feels alive rather than static.
-   113.137px = one stripe period (80px) projected onto the x-axis at 45°, so
-   the loop is perfectly seamless. */
-@keyframes brim-stripe-drift {
-  to {
-    background-position: 113.137px 0;
-  }
-}
-.brim-stripes-drift {
-  animation: brim-stripe-drift 10s linear infinite;
-}
-@media (prefers-reduced-motion: reduce) {
-  .brim-stripes-drift {
-    animation: none;
-  }
-}
-
 /* A finer, lower-contrast variant for dense areas / texture. */
 .brim-stripes-fine {
   background-image: repeating-linear-gradient(
@@ -235,30 +218,10 @@ html.lenis body {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
-   Interactive Wavy Blob Rotating Lens
+   Interactive Circular Glass Lens
+   A clean perfect circle — the sharp burger shows through with no overlay
+   effects on the image itself. Just the white ring + glow from the element.
    ───────────────────────────────────────────────────────────────────────── */
-@keyframes liquid-glass {
-  0%, 100% {
-    border-radius: 65% 35% 65% 35%;
-  }
-  25% {
-    border-radius: 35% 65% 45% 55%;
-  }
-  50% {
-    border-radius: 45% 55% 35% 65%;
-  }
-  75% {
-    border-radius: 55% 45% 55% 45%;
-  }
-}
 .animate-liquid-glass {
-  border-radius: 50%; /* Defensive fallback: perfect circle if animation fails */
-  animation: liquid-glass 8s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .animate-liquid-glass {
-    animation: none;
-    border-radius: 50%;
-  }
+  border-radius: 50%; /* always a perfect circle */
 }

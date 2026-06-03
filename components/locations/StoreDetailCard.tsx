@@ -35,16 +35,16 @@ export function StoreDetailCard({
           onSelect();
         }
       }}
-      className={`group glass-dark relative w-[21rem] shrink-0 cursor-pointer overflow-hidden rounded-3xl outline-none transition-all duration-300 focus-visible:ring-2 focus-visible:ring-white sm:w-[27rem] ${
+      className={`group relative w-[25rem] shrink-0 cursor-pointer overflow-hidden rounded-3xl bg-ink-soft shadow-xl shadow-black/20 outline-none transition-all duration-300 focus-visible:ring-2 focus-visible:ring-brim sm:w-[34rem] ${
         active
-          ? "scale-[1.015] shadow-2xl shadow-black/50 ring-2 ring-white/80"
-          : "opacity-65 hover:opacity-100"
+          ? "scale-[1.015] shadow-2xl shadow-black/40 ring-2 ring-brim"
+          : "hover:scale-[1.01]"
       }`}
     >
       <div className="relative">
-        <StorePhoto store={store} className="aspect-[16/9] w-full" />
+        <StorePhoto store={store} className="h-44 w-full" />
         <div
-          className="brim-stripes-fine absolute inset-x-0 top-0 h-1 opacity-90"
+          className="brim-stripes-fine absolute inset-x-0 top-0 z-10 h-1.5 opacity-90"
           aria-hidden
         />
         <div
@@ -72,6 +72,8 @@ export function StoreDetailCard({
         </div>
       </div>
 
+      {/* Reviews — every review in full (no truncation). Dark, on the dark
+          card; the WHITE backdrop lives behind the card (the carousel panel). */}
       <div className="p-4">
         <div className="flex items-center justify-between">
           <h4 className="text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-ash">
@@ -81,9 +83,9 @@ export function StoreDetailCard({
             {store.reviewCount.toLocaleString()} total
           </span>
         </div>
-        <ul className="mt-2.5 space-y-2.5">
+        <ul className="mt-2.5 space-y-2">
           {store.reviews.slice(0, 2).map((review, i) => (
-            <li key={i} className="rounded-xl bg-white/[0.03] p-3">
+            <li key={i} className="rounded-xl bg-white/[0.03] p-2.5">
               <div className="flex items-center gap-2">
                 <span className="flex size-6 items-center justify-center rounded-full bg-white/10 text-[0.65rem] font-bold text-paper">
                   {review.author.charAt(0)}
@@ -96,7 +98,7 @@ export function StoreDetailCard({
                 </span>
               </div>
               <StarRating rating={review.rating} size={11} className="mt-1.5" />
-              <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-paper/70">
+              <p className="mt-1.5 text-xs leading-relaxed text-paper/70">
                 {review.text}
               </p>
             </li>

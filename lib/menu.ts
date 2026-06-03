@@ -72,6 +72,26 @@ export const BUILD_YOUR_OWN = menuData.buildYourOwn as BuildYourOwn;
 export const DIET_FILTERS = menuData.dietFilters as { id: DietTag; label: string }[];
 export const SEARCH_SYNONYMS = menuData.searchSynonyms as Record<string, string[]>;
 
+// ── Flat lookups ──────────────────────────────────────────────────────────
+// Every item across all categories, in menu order. Handy for product pages,
+// generateStaticParams and resolving a cart line back to its item.
+export const ALL_ITEMS: MenuItem[] = MENU.flatMap((c) => c.items);
+
+// slug → { item, category }, built once. Used by the detail page and the cart
+// to turn a stored slug back into its full item + owning category.
+const ITEM_INDEX = new Map<string, { item: MenuItem; category: MenuCategory }>(
+  MENU.flatMap((category) =>
+    category.items.map((item) => [item.slug, { item, category }] as const)
+  )
+);
+
+/** Resolve a slug to its item and owning category (undefined if unknown). */
+export function getItemBySlug(
+  slug: string
+): { item: MenuItem; category: MenuCategory } | undefined {
+  return ITEM_INDEX.get(slug);
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 //  Search engine — ranked, synonym-aware, typo-tolerant lexical matching.
 //

@@ -5,6 +5,12 @@ import { useEffect, useRef, useState } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { asset } from "@/lib/asset";
 
+// Rotating headline words. ROLL_WORDS duplicates the first word at the end so
+// the vertical "slot" can loop forward seamlessly (roll to the clone, then snap
+// back to the real first row with no visible jump).
+const WORDS = ["JUICY", "BIG", "FRESH", "BRIM"];
+const ROLL_WORDS = [...WORDS, WORDS[0]];
+
 export function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
   const topLayerRef = useRef<HTMLDivElement>(null);
@@ -12,43 +18,59 @@ export function Hero() {
   const burgerWrapRef = useRef<HTMLImageElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
 
-  // ── Typing Effect State ──
-  const words = ["JUICY", "BIG", "FRESH", "BRIM"];
+  // ── Rotating word state (slot-style vertical roll + smooth width morph) ──
   const [wordIndex, setWordIndex] = useState(0);
-  const [displayText, setDisplayText] = useState("JUICY");
-  const [isDeleting, setIsDeleting] = useState(false);
+  const wordViewportRef = useRef<HTMLSpanElement>(null); // one-line clipping window
+  const wordRollRef = useRef<HTMLSpanElement>(null); // the stacked-words column
+  const firstRoll = useRef(true); // skip the entry animation on initial mount
 
+  // Advance to the next word on a steady cadence.
   useEffect(() => {
-    const currentFullWord = words[wordIndex];
-    let timer: NodeJS.Timeout;
+    const id = setInterval(() => setWordIndex((i) => i + 1), 2400);
+    return () => clearInterval(id);
+  }, []);
 
-    if (!isDeleting) {
-      if (displayText.length < currentFullWord.length) {
-        // Type next character
-        timer = setTimeout(() => {
-          setDisplayText(currentFullWord.substring(0, displayText.length + 1));
-        }, 150); // typing speed
-      } else {
-        // Pause at full word before deleting
-        timer = setTimeout(() => {
-          setIsDeleting(true);
-        }, 1800);
-      }
-    } else {
-      if (displayText.length > 0) {
-        // Delete character
-        timer = setTimeout(() => {
-          setDisplayText(currentFullWord.substring(0, displayText.length - 1));
-        }, 75); // deleting speed
-      } else {
-        // Fully deleted, move to next word
-        setIsDeleting(false);
-        setWordIndex((prev) => (prev + 1) % words.length);
-      }
-    }
+  // Roll the column to the active word and morph the pill's width to fit it.
+  // The width tween is what makes the white box expand for longer words and
+  // contract for shorter ones — smoothly, instead of snapping per-character.
+  useGSAP(
+    () => {
+      const viewport = wordViewportRef.current;
+      const roll = wordRollRef.current;
+      if (!viewport || !roll) return;
 
-    return () => clearTimeout(timer);
-  }, [displayText, isDeleting, wordIndex]);
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const rowH = viewport.clientHeight; // exactly one line tall
+      const row = roll.children[wordIndex] as HTMLElement | undefined;
+      if (!row) return;
+
+      // No animation on the very first run — just settle into the start state.
+      const duration = firstRoll.current || reduce ? 0 : 0.55;
+      firstRoll.current = false;
+
+      gsap.to(viewport, {
+        width: row.offsetWidth,
+        duration,
+        ease: "power3.inOut",
+        overwrite: "auto",
+      });
+      gsap.to(roll, {
+        y: -wordIndex * rowH,
+        duration,
+        ease: "power3.inOut",
+        overwrite: "auto",
+        onComplete: () => {
+          // Landed on the duplicated first word → snap back to the real row 0
+          // (identical visually) so the loop continues forward forever.
+          if (wordIndex === WORDS.length) {
+            gsap.set(roll, { y: 0 });
+            setWordIndex(0);
+          }
+        },
+      });
+    },
+    { dependencies: [wordIndex] }
+  );
 
   // ── Mouse / Touch Interactions (GSAP) ──
   useGSAP(
@@ -291,9 +313,25 @@ export function Hero() {
           <span className="block font-display text-[11vw] sm:text-[9vw] md:text-[8vw] lg:text-[7.5vw] uppercase leading-[0.95] tracking-normal text-paper [text-shadow:0_4px_40px_rgba(0,0,0,0.75)]">
             THEY ARE
           </span>
-          {/* Typing word box with the Google Font Climate Crisis, reduced padding */}
-          <span className="inline-block bg-paper text-ink px-4 py-1 sm:px-6 sm:py-1.5 rounded-[1.2rem] border-2 border-white/20 mt-3 align-middle shadow-2xl tracking-normal font-climate text-[11vw] sm:text-[10vw] md:text-[9vw] lg:text-[8vw] leading-[1.05]">
-            {displayText || "\u200b"}
+          {/* Rotating word \u2014 slot-style vertical roll inside a pill that morphs
+              its width to fit each word (Google Font Climate Crisis). */}
+          <span className="mt-3 inline-flex items-center align-middle rounded-[1.2rem] border-2 border-white/20 bg-paper px-4 py-1 text-ink shadow-2xl font-climate text-[11vw] leading-[1.05] tracking-normal sm:px-6 sm:py-1.5 sm:text-[10vw] md:text-[9vw] lg:text-[8vw]">
+            <span
+              ref={wordViewportRef}
+              className="block overflow-hidden"
+              style={{ height: "1.05em" }}
+            >
+              <span
+                ref={wordRollRef}
+                className="flex flex-col items-start will-change-transform"
+              >
+                {ROLL_WORDS.map((w, i) => (
+                  <span key={i} className="block whitespace-nowrap">
+                    {w}
+                  </span>
+                ))}
+              </span>
+            </span>
           </span>
         </h1>
 
@@ -350,8 +388,8 @@ export function Hero() {
             draggable="false"
           />
         </div>
-        {/* Glassmorphic overlay sitting on top of the image to add sheen and blur */}
-        <div className="absolute inset-0 bg-white/10 backdrop-blur-[2px] border border-white/15" style={{ borderRadius: "inherit" }} />
+        {/* Glassmorphic overlay sitting on top of the image — subtle sheen only, image stays sharp */}
+        <div className="absolute inset-0 bg-white/5 border border-white/15" style={{ borderRadius: "inherit" }} />
       </div>
 
       {/* Bottom fade to black to merge with the next section */}

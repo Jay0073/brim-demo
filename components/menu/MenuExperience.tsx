@@ -10,6 +10,7 @@ import { MENU, DIET_FILTERS, rankMenu, type DietTag } from "@/lib/menu";
 import { MenuItemCard } from "./MenuItemCard";
 import { SizeGuide } from "./SizeGuide";
 import { BuildYourOwn } from "./BuildYourOwn";
+import { CartButton } from "@/components/cart/CartButton";
 
 export function MenuExperience() {
   const lenis = useLenis();
@@ -212,6 +213,15 @@ export function MenuExperience() {
             )}
           </div>
         </div>
+      </div>
+
+      {/* Cart entry — the "cart option" at the top of the menu, just below the
+          category/filter controls. Opens the slide-over drawer. */}
+      <div className="flex items-center justify-end pt-4">
+        <CartButton
+          showLabel
+          className="rounded-full bg-ink px-4 py-2 text-paper transition-colors hover:bg-brim hover:text-ink"
+        />
       </div>
 
       <div ref={topRef} />

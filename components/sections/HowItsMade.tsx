@@ -12,9 +12,19 @@
 //  frames). The frame count is read from manifest.json at runtime, so
 //  re-extracting with new footage needs no change here.
 // ─────────────────────────────────────────────────────────────────────────
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "@/lib/gsap";
 import { asset } from "@/lib/asset";
+
+// useLayoutEffect on the client, useEffect on the server (dodges the SSR
+// "useLayoutEffect does nothing on the server" warning). This MUST be a layout
+// effect for the pinned ScrollTrigger below: its cleanup (gtx.revert) has to run
+// in React's mutation phase — BEFORE React removes this <section> on a
+// client-side route change — so GSAP's pin-spacer wrapper is unwound first. As a
+// passive useEffect the cleanup runs too late and React throws
+// "Failed to execute 'removeChild' on 'Node': … not a child of this node".
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 type Manifest = { count: number; pattern: string };
 
@@ -131,7 +141,10 @@ export function HowItsMade() {
   }, []);
 
   // ── 2. Canvas drawing + scroll scrubbing (runs once frames are known) ─────
-  useEffect(() => {
+  // Layout effect (not passive) so the GSAP cleanup unwinds the ScrollTrigger
+  // pin-spacer before React removes this <section> on navigation — see the note
+  // on useIsomorphicLayoutEffect above.
+  useIsomorphicLayoutEffect(() => {
     if (!count) return;
     if (!canvasRef.current || !sectionRef.current) return;
     const canvas = canvasRef.current;

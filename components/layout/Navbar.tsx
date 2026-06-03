@@ -7,6 +7,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { NAV_LINKS, SITE } from "@/lib/site";
+import { CartButton } from "@/components/cart/CartButton";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -50,6 +51,9 @@ export function Navbar() {
               ))}
             </ul>
           </div>
+
+          {/* Cart — always visible (desktop + mobile); opens the drawer */}
+          <CartButton className="grid h-10 w-10 place-items-center rounded-full text-paper transition-colors hover:bg-white/10" />
 
           {/* Mobile toggle */}
           <button

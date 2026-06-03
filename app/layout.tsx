@@ -5,6 +5,8 @@ import { SITE } from "@/lib/site";
 import { SmoothScroll } from "@/components/providers/SmoothScroll";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { CartProvider } from "@/components/cart/CartProvider";
+import { CartDrawer } from "@/components/cart/CartDrawer";
 
 // Display face: Bricolage Grotesque is variable — full weight range available,
 // so heading weight is controlled via CSS (.font-display → 800).
@@ -41,11 +43,15 @@ export default function RootLayout({
         className="min-h-dvh bg-ink text-paper antialiased"
         suppressHydrationWarning
       >
-        <SmoothScroll>
-          <Navbar />
-          <main>{children}</main>
-          <Footer />
-        </SmoothScroll>
+        <CartProvider>
+          <SmoothScroll>
+            <Navbar />
+            <main>{children}</main>
+            <Footer />
+          </SmoothScroll>
+          {/* Single global slide-over cart; opened from anywhere via useCart. */}
+          <CartDrawer />
+        </CartProvider>
       </body>
     </html>
   );

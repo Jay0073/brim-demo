@@ -21,10 +21,13 @@ export function StarRating({
   rating,
   size = 16,
   className = "",
+  track = "text-white/15",
 }: {
   rating: number;
   size?: number;
   className?: string;
+  /** Colour of the empty (unfilled) stars — override for light backgrounds. */
+  track?: string;
 }) {
   return (
     <span
@@ -37,7 +40,7 @@ export function StarRating({
         return (
           <span
             key={i}
-            className="relative text-white/15"
+            className={`relative ${track}`}
             style={{ width: size, height: size }}
           >
             <Star size={size} />
