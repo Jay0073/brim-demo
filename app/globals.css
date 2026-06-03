@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Climate+Crisis:YEAR@1979&display=swap');
 @import "tailwindcss";
 
 /* ------------------------------------------------------------------ */
@@ -10,6 +11,8 @@
   /* Typography */
   --font-display: var(--font-bricolage); /* Bricolage Grotesque — headings */
   --font-sans: var(--font-inter); /* Inter — body / UI */
+  --font-anton: var(--font-anton); /* Anton — ultra bold display highlights */
+  --font-climate: "Climate Crisis", sans-serif; /* Climate Crisis display font */
 
   /* Monochrome UI palette */
   --color-ink: #0a0a0a; /* near-black page base */
@@ -67,6 +70,14 @@ html.lenis body {
 .font-display {
   font-weight: 800;
   letter-spacing: -0.02em;
+}
+
+/* Custom display font class for typing highlights */
+.font-climate {
+  font-family: var(--font-climate);
+  font-variation-settings: "YEAR" 1979;
+  font-weight: 400;
+  font-style: normal;
 }
 
 /* Signature Brim backdrop: bold, EQUAL black & white diagonal strips.
@@ -221,4 +232,33 @@ html.lenis body {
 }
 .hero-js-pending .hero-stage {
   visibility: hidden;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Interactive Wavy Blob Rotating Lens
+   ───────────────────────────────────────────────────────────────────────── */
+@keyframes liquid-glass {
+  0%, 100% {
+    border-radius: 65% 35% 65% 35%;
+  }
+  25% {
+    border-radius: 35% 65% 45% 55%;
+  }
+  50% {
+    border-radius: 45% 55% 35% 65%;
+  }
+  75% {
+    border-radius: 55% 45% 55% 45%;
+  }
+}
+.animate-liquid-glass {
+  border-radius: 50%; /* Defensive fallback: perfect circle if animation fails */
+  animation: liquid-glass 8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-liquid-glass {
+    animation: none;
+    border-radius: 50%;
+  }
 }

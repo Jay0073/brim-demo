@@ -70,7 +70,7 @@ const CAPTIONS: Caption[] = [
     pos: "right-5 top-[30%] items-end text-right md:right-14",
     kicker: "04 — The Melt",
     title: "MELTED TO PERFECTION",
-    copy: "It softens, slumps and folds into every ridge and edge of the beef. Not a plastic-y slice in sight.",
+    copy: "It softens, slumps and folds into every ridge and edge of the beef. Nothing stiff or chewy to spoil it.",
   },
   {
     cls: "cap-5",
@@ -79,7 +79,7 @@ const CAPTIONS: Caption[] = [
     pos: "left-5 top-[50%] items-start text-left md:left-14",
     kicker: "05 — The Build",
     title: "SAUCED & STACKED",
-    copy: "House sauce, crisp lettuce, pickles and onion — layered with intent onto a soft, toasted bun.",
+    copy: "House sauce and sweet onions — drizzled and tucked neatly into a soft, toasted bun.",
   },
   {
     cls: "cap-6",
@@ -259,74 +259,68 @@ export function HowItsMade() {
   }, [count]);
 
   return (
-    // Stable wrapper. ScrollTrigger's `pin` re-parents the <section> into a
-    // pin-spacer it injects *inside this div*. On route changes React only ever
-    // removes this outer <div> (which GSAP never touches and whose parent really
-    // is <main>), carrying the re-parented section away with it — so React never
-    // calls removeChild() on the section from the wrong parent, which is what
-    // threw "Failed to execute 'removeChild' on 'Node'" when navigating away.
-    <div>
-      <section
-        ref={sectionRef}
-        id="how-its-made"
-        className="relative h-dvh overflow-hidden bg-black"
-      >
-        {/* Sequence canvas. Saturated + lifted a touch so the food pops. */}
-        <canvas
-          ref={canvasRef}
-          className="absolute inset-0 z-10 h-full w-full opacity-0"
-          style={{ filter: "saturate(1.22) contrast(1.06) brightness(1.04)" }}
-        />
+    <section
+      ref={sectionRef}
+      id="how-its-made"
+      className="relative h-dvh overflow-hidden bg-black"
+    >
+      {/* Sequence canvas. Saturated + lifted a touch so the food pops. */}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 z-10 h-full w-full opacity-0"
+        style={{ filter: "saturate(1.22) contrast(1.06) brightness(1.04)" }}
+      />
 
-        {/* Soft cinematic vignette — darkens only the far edges so the centre
-            food stays bright + in focus (gentler than the page-wide one). */}
+      {/* Soft cinematic vignette — darkens only the far edges so the centre
+          food stays bright + in focus (gentler than the page-wide one). */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-20"
+        style={{
+          background:
+            "radial-gradient(ellipse 82% 78% at 50% 48%, transparent 42%, rgba(0,0,0,0.5) 100%)",
+        }}
+      />
+
+      {/* Intro headline (not fixed — it clears as you scroll into the cook). */}
+      <div className="intro pointer-events-none absolute inset-0 z-30 flex flex-col items-center justify-center px-6 text-center">
+        <p className="mb-4 text-xs font-semibold uppercase tracking-[0.4em] text-brim">
+          How it&apos;s made
+        </p>
+        <h2 className="max-w-4xl font-display text-4xl uppercase leading-[0.95] text-paper [text-shadow:0_4px_40px_rgba(0,0,0,0.75)] sm:text-6xl">
+          Wanna know how these big, juicy burgers are made?
+        </h2>
+        <p className="mt-6 text-xs uppercase tracking-[0.35em] text-paper/55">
+          Keep scrolling ↓
+        </p>
+      </div>
+
+      {/* Phase captions — larger glass cards with a line of detail. */}
+      {CAPTIONS.map((c) => (
         <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 z-20"
-          style={{
-            background:
-              "radial-gradient(ellipse 82% 78% at 50% 48%, transparent 42%, rgba(0,0,0,0.5) 100%)",
-          }}
-        />
-
-        {/* Intro headline (not fixed — it clears as you scroll into the cook). */}
-        <div className="intro pointer-events-none absolute inset-0 z-30 flex flex-col items-center justify-center px-6 text-center">
-          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.4em] text-brim">
-            How it&apos;s made
-          </p>
-          <h2 className="max-w-4xl font-display text-4xl uppercase leading-[0.95] text-paper [text-shadow:0_4px_40px_rgba(0,0,0,0.75)] sm:text-6xl">
-            Wanna know how these big, juicy burgers are made?
-          </h2>
-          <p className="mt-6 text-xs uppercase tracking-[0.35em] text-paper/55">
-            Keep scrolling ↓
+          key={c.cls}
+          className={`cap ${c.cls}  pointer-events-none absolute z-30 flex w-[calc(100%-2.5rem)] sm:w-[24rem] md:w-[28rem] flex-col gap-3 md:gap-4 rounded-3xl p-7 md:p-9  ${c.pos}`}
+        >
+          <span className="text-xs md:text-sm font-bold uppercase tracking-[0.32em] text-brim">
+            {c.kicker}
+          </span>
+          <h3 className="font-display text-4xl sm:text-5xl md:text-6xl uppercase leading-[0.92] text-paper">
+            {c.title}
+          </h3>
+          <p className="text-[1rem] md:text-[1.12rem] font-semibold leading-relaxed text-paper/95">
+            {c.copy}
           </p>
         </div>
+      ))}
 
-        {/* Phase captions — larger glass cards with a line of detail. */}
-        {CAPTIONS.map((c) => (
-          <div
-            key={c.cls}
-            className={`cap ${c.cls} glass pointer-events-none absolute z-30 flex max-w-[21rem] flex-col gap-3 rounded-3xl p-6 opacity-0 shadow-2xl shadow-black/50 ${c.pos}`}
-          >
-            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-brim">
-              {c.kicker}
-            </span>
-            <h3 className="font-display text-4xl uppercase leading-[0.92] text-paper sm:text-5xl">
-              {c.title}
-            </h3>
-            <p className="text-[0.95rem] leading-relaxed text-paper/80">{c.copy}</p>
-          </div>
-        ))}
-
-        {/* Loading veil until all frames are in memory (prevents flicker). */}
-        {!ready && (
-          <div className="absolute inset-0 z-40 grid place-items-center bg-black">
-            <span className="font-display text-sm uppercase tracking-[0.4em] text-paper/60">
-              Firing up the griddle…
-            </span>
-          </div>
-        )}
-      </section>
-    </div>
+      {/* Loading veil until all frames are in memory (prevents flicker). */}
+      {!ready && (
+        <div className="absolute inset-0 z-40 grid place-items-center bg-black">
+          <span className="font-display text-sm uppercase tracking-[0.4em] text-paper/60">
+            Firing up the griddle…
+          </span>
+        </div>
+      )}
+    </section>
   );
 }

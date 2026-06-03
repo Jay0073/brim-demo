@@ -1,321 +1,364 @@
 "use client";
 
-// ─────────────────────────────────────────────────────────────────────────
-//  HERO — cinematic intro on the B/W striped stage.
-//
-//  Choreography (GSAP, time-based — no scroll):
-//    1. On load the burger card sits LARGE + CENTERED and plays the
-//       falling-burger sequence (2×, muted→sound on first interaction).
-//    2. When the clip ends it slides to the RIGHT + scales to its resting
-//       slot, while the headline / copy / CTAs slide IN FROM THE LEFT and a
-//       dark wash fades in under the text for legibility over the stripes.
-//
-//  The video's light studio backdrop is lifted to pure white (VIDEO_FILTER)
-//  and the wrapper is a rounded card, so the burger reads as a clean white
-//  panel on the stripes.
-//
-//  Pure monochrome — white type on bold black & white stripes, no colour
-//  accent. Keep the <section id="hero"> wrapper so the page composition +
-//  scroll math stay.
-// ─────────────────────────────────────────────────────────────────────────
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { asset } from "@/lib/asset";
 
-// Lifts the video's gray-blue studio backdrop (~rgb(187,195,197)) to pure
-// white so the burger reads as floating, while keeping it rich and saturated.
-const VIDEO_FILTER = "brightness(1.4) contrast(1.12) saturate(1.06)";
-
-const PLAYBACK_RATE = 2;
-
-// The last headline word auto-cycles through these (CSS upper-cases them).
-const WORDS = ["Juicy", "Big", "Bold", "Fresh"];
-
 export function Hero() {
-  const root = useRef<HTMLElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const wordRef = useRef<HTMLSpanElement>(null);
-  const splitDone = useRef(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const topLayerRef = useRef<HTMLDivElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const burgerWrapRef = useRef<HTMLImageElement>(null);
+  const ctaRef = useRef<HTMLDivElement>(null);
 
-  // ── Intro choreography ──────────────────────────────────────────────────
+  // ── Typing Effect State ──
+  const words = ["JUICY", "BIG", "FRESH", "BRIM"];
+  const [wordIndex, setWordIndex] = useState(0);
+  const [displayText, setDisplayText] = useState("JUICY");
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const currentFullWord = words[wordIndex];
+    let timer: NodeJS.Timeout;
+
+    if (!isDeleting) {
+      if (displayText.length < currentFullWord.length) {
+        // Type next character
+        timer = setTimeout(() => {
+          setDisplayText(currentFullWord.substring(0, displayText.length + 1));
+        }, 150); // typing speed
+      } else {
+        // Pause at full word before deleting
+        timer = setTimeout(() => {
+          setIsDeleting(true);
+        }, 1800);
+      }
+    } else {
+      if (displayText.length > 0) {
+        // Delete character
+        timer = setTimeout(() => {
+          setDisplayText(currentFullWord.substring(0, displayText.length - 1));
+        }, 75); // deleting speed
+      } else {
+        // Fully deleted, move to next word
+        setIsDeleting(false);
+        setWordIndex((prev) => (prev + 1) % words.length);
+      }
+    }
+
+    return () => clearTimeout(timer);
+  }, [displayText, isDeleting, wordIndex]);
+
+  // ── Mouse / Touch Interactions (GSAP) ──
   useGSAP(
     () => {
-      const stageEl = root.current?.querySelector<HTMLElement>(".hero-stage");
-      const video = videoRef.current;
+      const container = containerRef.current;
+      const topLayer = topLayerRef.current;
+      const heading = headingRef.current;
+      const burgerWrap = burgerWrapRef.current;
+      const cta = ctaRef.current;
 
-      // Translate needed to move the resting stage to the viewport centre.
-      const centreOffset = () => {
-        if (!stageEl) return { x: 0, y: 0 };
-        const r = stageEl.getBoundingClientRect();
+      if (!container || !topLayer || !burgerWrap) return;
+
+      // Coordinates object to animate
+      const coords = {
+        x: window.innerWidth / 2,
+        y: window.innerHeight / 2,
+        r: 0,
+      };
+
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      // Responsive configuration
+      const getRadii = () => {
+        const isMobile = window.innerWidth < 768;
         return {
-          x: window.innerWidth / 2 - (r.left + r.width / 2),
-          y: window.innerHeight / 2 - (r.top + r.height / 2),
+          base: isMobile ? 90 : 135,
+          hover: isMobile ? 140 : 220,
         };
       };
 
-      const mm = gsap.matchMedia();
+      // Set initial values
+      gsap.set(topLayer, { width: 0, height: 0, opacity: 0 });
 
-      // Reduced motion → present the resting layout immediately, no intro.
-      mm.add("(prefers-reduced-motion: reduce)", () => {
-        gsap.set(".hero-reveal", { opacity: 1, x: 0 });
-        gsap.set([".hero-leftwash", ".hero-scroll"], { opacity: 1 });
-        gsap.set(".hero-stage", { clearProps: "transform" });
-      });
+      // Direct DOM update callback to avoid React re-renders on mousemove
+      const updateStyle = () => {
+        if (topLayer) {
+          topLayer.style.left = `${coords.x}px`;
+          topLayer.style.top = `${coords.y}px`;
+          topLayer.style.width = `${coords.r * 2}px`;
+          topLayer.style.height = `${coords.r * 2}px`;
+          topLayer.style.opacity = coords.r > 0 ? "1" : "0";
+        }
 
-      // Full experience.
-      mm.add("(prefers-reduced-motion: no-preference)", () => {
-        const introScale = window.innerWidth >= 1024 ? 1.6 : 1.15;
-        const { x, y } = centreOffset();
+        const parallaxWrap = container.querySelector<HTMLElement>(".hero-parallax-wrap");
+        if (parallaxWrap) {
+          const x_tl = coords.x - coords.r;
+          const y_tl = coords.y - coords.r;
+          parallaxWrap.style.left = `${-x_tl}px`;
+          parallaxWrap.style.top = `${-y_tl}px`;
+        }
+      };
 
-        // Loop the clip so the burger keeps reforming — never a frozen frame.
-        if (video) video.loop = true;
+      const animateRadius = (targetR: number) => {
+        gsap.to(coords, {
+          r: targetR,
+          duration: prefersReducedMotion ? 0.1 : 0.45,
+          ease: "power2.out",
+          overwrite: "auto",
+          onUpdate: updateStyle,
+        });
+      };
 
-        // Initial state (runs pre-paint → no flash of the resting layout).
-        gsap.set(".hero-stage", {
+      // Handle Pointer Movement
+      const onPointerMove = (e: PointerEvent) => {
+        const rect = container.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        // Smoothly animate cursor position
+        gsap.to(coords, {
           x,
           y,
-          scale: introScale,
-          rotationY: 12,
-          transformPerspective: 1100,
-          transformOrigin: "center center",
+          duration: prefersReducedMotion ? 0 : 0.35,
+          ease: "power3.out",
+          overwrite: "auto",
+          onUpdate: updateStyle,
         });
-        // Burger sits a touch larger than its card → headroom to parallax it
-        // inside the frame without exposing the edges.
-        if (video) gsap.set(video, { scale: 1.12 });
-        gsap.set(".hero-reveal", { opacity: 0, x: -70 });
-        gsap.set([".hero-leftwash", ".hero-scroll"], { opacity: 0 });
 
-        let splitTl: gsap.core.Timeline | undefined;
-        let stopParallax = () => {};
+        // 3D Parallax shift on the background image (opposite direction of mouse)
+        const pctX = (x / rect.width) - 0.5;
+        const pctY = (y / rect.height) - 0.5;
+        gsap.to(burgerWrap, {
+          x: pctX * -40,
+          y: pctY * -40,
+          duration: prefersReducedMotion ? 0 : 0.6,
+          ease: "power2.out",
+          overwrite: "auto",
+        });
+      };
 
-        // Once settled: layered, clearly-visible motion so it never reads as a
-        // still image — a continuous float + sway + pitch always running, plus
-        // mouse-driven 3D yaw with the burger shifting the opposite way inside
-        // the card for real depth.
-        const startIdle = () => {
-          if (!stageEl) return;
-          gsap.to(stageEl, { y: -26, duration: 3, ease: "sine.inOut", repeat: -1, yoyo: true });
-          gsap.to(stageEl, { rotationZ: 2.2, duration: 4.4, ease: "sine.inOut", repeat: -1, yoyo: true });
-          gsap.to(stageEl, { rotationX: 3.5, duration: 5.2, ease: "sine.inOut", repeat: -1, yoyo: true });
+      const onPointerEnter = (e: PointerEvent) => {
+        const rect = container.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
 
-          const yaw = gsap.quickTo(stageEl, "rotationY", { duration: 0.7, ease: "power3" });
-          const vidX = video ? gsap.quickTo(video, "x", { duration: 0.8, ease: "power3" }) : null;
-          const vidY = video ? gsap.quickTo(video, "y", { duration: 0.8, ease: "power3" }) : null;
-          const onMove = (e: PointerEvent) => {
-            const dx = gsap.utils.clamp(-1, 1, (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2));
-            const dy = gsap.utils.clamp(-1, 1, (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2));
-            yaw(dx * 14);
-            if (vidX) vidX(dx * -26);
-            if (vidY) vidY(dy * -26);
-          };
-          window.addEventListener("pointermove", onMove);
-          stopParallax = () => window.removeEventListener("pointermove", onMove);
-        };
+        gsap.set(coords, { x, y });
+        updateStyle();
 
-        const runSplit = () => {
-          if (splitDone.current) return;
-          splitDone.current = true;
-          splitTl = gsap
-            .timeline({ defaults: { ease: "power4.out" }, onComplete: startIdle })
-            .to(".hero-stage", { x: 0, y: 0, scale: 1, rotationY: 0, duration: 1.4 })
-            .to(".hero-leftwash", { opacity: 1, duration: 0.9 }, "-=1.0")
-            .to(
-              ".hero-reveal",
-              { opacity: 1, x: 0, duration: 0.85, stagger: 0.1, ease: "power3.out" },
-              "-=0.85",
-            )
-            .to(".hero-scroll", { opacity: 1, duration: 0.5 }, "-=0.3");
-        };
+        const { base } = getRadii();
+        animateRadius(base);
+      };
 
-        // Split after roughly one full play of the clip (10s @ 2× ≈ 5s).
-        const splitTimer = window.setTimeout(runSplit, 5200);
+      const onPointerLeave = () => {
+        animateRadius(0);
+      };
 
-        return () => {
-          window.clearTimeout(splitTimer);
-          stopParallax();
-          splitTl?.kill();
-          if (stageEl) gsap.killTweensOf(stageEl);
-          if (video) gsap.killTweensOf(video);
-        };
-      });
+      // Heading-specific hover (widens the lens)
+      const onHeadingEnter = () => {
+        const { hover } = getRadii();
+        animateRadius(hover);
+        gsap.to(heading, {
+          scale: prefersReducedMotion ? 1 : 1.02,
+          duration: 0.3,
+          ease: "power2.out",
+        });
+      };
 
-      // Initial positions are set — reveal the stage (was hidden to avoid a
-      // flash of the resting layout on first paint).
-      root.current?.classList.remove("hero-js-pending");
+      const onHeadingLeave = () => {
+        const { base } = getRadii();
+        animateRadius(base);
+        gsap.to(heading, {
+          scale: 1,
+          duration: 0.3,
+          ease: "power2.out",
+        });
+      };
+
+      // Button-wrapper hover (collapses the lens to 0)
+      const onCtaEnter = () => {
+        animateRadius(0);
+      };
+
+      const onCtaLeave = () => {
+        const { base } = getRadii();
+        animateRadius(base);
+      };
+
+      // Touch events specific override to collapse lens when touch ends
+      const onPointerDown = (e: PointerEvent) => {
+        if (e.pointerType === "touch") {
+          const rect = container.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          gsap.set(coords, { x, y });
+          updateStyle();
+
+          const { base } = getRadii();
+          animateRadius(base);
+        }
+      };
+
+      const onPointerUp = (e: PointerEvent) => {
+        if (e.pointerType === "touch") {
+          animateRadius(0);
+        }
+      };
+
+      // Bind events
+      container.addEventListener("pointermove", onPointerMove);
+      container.addEventListener("pointerenter", onPointerEnter);
+      container.addEventListener("pointerleave", onPointerLeave);
+      container.addEventListener("pointerdown", onPointerDown);
+      container.addEventListener("pointerup", onPointerUp);
+      container.addEventListener("pointercancel", onPointerUp);
+
+      if (heading) {
+        heading.addEventListener("pointerenter", onHeadingEnter);
+        heading.addEventListener("pointerleave", onHeadingLeave);
+      }
+
+      if (cta) {
+        cta.addEventListener("pointerenter", onCtaEnter);
+        cta.addEventListener("pointerleave", onCtaLeave);
+      }
+
+      // Intro entry animation for typography on page load
+      gsap.fromTo(
+        ".hero-reveal-text",
+        { opacity: 0, y: 35 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: prefersReducedMotion ? 0.3 : 1.2,
+          stagger: prefersReducedMotion ? 0 : 0.15,
+          ease: "power4.out",
+          delay: 0.2,
+        }
+      );
+
+      return () => {
+        container.removeEventListener("pointermove", onPointerMove);
+        container.removeEventListener("pointerenter", onPointerEnter);
+        container.removeEventListener("pointerleave", onPointerLeave);
+        container.removeEventListener("pointerdown", onPointerDown);
+        container.removeEventListener("pointerup", onPointerUp);
+        container.removeEventListener("pointercancel", onPointerUp);
+
+        if (heading) {
+          heading.removeEventListener("pointerenter", onHeadingEnter);
+          heading.removeEventListener("pointerleave", onHeadingLeave);
+        }
+
+        if (cta) {
+          cta.removeEventListener("pointerenter", onCtaEnter);
+          cta.removeEventListener("pointerleave", onCtaLeave);
+        }
+      };
     },
-    { scope: root },
+    { scope: containerRef }
   );
-
-  // ── Playback rate + sound (independent of motion preference) ────────────
-  useEffect(() => {
-    const v = videoRef.current;
-    if (!v) return;
-    v.playbackRate = PLAYBACK_RATE;
-
-    const inView = () => {
-      const r = v.getBoundingClientRect();
-      return r.bottom > 0 && r.top < window.innerHeight;
-    };
-
-    const removeListeners = () => {
-      window.removeEventListener("pointerdown", enableSound);
-      window.removeEventListener("keydown", enableSound);
-      window.removeEventListener("touchstart", enableSound);
-    };
-
-    // Unmute on the first gesture. If the clip is still running sound just
-    // fades in; if it finished and is on screen, replay it so it's heard.
-    const enableSound = () => {
-      v.muted = false;
-      v.playbackRate = PLAYBACK_RATE;
-      if (!v.ended) {
-        void v.play().catch(() => {});
-      } else if (inView()) {
-        v.currentTime = 0;
-        void v.play().catch(() => {});
-      }
-      removeListeners();
-    };
-
-    // Try audible playback right away; if blocked, play muted + arm unmute.
-    v.muted = false;
-    void v.play().catch(() => {
-      v.muted = true;
-      void v.play().catch(() => {});
-      window.addEventListener("pointerdown", enableSound);
-      window.addEventListener("keydown", enableSound);
-      window.addEventListener("touchstart", enableSound);
-    });
-
-    return removeListeners;
-  }, []);
-
-  // ── Auto-cycling headline word ("They are JUICY → BIG → …") ─────────────
-  useEffect(() => {
-    const el = wordRef.current;
-    if (!el) return;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let i = 0;
-
-    const swap = () => {
-      i = (i + 1) % WORDS.length;
-      const next = WORDS[i];
-      if (reduce) {
-        gsap
-          .timeline()
-          .to(el, { opacity: 0, duration: 0.3 })
-          .add(() => {
-            el.textContent = next;
-          })
-          .to(el, { opacity: 1, duration: 0.3 });
-      } else {
-        // Clean fade + small lift (px, not clipped) so letters never fragment.
-        gsap
-          .timeline({ defaults: { ease: "power3.inOut" } })
-          .to(el, { opacity: 0, y: -16, duration: 0.32, ease: "power2.in" })
-          .add(() => {
-            el.textContent = next;
-          })
-          .set(el, { y: 16 })
-          .to(el, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" });
-      }
-    };
-
-    const id = window.setInterval(swap, 2800);
-    return () => {
-      window.clearInterval(id);
-      gsap.killTweensOf(el);
-    };
-  }, []);
 
   return (
     <section
-      ref={root}
+      ref={containerRef}
       id="hero"
-      className="hero-js-pending relative flex min-h-dvh items-center overflow-hidden bg-ink text-paper"
+      className="relative flex h-dvh items-center justify-center overflow-hidden bg-ink select-none"
     >
-      {/* Signature bold pure black & white diagonal stripes, slowly drifting. */}
-      <div className="brim-stripes brim-stripes-drift absolute inset-0" aria-hidden />
-      {/* Soft dark wash under the text column for legibility over the stripes. */}
+      {/* ── BOTTOM LAYER (Default view: Dark paper state) ── */}
+      {/* Stripes background, softly out of focus */}
       <div
-        className="hero-leftwash pointer-events-none absolute inset-y-0 left-0 z-[1] w-[72%] bg-gradient-to-r from-ink via-ink/60 to-transparent"
+        className="brim-stripes absolute inset-0 scale-105 blur-[2px]"
         aria-hidden
       />
+      {/* Vignette for lighting control */}
+      <div className="brim-vignette absolute inset-0" aria-hidden />
+      {/* Center ambient glow for depth */}
+      <div
+        aria-hidden
+        className="absolute left-1/2 top-1/2 h-[62vh] w-[82vw] -translate-x-1/2 -translate-y-1/2 rounded-full bg-black/60 blur-3xl"
+      />
 
-      <div className="relative z-10 mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-10 px-6 pb-16 pt-28 sm:px-8 lg:grid-cols-12 lg:gap-6 lg:px-12 lg:pt-24">
-        {/* ── LEFT: statement type (slides in from the left) ───────────── */}
-        <div className="order-2 lg:order-1 lg:col-span-6">
-          <div className="hero-reveal inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-paper/75 backdrop-blur-sm">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-paper opacity-50" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-paper" />
-            </span>
-            Smashed · Halal · Unforgettable
-          </div>
+      {/* Central content container */}
+      <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 max-w-5xl">
 
-          <h1 className="hero-reveal font-display mt-7 text-[clamp(3.25rem,9.5vw,8.5rem)] uppercase leading-[0.82] tracking-[-0.03em] [text-shadow:0_4px_40px_rgba(0,0,0,0.5)]">
-            <span className="block">They are</span>
-            {/* Auto-cycling word — clean fade + lift (see the cycling effect). */}
-            <span ref={wordRef} className="block">
-              Juicy
-            </span>
-          </h1>
+        <h1
+          ref={headingRef}
+          className="hero-reveal-text flex flex-col items-center pointer-events-auto cursor-default transition-transform duration-300"
+        >
+          {/* "THEY ARE" matching the font style of the How It's Made question */}
+          <span className="block font-display text-[11vw] sm:text-[9vw] md:text-[8vw] lg:text-[7.5vw] uppercase leading-[0.95] tracking-normal text-paper [text-shadow:0_4px_40px_rgba(0,0,0,0.75)]">
+            THEY ARE
+          </span>
+          {/* Typing word box with the Google Font Climate Crisis, reduced padding */}
+          <span className="inline-block bg-paper text-ink px-4 py-1 sm:px-6 sm:py-1.5 rounded-[1.2rem] border-2 border-white/20 mt-3 align-middle shadow-2xl tracking-normal font-climate text-[11vw] sm:text-[10vw] md:text-[9vw] lg:text-[8vw] leading-[1.05]">
+            {displayText || "\u200b"}
+          </span>
+        </h1>
 
-          <p className="hero-reveal mt-7 max-w-md text-base leading-relaxed text-paper/65 sm:text-lg">
-            100% grass-fed, strictly Halal smash burgers — pressed hard,
-            caramelised deep, and impossible to forget.
-          </p>
+        <p className="hero-reveal-text mt-8 max-w-md text-base sm:text-lg leading-relaxed text-paper/75 pointer-events-auto [text-shadow:0_2px_10px_rgba(0,0,0,0.5)]">
+          100% grass-fed, strictly Halal smash burgers — pressed hard,
+          caramelised deep, and impossible to forget.
+        </p>
 
-          <div className="hero-reveal mt-9 flex flex-wrap items-center gap-3">
-            <Link
-              href="/menu"
-              className="group inline-flex items-center gap-2 rounded-full bg-paper px-6 py-3.5 text-sm font-semibold text-ink shadow-lg shadow-black/30 transition-colors hover:bg-white"
-            >
-              Explore the menu
-              <span
-                aria-hidden
-                className="transition-transform duration-300 group-hover:translate-x-1"
-              >
-                →
-              </span>
-            </Link>
-            <Link
-              href="/locations"
-              className="rounded-full border border-white/25 px-6 py-3.5 text-sm font-semibold text-paper transition-colors hover:border-white/50 hover:bg-white/10"
-            >
-              Find a location
-            </Link>
-          </div>
-        </div>
-
-        {/* ── RIGHT: the live burger (starts centred, slides here) ─────── */}
-        <div className="order-1 flex justify-center lg:order-2 lg:col-span-6 lg:justify-end">
-          {/* Rounded white card so the burger reads as a clean panel on the
-              stripes. Shadow/ring live on the wrapper so the video's brightness
-              filter doesn't wash them out; overflow-hidden clips the corners. */}
-          <div className="hero-stage relative w-[min(86vw,560px)] overflow-hidden rounded-[2rem] shadow-2xl shadow-black/50 ring-1 ring-black/10 lg:w-[min(46vw,640px)]">
-            <video
-              ref={videoRef}
-              className="block w-full select-none"
-              src={asset("/watermark-removed-finalized.mp4")}
-              style={{ filter: VIDEO_FILTER }}
-              onLoadedMetadata={(e) => {
-                e.currentTarget.playbackRate = PLAYBACK_RATE;
-              }}
-              playsInline
-              preload="auto"
+        <div
+          ref={ctaRef}
+          className="hero-reveal-text mt-9 flex flex-wrap items-center justify-center gap-3 pointer-events-auto"
+        >
+          <Link
+            href="/menu"
+            className="group inline-flex items-center gap-2 rounded-full bg-paper px-6 py-3.5 text-sm font-semibold text-ink shadow-lg shadow-black/30 transition-colors hover:bg-white"
+          >
+            Explore the menu
+            <span
               aria-hidden
-            />
-          </div>
+              className="transition-transform duration-300 group-hover:translate-x-1"
+            >
+              →
+            </span>
+          </Link>
+          <Link
+            href="/locations"
+            className="rounded-full border border-white/25 px-6 py-3.5 text-sm font-semibold text-paper transition-colors hover:border-white/50 hover:bg-white/10"
+          >
+            Find a location
+          </Link>
         </div>
       </div>
 
-      {/* Scroll cue into "How It's Made". */}
-      <div className="hero-scroll absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 flex-col items-center gap-2 text-[10px] uppercase tracking-[0.3em] text-paper/45">
-        Scroll
-        <span aria-hidden className="h-8 w-px bg-white/25" />
+      {/* ── TOP LAYER (Revealed via morphing wavy glass lens) ── */}
+      <div
+        ref={topLayerRef}
+        className="absolute z-20 pointer-events-none overflow-hidden border-[3px] border-white/25 shadow-[0_0_40px_rgba(255,255,255,0.18),inset_0_0_20px_rgba(255,255,255,0.12)] animate-liquid-glass bg-black/10"
+        style={{
+          width: "0px",
+          height: "0px",
+          left: "50%",
+          top: "50%",
+          transform: "translate(-50%, -50%)",
+          isolation: "isolate",
+        }}
+      >
+        {/* Parallax coordinate-aligning wrapper */}
+        <div className="hero-parallax-wrap absolute w-screen h-screen">
+          <img
+            ref={burgerWrapRef}
+            src={asset("/hero/brim-maniac.jpg")}
+            alt="BRIM Maniac Full Screen"
+            className="absolute w-[104vw] h-[104vh] -left-[2vw] -top-[2vh] max-w-none object-cover select-none"
+            draggable="false"
+          />
+        </div>
+        {/* Glassmorphic overlay sitting on top of the image to add sheen and blur */}
+        <div className="absolute inset-0 bg-white/10 backdrop-blur-[2px] border border-white/15" style={{ borderRadius: "inherit" }} />
       </div>
+
+      {/* Bottom fade to black to merge with the next section */}
+      <div
+        className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black to-transparent z-15 pointer-events-none"
+        aria-hidden
+      />
     </section>
   );
 }
