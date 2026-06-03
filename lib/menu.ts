@@ -31,6 +31,9 @@ export interface MenuItem {
   image?: string;
   /** Larger, inverted (black) card for hero items. */
   featured?: boolean;
+  /** Use a fixed, shorter image crop instead of the grow-to-fill one, so the
+   *  tile stays compact while still matching its row-mates' height. */
+  compact?: boolean;
   /** Tiny catchy label, e.g. "The original". */
   badge?: string;
   /** Extra search terms beyond name/description. */

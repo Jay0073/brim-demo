@@ -79,13 +79,32 @@ export default function FranchisingPage() {
       {/* ── Why Brim + quote (split pane) ────────────────────────────────── */}
       <section className="mx-auto max-w-6xl px-6 py-20">
         <div className="grid overflow-hidden rounded-3xl ring-1 ring-ink/10 lg:grid-cols-2">
-          {/* Quote pane — solid black with white text. */}
-          <div className="flex flex-col justify-center bg-black p-8 text-white sm:p-12">
-            <blockquote>
-              <p className="font-display text-3xl uppercase leading-[1.05] sm:text-5xl">
+          {/* Quote pane — signature striped backdrop with a frosted glass panel
+              so the quote holds focus instead of being out-shouted by the
+              bright Why-Brim side. */}
+          <div className="relative isolate flex flex-col justify-center overflow-hidden bg-black p-8 text-white sm:p-12">
+            {/* Brand stripes give the pane texture and identity. */}
+            <div
+              aria-hidden
+              className="brim-stripes brim-stripes-drift absolute inset-0 -z-20 opacity-90"
+            />
+            {/* Dark wash keeps the white quote fully legible over the stripes. */}
+            <div
+              aria-hidden
+              className="absolute inset-0 -z-10 bg-gradient-to-br from-black/85 via-black/70 to-black/85"
+            />
+            <blockquote className="glass-dark relative rounded-2xl p-7 shadow-2xl shadow-black/50 sm:p-9">
+              {/* Oversized quotation mark as a soft brand flourish behind the copy. */}
+              <span
+                aria-hidden
+                className="pointer-events-none absolute -top-6 left-3 select-none font-display text-8xl leading-none text-white/10"
+              >
+                “
+              </span>
+              <p className="relative font-display text-3xl uppercase leading-[1.05] sm:text-5xl">
                 “We didn&apos;t just build a burger. We built a following.”
               </p>
-              <footer className="mt-6 text-xs uppercase tracking-[0.3em] text-white/50">
+              <footer className="mt-6 text-xs uppercase tracking-[0.3em] text-white/55">
                 — The Brim Burgers Team
               </footer>
             </blockquote>

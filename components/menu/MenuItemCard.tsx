@@ -49,10 +49,12 @@ export function MenuItemCard({ item }: { item: MenuItem }) {
       {/* Image / placeholder. Featured tiles keep their big 4:3 hero shot;
           regular tiles let the image GROW (flex-1) to absorb any extra height
           when the grid row is stretched by a taller neighbour — so the space
-          fills with food, not whitespace. */}
+          fills with food, not whitespace. Cards flagged `compact` instead use a
+          fixed, shorter crop: they still stretch to match their row-mates'
+          height (so a group stays uniform), but the image never balloons. */}
       <div
         className={`relative overflow-hidden ${
-          dark ? "aspect-[4/3]" : "min-h-[14rem] flex-1"
+          dark ? "aspect-[4/3]" : item.compact ? "aspect-[16/10]" : "min-h-[14rem] flex-1"
         }`}
       >
         {item.image ? (
