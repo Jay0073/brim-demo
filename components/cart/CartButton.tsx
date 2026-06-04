@@ -26,7 +26,7 @@ export function CartButton({
       <span className="relative grid place-items-center">
         <BagIcon className="h-5 w-5" />
         {badge !== null && (
-          <span className="absolute -right-2 -top-2 grid h-4 min-w-4 place-items-center rounded-full bg-brim px-1 text-[0.6rem] font-bold leading-none text-ink">
+          <span className="absolute -right-1.5 -top-1.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-brim px-1 text-[0.625rem] font-bold leading-none text-ink tabular-nums">
             {badge}
           </span>
         )}

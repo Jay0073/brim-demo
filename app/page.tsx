@@ -1,4 +1,6 @@
-import { Hero } from "@/components/sections/Hero";
+// TEMP: original interactive hero commented out — using the video hero below.
+// import { Hero } from "@/components/sections/Hero";
+import { HeroVideo } from "@/components/sections/HeroVideo";
 import { Specials } from "@/components/sections/Specials";
 import { HowItsMade } from "@/components/sections/HowItsMade";
 import { ExploreCTA } from "@/components/sections/ExploreCTA";
@@ -9,7 +11,8 @@ import { ExploreCTA } from "@/components/sections/ExploreCTA";
 export default function Home() {
   return (
     <>
-      <Hero />
+      {/* TEMP: <Hero /> */}
+      <HeroVideo />
       <HowItsMade />
       <Specials />
       <ExploreCTA />
