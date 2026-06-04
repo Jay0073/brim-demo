@@ -29,6 +29,7 @@ export function LocationsExperience() {
   const carouselRef = useRef<HTMLElement>(null);
   const [filter, setFilter] = useState<Filter>("All");
   const [activeId, setActiveId] = useState<string | null>(STORES[0]?.id ?? null);
+  const isProgrammaticScroll = useRef(false);
 
   const stores = useMemo(() => storesIn(filter), [filter]);
   const markers = useMemo<GlobeMarker[]>(
@@ -38,33 +39,86 @@ export function LocationsExperience() {
   const active = stores.find((s) => s.id === activeId) ?? null;
 
   function changeFilter(next: Filter) {
+    isProgrammaticScroll.current = true;
     setFilter(next);
     setActiveId(storesIn(next)[0]?.id ?? null);
   }
 
   // Open the full card: select + smooth-scroll the carousel into view.
   function openDetail(id: string) {
+    isProgrammaticScroll.current = true;
     setActiveId(id);
     smoothScrollTo(carouselRef.current);
   }
 
   // Page the branches carousel left/right (the "scroll for more" control).
   function scrollTrack(dir: 1 | -1) {
-    const track = trackRef.current;
-    if (!track) return;
-    track.scrollBy({ left: dir * track.clientWidth * 0.85, behavior: "smooth" });
+    const currentIndex = stores.findIndex((s) => s.id === activeId);
+    if (currentIndex === -1) return;
+    const nextIndex = Math.max(0, Math.min(stores.length - 1, currentIndex + dir));
+    isProgrammaticScroll.current = true;
+    setActiveId(stores[nextIndex].id);
   }
 
   // Centre the active branch within the carousel (horizontal only → never
-  // fights Lenis' page scroll).
+  // fights Lenis' page scroll) when programmatically triggered.
   useEffect(() => {
     const track = trackRef.current;
     if (!track || !activeId) return;
-    const card = track.querySelector<HTMLElement>(`[data-id="${activeId}"]`);
-    if (!card) return;
-    const t = track.getBoundingClientRect();
-    const c = card.getBoundingClientRect();
-    track.scrollBy({ left: c.left + c.width / 2 - (t.left + t.width / 2), behavior: "smooth" });
+
+    if (isProgrammaticScroll.current) {
+      const card = track.querySelector<HTMLElement>(`[data-id="${activeId}"]`);
+      if (!card) return;
+      const t = track.getBoundingClientRect();
+      const c = card.getBoundingClientRect();
+      track.scrollBy({ left: c.left + c.width / 2 - (t.left + t.width / 2), behavior: "smooth" });
+
+      const timer = setTimeout(() => {
+        isProgrammaticScroll.current = false;
+      }, 800);
+      return () => clearTimeout(timer);
+    }
+  }, [activeId, stores]);
+
+  // Sync scroll positioning: when user slides/scrolls manually, update the activeId based on the center item
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    function handleTrackScroll() {
+      if (isProgrammaticScroll.current) return;
+      const currentTrack = trackRef.current;
+      if (!currentTrack) return;
+
+      const cards = Array.from(currentTrack.querySelectorAll<HTMLElement>("[data-id]"));
+      if (cards.length === 0) return;
+
+      const trackRect = currentTrack.getBoundingClientRect();
+      const trackCenter = trackRect.left + trackRect.width / 2;
+
+      let closestId = activeId;
+      let minDistance = Infinity;
+
+      cards.forEach((card) => {
+        const cardRect = card.getBoundingClientRect();
+        const cardCenter = cardRect.left + cardRect.width / 2;
+        const distance = Math.abs(cardCenter - trackCenter);
+
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestId = card.getAttribute("data-id");
+        }
+      });
+
+      if (closestId && closestId !== activeId) {
+        setActiveId(closestId);
+      }
+    }
+
+    track.addEventListener("scroll", handleTrackScroll, { passive: true });
+    return () => {
+      track.removeEventListener("scroll", handleTrackScroll);
+    };
   }, [activeId, stores]);
 
   // Entrance choreography (pre-paint via useGSAP layout effect → no flash).
@@ -95,7 +149,7 @@ export function LocationsExperience() {
         style={{ background: "radial-gradient(circle, rgba(210,220,240,0.10), transparent 60%)" }}
       />
 
-      <div className="relative mx-auto max-w-7xl px-6 pb-24 pt-28 sm:pt-32">
+      <div className="relative mx-auto max-w-7xl px-6 pb-16 pt-28 sm:pt-32">
         {/* ── Striped heading banner ─────────────────────────────────── */}
         <header className="relative isolate flex flex-col items-center py-8 text-center">
           <div
@@ -154,15 +208,25 @@ export function LocationsExperience() {
             </p>
             <ul
               data-lenis-prevent
-              className="flex max-h-[25rem] flex-col overflow-y-auto overflow-x-hidden pr-1 [scrollbar-color:rgba(255,255,255,0.2)_transparent] [scrollbar-width:thin] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/20 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar]:w-1.5"
+              className="flex max-h-[25rem] flex-col overflow-y-auto overflow-x-hidden pr-1 py-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+              style={{
+                maskImage: "linear-gradient(to bottom, transparent, black 2rem, black calc(100% - 2rem), transparent)",
+                WebkitMaskImage: "linear-gradient(to bottom, transparent, black 2rem, black calc(100% - 2rem), transparent)"
+              }}
             >
               {stores.map((s, i) => {
                 const on = s.id === activeId;
                 return (
                   <li key={s.id} className="loc-index-item">
                     <button
-                      onMouseEnter={() => setActiveId(s.id)}
-                      onFocus={() => setActiveId(s.id)}
+                      onMouseEnter={() => {
+                        isProgrammaticScroll.current = true;
+                        setActiveId(s.id);
+                      }}
+                      onFocus={() => {
+                        isProgrammaticScroll.current = true;
+                        setActiveId(s.id);
+                      }}
                       onClick={() => openDetail(s.id)}
                       aria-pressed={on}
                       className={`group relative flex w-full items-center gap-3 border-l-2 py-3 pl-4 pr-2 text-left transition-all ${
@@ -242,61 +306,61 @@ export function LocationsExperience() {
           </div>
         </div>
 
-        {/* ── Carousel: all branches + reviews, on a WHITE panel (the dark
-            cards sit on white here; the globe stage above stays dark). ──── */}
-        <section ref={carouselRef} className="loc-carousel mt-16 scroll-mt-24" aria-label="All branches">
-          <div className="rounded-[2rem] bg-white px-5 py-7 text-ink sm:px-8 sm:py-9">
-            <div className="mb-5 flex items-end justify-between gap-4">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brim">
-                  Every Brim · {stores.length} branches
-                </p>
-                <h2 className="mt-1 font-display text-2xl uppercase leading-none text-ink sm:text-3xl">
-                  Browse the branches
-                </h2>
-              </div>
-              {/* Scroll-for-more controls — page the carousel left / right. */}
-              <div className="flex shrink-0 items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => scrollTrack(-1)}
-                  aria-label="Scroll branches left"
-                  className="grid h-10 w-10 place-items-center rounded-full text-ink ring-1 ring-ink/15 transition-colors hover:bg-ink hover:text-paper"
-                >
-                  <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
-                    <path d="m14 6-6 6 6 6" />
-                  </svg>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => scrollTrack(1)}
-                  aria-label="Scroll branches right"
-                  className="grid h-10 w-10 place-items-center rounded-full text-ink ring-1 ring-ink/15 transition-colors hover:bg-ink hover:text-paper"
-                >
-                  <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
-                    <path d="m10 6 6 6-6 6" />
-                  </svg>
-                </button>
-              </div>
+      </div>
+
+      {/* ── Carousel: all branches + reviews, on a WHITE background panel (spans edge-to-edge) ──── */}
+      <section ref={carouselRef} className="loc-carousel mt-24 bg-white py-20 text-ink scroll-mt-24" aria-label="All branches">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="mb-8 flex items-end justify-between gap-4">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brim">
+                Every Brim · {stores.length} branches
+              </p>
+              <h2 className="mt-1 font-display text-3xl uppercase leading-none text-ink sm:text-4xl">
+                Browse the branches
+              </h2>
             </div>
-            <div
-              ref={trackRef}
-              className="flex snap-x snap-mandatory gap-5 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-            >
-              {stores.map((s, i) => (
-                <div key={s.id} data-id={s.id} className="snap-center">
-                  <StoreDetailCard
-                    store={s}
-                    index={i}
-                    active={s.id === activeId}
-                    onSelect={() => setActiveId(s.id)}
-                  />
-                </div>
-              ))}
+            {/* Scroll-for-more controls — page the carousel left / right. */}
+            <div className="flex shrink-0 items-center gap-2">
+              <button
+                type="button"
+                onClick={() => scrollTrack(-1)}
+                aria-label="Scroll branches left"
+                className="grid h-10 w-10 place-items-center rounded-full text-ink ring-1 ring-ink/15 transition-colors hover:bg-ink hover:text-paper"
+              >
+                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m14 6-6 6 6 6" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollTrack(1)}
+                aria-label="Scroll branches right"
+                className="grid h-10 w-10 place-items-center rounded-full text-ink ring-1 ring-ink/15 transition-colors hover:bg-ink hover:text-paper"
+              >
+                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m10 6 6 6-6 6" />
+                </svg>
+              </button>
             </div>
           </div>
-        </section>
-      </div>
+          <div
+            ref={trackRef}
+            className="flex snap-x snap-mandatory gap-6 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {stores.map((s, i) => (
+              <div key={s.id} data-id={s.id} className="snap-center py-12">
+                <StoreDetailCard
+                  store={s}
+                  index={i}
+                  active={s.id === activeId}
+                  onSelect={() => setActiveId(s.id)}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

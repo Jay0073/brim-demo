@@ -35,83 +35,106 @@ export function StoreDetailCard({
           onSelect();
         }
       }}
-      className={`group relative w-[25rem] shrink-0 cursor-pointer overflow-hidden rounded-3xl bg-ink-soft shadow-xl shadow-black/20 outline-none transition-all duration-300 focus-visible:ring-2 focus-visible:ring-brim sm:w-[34rem] ${
+      className={`group relative flex flex-col md:flex-row w-[21rem] sm:w-[25rem] md:w-[48rem] h-[550px] md:h-[460px] shrink-0 cursor-pointer overflow-hidden rounded-[2rem] bg-[#0c0c0c] border transition-all duration-500 outline-none focus-visible:ring-2 focus-visible:ring-brim ${
         active
-          ? "scale-[1.015] shadow-2xl shadow-black/40 ring-2 ring-brim"
-          : "hover:scale-[1.01]"
+          ? "scale-[1.015] border-brim shadow-[0_20px_45px_rgba(0,0,0,0.18)] ring-1 ring-brim z-10"
+          : "border-white/10 opacity-70 hover:opacity-100 hover:scale-[1.01] hover:shadow-[0_15px_30px_rgba(0,0,0,0.12)] hover:border-white/20 shadow-[0_4px_20px_rgba(0,0,0,0.06)]"
       }`}
     >
-      <div className="relative">
-        <StorePhoto store={store} className="h-44 w-full" />
+      {/* LEFT SIDE: Store Photo & Overlays (42% on desktop, full-width on mobile) */}
+      <div className="relative h-48 sm:h-56 md:h-full md:w-[42%] shrink-0 overflow-hidden">
+        <StorePhoto store={store} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
         <div
           className="brim-stripes-fine absolute inset-x-0 top-0 z-10 h-1.5 opacity-90"
           aria-hidden
         />
         <div
-          className="absolute inset-0 bg-gradient-to-t from-ink-soft via-ink-soft/25 to-transparent"
+          className="absolute inset-0 bg-gradient-to-t from-[#0c0c0c] via-black/35 to-transparent z-10"
           aria-hidden
         />
-        <span className="absolute left-3 top-3 font-display text-xs tabular-nums text-paper/55">
-          {String(index + 1).padStart(2, "0")}
+        
+        {/* Floating index badge on top left */}
+        <span className="absolute left-4 top-4 z-20 rounded-lg bg-black/60 px-2.5 py-1 font-display text-[0.65rem] tracking-wider tabular-nums text-paper/60 backdrop-blur-md border border-white/5">
+          BRANCH {String(index + 1).padStart(2, "0")}
         </span>
-        <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 p-4">
-          <div className="min-w-0">
-            <h3 className="truncate font-display text-xl uppercase leading-none text-paper">
-              {store.name}
-            </h3>
-            <p className="mt-1 truncate text-xs text-paper/70">
-              {store.neighborhood} · {store.city}{" "}
-              <span aria-hidden>{flagFor(store.region)}</span>
-            </p>
-          </div>
-          <div className="shrink-0 rounded-xl bg-black/55 px-2.5 py-1.5 text-center ring-1 ring-white/10 backdrop-blur-sm">
-            <span className="block font-display text-lg leading-none text-paper">
-              {store.rating.toFixed(1)}
-            </span>
-          </div>
+
+        {/* Floating high-contrast rating badge on top right */}
+        <div className="absolute right-4 top-4 z-20 flex flex-col items-center justify-center rounded-xl bg-black/65 px-3 py-2.5 text-center border border-white/10 backdrop-blur-md shadow-lg shadow-black/40">
+          <span className="block font-display text-xl font-extrabold leading-none text-white">
+            {store.rating.toFixed(1)}
+          </span>
+          <StarRating rating={store.rating} size={11} className="mt-1.5 justify-center" />
+        </div>
+
+        {/* Text information overlays at bottom of photo (mobile) / left-aligned on image (desktop) */}
+        <div className="absolute inset-x-0 bottom-0 z-20 p-5">
+          <h3 className="font-display text-2xl uppercase leading-[0.9] text-white [text-shadow:0_2px_8px_rgba(0,0,0,0.5)] md:text-3xl">
+            {store.name}
+          </h3>
+          <p className="mt-2 text-xs font-semibold uppercase tracking-widest text-paper/85 flex items-center gap-1.5">
+            {store.neighborhood} · {store.city} <span aria-hidden className="text-sm">{flagFor(store.region)}</span>
+          </p>
         </div>
       </div>
 
-      {/* Reviews — every review in full (no truncation). Dark, on the dark
-          card; the WHITE backdrop lives behind the card (the carousel panel). */}
-      <div className="p-4">
-        <div className="flex items-center justify-between">
-          <h4 className="text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-ash">
-            Google reviews
-          </h4>
-          <span className="text-[0.65rem] text-ash">
-            {store.reviewCount.toLocaleString()} total
-          </span>
-        </div>
-        <ul className="mt-2.5 space-y-2">
-          {store.reviews.slice(0, 2).map((review, i) => (
-            <li key={i} className="rounded-xl bg-white/[0.03] p-2.5">
-              <div className="flex items-center gap-2">
-                <span className="flex size-6 items-center justify-center rounded-full bg-white/10 text-[0.65rem] font-bold text-paper">
-                  {review.author.charAt(0)}
-                </span>
-                <span className="text-xs font-semibold text-paper">
-                  {review.author}
-                </span>
-                <span className="ml-auto text-[0.65rem] text-ash">
-                  {review.relativeTime}
-                </span>
-              </div>
-              <StarRating rating={review.rating} size={11} className="mt-1.5" />
-              <p className="mt-1.5 text-xs leading-relaxed text-paper/70">
-                {review.text}
-              </p>
-            </li>
-          ))}
-        </ul>
+      {/* RIGHT SIDE: Reviews, Phone, and Directions (58% on desktop) */}
+      <div className="flex flex-1 flex-col justify-between p-5 md:p-6 md:h-full overflow-hidden bg-[#0c0c0c] relative">
+        
+        {/* Reviews Section */}
+        <div className="flex-1 flex flex-col min-h-0">
+          <div className="flex items-center justify-between border-b border-white/5 pb-2.5">
+            <h4 className="text-[0.65rem] font-bold uppercase tracking-[0.25em] text-ash/80">
+              Google Reviews
+            </h4>
+            <span className="text-[0.65rem] font-semibold text-ash/80 bg-white/5 px-2 py-0.5 rounded-full">
+              {store.reviewCount.toLocaleString()} reviews
+            </span>
+          </div>
 
-        <div className="mt-4 flex gap-2">
+          {/* Scrolling Reviews Container with Vertical Gradient Mask */}
+          <div 
+            data-lenis-prevent
+            className="flex-1 overflow-y-auto pr-1 py-3 space-y-3 mt-1.5 scrollbar-thin [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            style={{
+              maskImage: "linear-gradient(to bottom, transparent, black 16px, black calc(100% - 16px), transparent)",
+              WebkitMaskImage: "linear-gradient(to bottom, transparent, black 16px, black calc(100% - 16px), transparent)"
+            }}
+          >
+            {store.reviews.slice(0, 3).map((review, i) => (
+              <div key={i} className="rounded-2xl bg-white/[0.03] hover:bg-white/[0.05] border border-white/[0.03] p-3 transition-colors duration-300">
+                <div className="flex items-center gap-2">
+                  <span className="flex size-7 items-center justify-center rounded-full bg-brim/15 text-[0.65rem] font-bold text-brim border border-brim/10">
+                    {review.author.charAt(0)}
+                  </span>
+                  <div className="min-w-0">
+                    <span className="block text-xs font-semibold text-white truncate">
+                      {review.author}
+                    </span>
+                    <span className="block text-[0.6rem] text-ash/70 leading-none mt-0.5">
+                      {review.relativeTime}
+                    </span>
+                  </div>
+                  <div className="ml-auto shrink-0 flex items-center gap-1">
+                    <span className="text-xs font-display text-white">{review.rating}</span>
+                    <StarRating rating={review.rating} size={9} />
+                  </div>
+                </div>
+                <p className="mt-2 text-xs leading-relaxed text-neutral-300 font-sans tracking-wide">
+                  "{review.text}"
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Buttons Action bar */}
+        <div className="mt-4 flex gap-3 shrink-0 pt-3 border-t border-white/5">
           <a
             href={`tel:${store.phone.replace(/\s+/g, "")}`}
             onClick={(e) => e.stopPropagation()}
-            className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-full bg-paper px-4 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-white"
+            className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-white py-3 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:bg-neutral-200"
           >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
               <rect x="3" y="4" width="18" height="18" rx="2" />
               <path d="M16 2v4M8 2v4M3 10h18M9 16l2 2 4-4" />
             </svg>
@@ -122,9 +145,9 @@ export function StoreDetailCard({
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
-            className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-full border border-white/20 px-4 py-2.5 text-sm font-medium text-paper transition-colors hover:border-white hover:text-white"
+            className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-white/15 py-3 text-xs font-semibold uppercase tracking-wider text-white transition-colors hover:border-white hover:bg-white/5"
           >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
               <path d="M21.7 11.3l-9-9a1 1 0 0 0-1.4 0l-9 9a1 1 0 0 0 0 1.4l9 9a1 1 0 0 0 1.4 0l9-9a1 1 0 0 0 0-1.4zM14 14.5V12h-4v3H8v-4a1 1 0 0 1 1-1h5V7.5l3.5 3.5z" />
             </svg>
             Directions

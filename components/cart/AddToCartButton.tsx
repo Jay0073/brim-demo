@@ -45,7 +45,7 @@ export function AddToCartButton({
       <button
         type="button"
         onClick={handleClick}
-        className={`inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-sm font-semibold uppercase tracking-wide transition-transform active:scale-95 ${className}`}
+        className={`inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 cursor-pointer text-sm font-semibold uppercase tracking-wide transition-transform active:scale-95 ${className}`}
       >
         <PlusIcon className="h-4 w-4" />
         {label ?? "Add to cart"}
@@ -58,7 +58,7 @@ export function AddToCartButton({
       type="button"
       onClick={handleClick}
       aria-label="Add to cart"
-      className={`grid h-10 w-10 place-items-center rounded-full bg-ink text-paper shadow-lg shadow-black/30 transition-transform hover:bg-brim hover:text-ink active:scale-90 ${
+      className={`grid h-10 w-10 place-items-center cursor-pointer rounded-full bg-ink text-paper shadow-lg shadow-black/30 transition-transform hover:bg-brim hover:text-ink active:scale-90 ${
         pulse ? "scale-110" : ""
       } ${className}`}
     >

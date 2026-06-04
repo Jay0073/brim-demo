@@ -336,8 +336,7 @@ export function Hero() {
         </h1>
 
         <p className="hero-reveal-text mt-8 max-w-md text-base sm:text-lg leading-relaxed text-paper/75 pointer-events-auto [text-shadow:0_2px_10px_rgba(0,0,0,0.5)]">
-          100% grass-fed, strictly Halal smash burgers — pressed hard,
-          caramelised deep, and impossible to forget.
+          Pure flavor, pure fire — grass‑fed, Halal, pressed bold and dripping with flavor you’ll crave again.
         </p>
 
         <div
