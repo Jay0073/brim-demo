@@ -40,12 +40,44 @@ export function HeroVideo() {
       window.removeEventListener("scroll", enableSound);
     };
 
+    // Preloader handoff: when the intro is dismissed it fires "brim:enter". We
+    // (re)start the hero from the top so it's in sync with the reveal — with
+    // sound when the dismissal was a real tap (a user gesture lets audio play).
+    const onEnter = (e: Event) => {
+      const withSound = (e as CustomEvent).detail?.withSound;
+      try {
+        video.currentTime = 0;
+      } catch {
+        /* not seekable yet — ignore */
+      }
+      if (withSound) {
+        // We always WANT sound. After a real tap this succeeds; otherwise the
+        // browser blocks audio — fall back to MUTED playback (so the video
+        // still plays, never black) and leave the first-interaction unmute
+        // armed so sound kicks in the instant the user does anything.
+        video.muted = false;
+        video
+          .play()
+          .then(() => teardown())
+          .catch(() => {
+            video.muted = true;
+            video.play().catch(() => {});
+          });
+      } else {
+        video.play().catch(() => {});
+      }
+    };
+
     window.addEventListener("pointerdown", enableSound);
     window.addEventListener("keydown", enableSound);
     window.addEventListener("touchstart", enableSound);
     window.addEventListener("scroll", enableSound, { passive: true });
+    window.addEventListener("brim:enter", onEnter);
 
-    return teardown;
+    return () => {
+      teardown();
+      window.removeEventListener("brim:enter", onEnter);
+    };
   }, []);
 
   return (
