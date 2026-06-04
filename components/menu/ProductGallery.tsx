@@ -3,9 +3,10 @@
 // Product image gallery for the detail page. A horizontal slide track you move
 // with arrows, dots or thumbnails — used to flip the main burger shot over to
 // its "what's inside" breakdown. Falls back to a plain single image (no
-// controls) when an item only has one picture.
+// controls) when an item only has one picture. Pure solid-black theme.
 import { useState } from "react";
 import { asset } from "@/lib/asset";
+import { HalalMark } from "./HalalBadge";
 
 export interface GalleryImage {
   src: string;
@@ -17,10 +18,14 @@ export function ProductGallery({
   images,
   alt,
   badge,
+  halal = false,
+  heat = null,
 }: {
   images: GalleryImage[];
   alt: string;
   badge?: string;
+  halal?: boolean;
+  heat?: string | null;
 }) {
   const [index, setIndex] = useState(0);
   const count = images.length;
@@ -29,10 +34,10 @@ export function ProductGallery({
   return (
     <div className="lg:sticky lg:top-28 lg:self-start">
       {/* Viewport */}
-      <div className="group relative aspect-square overflow-hidden rounded-3xl bg-zinc-100 ring-1 ring-ink/10">
+      <div className="group relative aspect-square overflow-hidden rounded-3xl bg-white/[0.03] ring-1 ring-white/10">
         {count === 0 ? (
           <div className="grid h-full w-full place-items-center">
-            <span className="font-display text-9xl uppercase text-ink/10">
+            <span className="font-display text-9xl uppercase text-paper/10">
               {alt.charAt(0)}
             </span>
           </div>
@@ -49,7 +54,7 @@ export function ProductGallery({
                 alt={i === 0 ? alt : `${alt} — what's inside`}
                 draggable={false}
                 className={`h-full w-full shrink-0 ${
-                  img.contain ? "bg-white object-contain p-3" : "object-cover"
+                  img.contain ? "bg-white/[0.02] object-contain p-3" : "object-cover"
                 }`}
               />
             ))}
@@ -57,9 +62,26 @@ export function ProductGallery({
         )}
 
         {badge && (
-          <span className="absolute left-4 top-4 z-10 rounded-full bg-brim px-3 py-1 text-xs font-bold uppercase tracking-wider text-ink shadow">
+          <span className="absolute left-4 top-4 z-10 rounded-full bg-brim px-3 py-1 text-xs font-bold uppercase tracking-wider text-ink shadow-lg shadow-black/30">
             {badge}
           </span>
+        )}
+
+        {/* Halal + heat marks, stacked top-right (matches the spotlight). */}
+        {(halal || heat) && (
+          <div className="absolute right-4 top-4 z-10 flex flex-col items-center gap-2">
+            {halal && <HalalMark />}
+            {heat && (
+              <span
+                className="grid h-12 w-12 place-items-center rounded-full bg-paper shadow-lg ring-1 ring-black/10"
+                title={`${heat} heat`}
+              >
+                <span className="text-[0.55rem] font-bold uppercase leading-none tracking-wide text-ink">
+                  {heat}
+                </span>
+              </span>
+            )}
+          </div>
         )}
 
         {count > 1 && (
@@ -69,7 +91,7 @@ export function ProductGallery({
               type="button"
               onClick={() => go(index - 1)}
               aria-label="Previous image"
-              className="absolute left-3 top-1/2 z-10 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-white/85 text-ink shadow-md backdrop-blur transition-all hover:bg-white sm:opacity-0 sm:group-hover:opacity-100"
+              className="absolute left-3 top-1/2 z-10 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-black/60 text-paper ring-1 ring-white/15 backdrop-blur transition-all hover:bg-black/80 sm:opacity-0 sm:group-hover:opacity-100"
             >
               <Chevron dir="left" />
             </button>
@@ -77,7 +99,7 @@ export function ProductGallery({
               type="button"
               onClick={() => go(index + 1)}
               aria-label="Next image"
-              className="absolute right-3 top-1/2 z-10 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-white/85 text-ink shadow-md backdrop-blur transition-all hover:bg-white sm:opacity-0 sm:group-hover:opacity-100"
+              className="absolute right-3 top-1/2 z-10 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-black/60 text-paper ring-1 ring-white/15 backdrop-blur transition-all hover:bg-black/80 sm:opacity-0 sm:group-hover:opacity-100"
             >
               <Chevron dir="right" />
             </button>
@@ -92,7 +114,7 @@ export function ProductGallery({
                   aria-label={`Show image ${i + 1}`}
                   aria-current={i === index}
                   className={`h-2 rounded-full transition-all ${
-                    i === index ? "w-5 bg-ink" : "w-2 bg-ink/30 hover:bg-ink/50"
+                    i === index ? "w-5 bg-paper" : "w-2 bg-paper/30 hover:bg-paper/50"
                   }`}
                 />
               ))}
@@ -110,15 +132,15 @@ export function ProductGallery({
               type="button"
               onClick={() => setIndex(i)}
               aria-label={`Show image ${i + 1}`}
-              className={`relative h-16 w-16 overflow-hidden rounded-xl bg-zinc-100 ring-2 transition-all ${
-                i === index ? "ring-ink" : "ring-transparent hover:ring-ink/20"
+              className={`relative h-16 w-16 overflow-hidden rounded-xl bg-white/5 ring-2 transition-all ${
+                i === index ? "ring-brim" : "ring-transparent hover:ring-white/25"
               }`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={asset(img.src)}
                 alt=""
-                className={`h-full w-full ${img.contain ? "bg-white object-contain p-1" : "object-cover"}`}
+                className={`h-full w-full ${img.contain ? "bg-white/[0.03] object-contain p-1" : "object-cover"}`}
               />
             </button>
           ))}

@@ -1,37 +1,23 @@
 import Link from "next/link";
 import type { MenuItem } from "@/lib/menu";
+import { getItemBySlug } from "@/lib/menu";
 import { asset } from "@/lib/asset";
 import { priceOf, formatGBP } from "@/lib/pricing";
+import { nutritionOf, isHalal } from "@/lib/menu-extras";
 import { SpiceMeter } from "./SpiceMeter";
+import { HalalBadge } from "./HalalBadge";
 import { AddToCartButton } from "@/components/cart/AddToCartButton";
 
 // Placeholder shown until a real product shot exists. To use a photo, set
 // `image: "/menu/<slug>.jpg"` on the item (drop the file in /public/menu).
-function Placeholder({ name, dark }: { name: string; dark: boolean }) {
+function Placeholder({ name }: { name: string }) {
   return (
-    <div
-      className={`relative grid h-full w-full place-items-center overflow-hidden ${
-        dark ? "bg-black" : "bg-zinc-100"
-      }`}
-    >
-      <div
-        className={`brim-stripes-fine absolute inset-0 ${
-          dark ? "opacity-[0.08]" : "opacity-[0.05]"
-        }`}
-        aria-hidden
-      />
-      <span
-        className={`font-display text-7xl uppercase ${
-          dark ? "text-white/15" : "text-ink/10"
-        }`}
-      >
+    <div className="relative grid h-full w-full place-items-center overflow-hidden bg-black">
+      <div className="brim-stripes-fine absolute inset-0 opacity-[0.08]" aria-hidden />
+      <span className="font-display text-7xl uppercase text-white/15">
         {name.charAt(0)}
       </span>
-      <span
-        className={`absolute bottom-2 right-3 text-[0.6rem] uppercase tracking-[0.3em] ${
-          dark ? "text-white/30" : "text-ink/25"
-        }`}
-      >
+      <span className="absolute bottom-2 right-3 text-[0.6rem] uppercase tracking-[0.3em] text-white/30">
         Brim
       </span>
     </div>
@@ -39,33 +25,29 @@ function Placeholder({ name, dark }: { name: string; dark: boolean }) {
 }
 
 export function MenuItemCard({ item }: { item: MenuItem }) {
-  const dark = !!item.featured;
+  // Resolve the owning category so we can show per-item calories (demo facts).
+  const categoryId = getItemBySlug(item.slug)?.category.id ?? "";
+  const cal = nutritionOf(item, categoryId).calories;
+  const halal = isHalal(item);
+  const isVeggie = item.tags.includes("veggie");
 
   return (
-    // `relative` so the "+" button can overlay the image; `group` so the card's
-    // hover scales the photo. The whole visual is a Link to the detail page; the
-    // "+" lives OUTSIDE that Link so adding to cart never navigates.
-    <article
-      className={`group relative flex h-full flex-col overflow-hidden rounded-3xl transition-all duration-300 hover:-translate-y-1 ${
-        dark
-          ? "bg-ink text-paper shadow-xl shadow-black/30"
-          : "bg-white text-ink shadow-sm ring-1 ring-ink/10 hover:shadow-xl hover:shadow-black/10"
-      }`}
-    >
+    // Dark card on the pure-black page. `group` so the photo scales on hover.
+    // The whole visual is a <Link>; the footer (calories + add) sits OUTSIDE the
+    // link so adding to cart never navigates.
+    <article className="group relative flex h-full flex-col overflow-hidden rounded-3xl bg-white/[0.03] shadow-xl shadow-black/40 ring-1 ring-white/10 transition-all duration-300 hover:-translate-y-1 hover:bg-white/[0.05] hover:ring-white/25">
       <Link
         href={`/menu/${item.slug}`}
         aria-label={`View ${item.name}`}
-        className="flex h-full flex-col"
+        className="flex flex-1 flex-col"
       >
-        {/* Image / placeholder. Featured tiles keep their big 4:3 hero shot;
-            regular tiles let the image GROW (flex-1) to absorb any extra height
-            when the grid row is stretched by a taller neighbour — so the space
-            fills with food, not whitespace. Cards flagged `compact` instead use a
-            fixed, shorter crop: they still stretch to match their row-mates'
-            height (so a group stays uniform), but the image never balloons. */}
+        {/* Image / placeholder. The image is the slack-absorber: it GROWS
+            (flex-1) to fill whatever height the grid row takes, so a card that
+            shares a row with a taller neighbour shows more food instead of an
+            empty gap below its copy. Featured tiles start a touch taller. */}
         <div
-          className={`relative overflow-hidden ${
-            dark ? "aspect-[4/3]" : item.compact ? "aspect-[16/10]" : "min-h-[14rem] flex-1"
+          className={`relative flex-1 overflow-hidden ${
+            item.featured ? "min-h-[17rem]" : "min-h-[13rem]"
           }`}
         >
           {item.image ? (
@@ -76,35 +58,33 @@ export function MenuItemCard({ item }: { item: MenuItem }) {
               className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
-            <Placeholder name={item.name} dark={dark} />
+            <Placeholder name={item.name} />
           )}
+
+          {/* Badges over the shot: brand label (left), Halal mark (right). */}
           {item.badge && (
-            <span className="absolute left-3 top-3 rounded-full bg-brim px-3 py-1 text-[0.65rem] font-bold uppercase tracking-wider text-ink shadow">
+            <span className="absolute left-3 top-3 rounded-full bg-brim px-3 py-1 text-[0.65rem] font-bold uppercase tracking-wider text-ink shadow-lg shadow-black/30">
               {item.badge}
             </span>
           )}
+          {halal && <HalalBadge className="absolute right-3 top-3" />}
         </div>
 
-        {/* Body — content-height on regular tiles (the image takes the slack);
-            featured tiles keep flex-1 so their copy fills the taller card. */}
-        <div className={`flex flex-col gap-2.5 p-5 ${dark ? "flex-1" : ""}`}>
+        {/* Body — content height (the image above takes the row's slack). */}
+        <div className="flex flex-col gap-2.5 p-5 pb-3.5">
           <div className="flex items-start justify-between gap-3">
-            <h3 className="font-display text-2xl uppercase leading-[0.95] sm:text-3xl">
+            <h3 className="font-display text-2xl uppercase leading-[0.95] text-paper sm:text-3xl">
               {item.name}
             </h3>
-            {item.spice ? <SpiceMeter level={item.spice} className="shrink-0 pt-1" /> : null}
+            <span className="shrink-0 font-display text-xl leading-none text-brim">
+              {formatGBP(priceOf(item.slug))}
+            </span>
           </div>
 
-          <p className={`font-display text-xl leading-none ${dark ? "text-paper" : "text-ink"}`}>
-            {formatGBP(priceOf(item.slug))}
-          </p>
+          {item.spice ? <SpiceMeter level={item.spice} /> : null}
 
           {item.description && (
-            <p
-              className={`text-sm leading-relaxed ${
-                dark ? "text-paper/75" : "text-ink/65"
-              }`}
-            >
+            <p className="text-sm leading-relaxed text-paper/55">
               {item.description}
             </p>
           )}
@@ -114,11 +94,7 @@ export function MenuItemCard({ item }: { item: MenuItem }) {
               {item.variants.map((v) => (
                 <li
                   key={v}
-                  className={`rounded-full px-2.5 py-1 text-xs font-medium ${
-                    dark
-                      ? "bg-white/10 text-paper/80"
-                      : "bg-ink/[0.06] text-ink/70"
-                  }`}
+                  className="rounded-full bg-white/[0.06] px-2.5 py-1 text-xs font-medium text-paper/75 ring-1 ring-white/5"
                 >
                   {v}
                 </li>
@@ -126,24 +102,21 @@ export function MenuItemCard({ item }: { item: MenuItem }) {
             </ul>
           )}
 
-          {item.tags.includes("veggie") && (
-            <span
-              className={`mt-auto w-fit pt-1 text-[0.7rem] font-semibold uppercase tracking-[0.2em] ${
-                dark ? "text-emerald-300/80" : "text-emerald-600"
-              }`}
-            >
+          {isVeggie && (
+            <span className="mt-auto w-fit pt-1 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-emerald-300/80">
               🌱 Plant-friendly
             </span>
           )}
         </div>
       </Link>
 
-      {/* Direct add — overlays the image corner, opposite the badge. */}
-      <AddToCartButton
-        slug={item.slug}
-        variant="icon"
-        className="absolute right-3 top-3 z-10"
-      />
+      {/* Footer (outside the Link): calories + direct add. */}
+      <div className="flex items-center justify-between gap-3 border-t border-white/10 px-5 py-3.5">
+        <span className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-paper/45 tabular-nums">
+          {cal} Cal
+        </span>
+        <AddToCartButton slug={item.slug} variant="icon" />
+      </div>
     </article>
   );
 }

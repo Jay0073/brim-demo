@@ -124,25 +124,28 @@ function SpotlightDrawer({
         role="dialog"
         aria-modal="true"
         aria-label={`${item.name} details`}
-        className={`fixed inset-y-0 right-0 z-[70] flex w-full max-w-lg flex-col bg-paper text-ink shadow-2xl transition-transform duration-300 ease-out ${
+        className={`fixed inset-y-0 right-0 z-[70] flex w-full max-w-lg flex-col bg-black text-paper shadow-2xl ring-1 ring-white/10 transition-transform duration-300 ease-out ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
+        {/* Brand stripe edge down the panel's left seam. */}
+        <div aria-hidden className="brim-stripes-fine absolute inset-y-0 left-0 w-1.5 opacity-70" />
         {/* Header: BRIM logo + Halal mark (side by side) · close */}
         <div className="flex items-center justify-between px-5 py-4">
           <div className="flex items-center gap-3">
-            {/* Logo artwork is white, so invert it to read on the light panel. */}
+            {/* Logo artwork is white — reads as-is on the black panel. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={asset("/brim-logo.svg")} alt="BRIM" className="h-6 w-auto [filter:invert(1)]" />
-            <span className="h-6 w-px bg-ink/15" aria-hidden />
+            <img src={asset("/brim-logo.svg")} alt="BRIM" className="h-6 w-auto" />
+            <span className="h-6 w-px bg-white/15" aria-hidden />
+            {/* Halal artwork is black — invert to white on the dark panel. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={asset("/halal.svg")} alt="Halal certified" className="h-7 w-7" />
+            <img src={asset("/halal.svg")} alt="Halal certified" className="h-7 w-7 [filter:invert(1)]" />
           </div>
           <button
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="grid h-9 w-9 place-items-center rounded-full text-ink/60 transition-colors hover:bg-ink/5 hover:text-ink"
+            className="grid h-9 w-9 place-items-center rounded-full text-paper/60 transition-colors hover:bg-white/5 hover:text-paper"
           >
             <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
               <path d="m6 6 12 12M18 6 6 18" />
@@ -161,7 +164,7 @@ function SpotlightDrawer({
                   type="button"
                   onClick={() => setActive(i)}
                   aria-label={`View ${img.label}`}
-                  className={`h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-ink ring-2 transition ${
+                  className={`h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-white/5 ring-2 transition ${
                     i === active ? "ring-brim" : "ring-transparent opacity-60 hover:opacity-100"
                   }`}
                 >
@@ -208,7 +211,7 @@ function SpotlightDrawer({
           </div>
 
           {item.description && (
-            <p className="mt-3 text-sm leading-relaxed text-ink/65" data-stagger>
+            <p className="mt-3 text-sm leading-relaxed text-paper/60" data-stagger>
               {item.description}
             </p>
           )}
@@ -225,10 +228,10 @@ function SpotlightDrawer({
                 <div
                   key={n.l}
                   data-stagger
-                  className="rounded-xl bg-ink/[0.04] p-3 text-center ring-1 ring-ink/5"
+                  className="rounded-xl bg-white/[0.04] p-3 text-center ring-1 ring-white/10"
                 >
-                  <span className="block font-display text-xl leading-none">{n.v}</span>
-                  <span className="mt-1 block text-[0.55rem] font-semibold uppercase tracking-wider text-ink/45">
+                  <span className="block font-display text-xl leading-none text-paper">{n.v}</span>
+                  <span className="mt-1 block text-[0.55rem] font-semibold uppercase tracking-wider text-paper/45">
                     {n.l}
                   </span>
                 </div>
@@ -239,7 +242,7 @@ function SpotlightDrawer({
           {/* Allergens */}
           {item.allergens && item.allergens.length > 0 && (
             <div className="mt-5">
-              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-ink/45" data-stagger>
+              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-paper/45" data-stagger>
                 Allergens
               </p>
               <ul className="mt-2 flex flex-wrap gap-2">
@@ -247,12 +250,12 @@ function SpotlightDrawer({
                   <li
                     key={a}
                     data-stagger
-                    className="flex items-center gap-1.5 rounded-full bg-ink/[0.04] px-3 py-1.5 ring-1 ring-ink/5"
+                    className="flex items-center gap-1.5 rounded-full bg-white/[0.04] px-3 py-1.5 ring-1 ring-white/10"
                   >
                     <span aria-hidden className="text-sm leading-none">
                       {ALLERGEN_ICON[a] ?? "•"}
                     </span>
-                    <span className="text-xs font-medium text-ink/70">{a}</span>
+                    <span className="text-xs font-medium text-paper/70">{a}</span>
                   </li>
                 ))}
               </ul>
@@ -261,23 +264,23 @@ function SpotlightDrawer({
         </div>
 
         {/* Footer: quantity + add to order */}
-        <div className="border-t border-ink/10 px-5 py-4">
+        <div className="border-t border-white/10 px-5 py-4">
           <div className="flex items-center gap-3">
-            <div className="inline-flex items-center rounded-full ring-1 ring-ink/15">
+            <div className="inline-flex items-center rounded-full ring-1 ring-white/15">
               <button
                 type="button"
                 onClick={() => setQty((q) => Math.max(1, q - 1))}
                 aria-label="Decrease quantity"
-                className="grid h-11 w-11 place-items-center rounded-full text-xl leading-none text-ink/70 transition-colors hover:bg-ink/5"
+                className="grid h-11 w-11 place-items-center rounded-full text-xl leading-none text-paper/70 transition-colors hover:bg-white/5"
               >
                 −
               </button>
-              <span className="w-8 text-center font-semibold tabular-nums">{qty}</span>
+              <span className="w-8 text-center font-semibold tabular-nums text-paper">{qty}</span>
               <button
                 type="button"
                 onClick={() => setQty((q) => q + 1)}
                 aria-label="Increase quantity"
-                className="grid h-11 w-11 place-items-center rounded-full text-xl leading-none text-ink/70 transition-colors hover:bg-ink/5"
+                className="grid h-11 w-11 place-items-center rounded-full text-xl leading-none text-paper/70 transition-colors hover:bg-white/5"
               >
                 +
               </button>
@@ -285,12 +288,12 @@ function SpotlightDrawer({
             <button
               type="button"
               onClick={handleAdd}
-              className="flex-1 rounded-full bg-ink py-3.5 text-sm font-semibold uppercase tracking-wide text-paper transition-colors hover:bg-brim hover:text-ink"
+              className="flex-1 rounded-full bg-brim py-3.5 text-sm font-semibold uppercase tracking-wide text-ink transition-[filter,transform] hover:brightness-110 active:scale-[0.99]"
             >
               {added ? "Added ✓" : `Add to order · ${formatGBP(unit * qty)}`}
             </button>
           </div>
-          <p className="mt-2 text-center text-xs text-ink/40">
+          <p className="mt-2 text-center text-xs text-paper/40">
             Strictly Halal · Smashed to order · Never frozen
           </p>
         </div>
