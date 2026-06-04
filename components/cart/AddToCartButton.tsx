@@ -58,7 +58,7 @@ export function AddToCartButton({
       type="button"
       onClick={handleClick}
       aria-label="Add to cart"
-      className={`grid h-10 w-10 place-items-center rounded-full bg-ink text-paper shadow-lg shadow-black/30 transition-transform hover:bg-brim hover:text-ink active:scale-90 ${
+      className={`grid h-10 w-10 place-items-center rounded-full border border-white/20 bg-white/[0.06] text-paper shadow-lg shadow-black/30 backdrop-blur-sm transition-colors hover:border-brim hover:bg-brim hover:text-ink active:scale-90 ${
         pulse ? "scale-110" : ""
       } ${className}`}
     >

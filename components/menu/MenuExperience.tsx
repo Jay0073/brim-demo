@@ -122,7 +122,7 @@ export function MenuExperience() {
       {/* ── Sticky control bar (opaque + compact) ────────────────────────── */}
       <div
         ref={barRef}
-        className="sticky top-20 z-30 -mx-4 border-b border-ink/10 bg-paper/95 px-4 py-2.5 backdrop-blur-md sm:-mx-6 sm:px-6"
+        className="sticky top-20 z-30 -mx-4 border-b border-white/10 bg-black/90 px-4 py-2.5 backdrop-blur-md sm:-mx-6 sm:px-6"
       >
         <div className="flex flex-col gap-2.5">
           {/* Search + surprise */}
@@ -130,7 +130,7 @@ export function MenuExperience() {
             <div className="relative flex-1">
               <svg
                 viewBox="0 0 24 24"
-                className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/40"
+                className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-paper/40"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth={2.2}
@@ -145,12 +145,12 @@ export function MenuExperience() {
                 type="search"
                 aria-label="Search the menu"
                 placeholder="Search “spicy”, “cheesy”, “veggie”, “shake”…"
-                className="w-full rounded-xl border border-ink/10 bg-white py-2.5 pl-10 pr-4 text-sm text-ink outline-none placeholder:text-ink/40 focus:border-ink/30"
+                className="w-full rounded-xl border border-white/10 bg-white/[0.04] py-2.5 pl-10 pr-4 text-sm text-paper outline-none placeholder:text-paper/35 focus:border-white/35"
               />
             </div>
             <button
               onClick={surpriseMe}
-              className="shrink-0 rounded-xl bg-ink px-3.5 text-sm font-semibold uppercase tracking-wide text-paper transition-colors hover:bg-brim hover:text-ink sm:px-4"
+              className="shrink-0 rounded-xl bg-white/[0.06] px-3.5 text-sm font-semibold uppercase tracking-wide text-paper ring-1 ring-white/10 transition-colors hover:bg-brim hover:text-ink hover:ring-brim sm:px-4"
             >
               🎲<span className="ml-1.5 hidden sm:inline">Surprise me</span>
             </button>
@@ -168,10 +168,10 @@ export function MenuExperience() {
                   disabled={empty}
                   className={`shrink-0 rounded-full px-3.5 py-1.5 text-sm font-semibold uppercase tracking-wide transition-colors ${
                     active
-                      ? "bg-ink text-paper"
+                      ? "bg-paper text-ink"
                       : empty
-                      ? "cursor-not-allowed text-ink/25"
-                      : "bg-ink/[0.04] text-ink/60 hover:bg-ink/10 hover:text-ink"
+                      ? "cursor-not-allowed text-paper/20"
+                      : "bg-white/[0.05] text-paper/60 hover:bg-white/10 hover:text-paper"
                   }`}
                 >
                   {c.name}
@@ -192,7 +192,7 @@ export function MenuExperience() {
                   className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide transition-colors ${
                     active
                       ? "bg-brim text-ink"
-                      : "text-ink/55 ring-1 ring-ink/15 hover:text-ink hover:ring-ink/40"
+                      : "text-paper/55 ring-1 ring-white/15 hover:text-paper hover:ring-white/40"
                   }`}
                 >
                   {f.label}
@@ -201,12 +201,12 @@ export function MenuExperience() {
             })}
             {isFiltering && (
               <span className="ml-auto flex items-center gap-3 text-xs">
-                <span className="font-medium text-ink/45">
+                <span className="font-medium text-paper/45">
                   {total} {total === 1 ? "result" : "results"}
                 </span>
                 <button
                   onClick={clearAll}
-                  className="font-semibold uppercase tracking-wide text-ink/55 underline-offset-2 hover:text-ink hover:underline"
+                  className="font-semibold uppercase tracking-wide text-paper/55 underline-offset-2 hover:text-paper hover:underline"
                 >
                   Clear all
                 </button>
@@ -221,7 +221,7 @@ export function MenuExperience() {
       <div className="flex items-center justify-end pt-4">
         <CartButton
           showLabel
-          className="rounded-full bg-ink px-4 py-2 text-paper transition-colors hover:bg-brim hover:text-ink"
+          className="rounded-full bg-white/[0.06] px-4 py-2 text-paper ring-1 ring-white/10 transition-colors hover:bg-brim hover:text-ink hover:ring-brim"
         />
       </div>
 
@@ -230,14 +230,14 @@ export function MenuExperience() {
       {/* ── Results ──────────────────────────────────────────────────────── */}
       {total === 0 ? (
         <div className="py-24 text-center">
-          <p className="font-display text-4xl uppercase text-ink">Nothing on the grill</p>
-          <p className="mt-3 text-ink/55">
+          <p className="font-display text-4xl uppercase text-paper">Nothing on the grill</p>
+          <p className="mt-3 text-paper/55">
             No bites match{query ? ` “${query}”` : " those filters"}. Try “cheesy”
             or “spicy”.
           </p>
           <button
             onClick={clearAll}
-            className="mt-6 rounded-full bg-ink px-6 py-3 text-sm font-semibold uppercase tracking-wide text-paper transition-colors hover:bg-brim hover:text-ink"
+            className="mt-6 rounded-full bg-paper px-6 py-3 text-sm font-semibold uppercase tracking-wide text-ink transition-colors hover:bg-brim"
           >
             Reset the menu
           </button>
@@ -253,16 +253,16 @@ export function MenuExperience() {
             >
               <header className="mb-6">
                 <div className="flex items-end justify-between gap-4">
-                  <h2 className="font-display text-4xl uppercase leading-none text-ink sm:text-6xl">
+                  <h2 className="font-display text-4xl uppercase leading-none text-paper sm:text-6xl">
                     {cat.name}
                   </h2>
-                  <span className="shrink-0 pb-1 text-sm font-medium text-ink/40">
+                  <span className="shrink-0 pb-1 text-sm font-medium text-paper/40">
                     {cat.filtered.length}{" "}
                     {cat.filtered.length === 1 ? "item" : "items"}
                   </span>
                 </div>
                 <div className="mt-3 h-1 w-16 rounded-full bg-brim" />
-                <p className="mt-3 text-ink/60">{cat.tagline}</p>
+                <p className="mt-3 text-paper/55">{cat.tagline}</p>
               </header>
 
               {cat.id === "burgers" && !isFiltering && (
@@ -278,7 +278,7 @@ export function MenuExperience() {
                     id={`item-${it.slug}`}
                     className={`rounded-3xl transition-all duration-300 ${
                       it.featured ? "sm:col-span-2" : ""
-                    } ${surprise === it.slug ? "ring-4 ring-brim ring-offset-2 ring-offset-paper" : ""}`}
+                    } ${surprise === it.slug ? "ring-4 ring-brim ring-offset-2 ring-offset-black" : ""}`}
                   >
                     {it.slug === "brim-burger" ? (
                       <BrimSpotlight item={it} />
@@ -289,11 +289,11 @@ export function MenuExperience() {
                 ))}
               </div>
 
-              {cat.id === "burgers" && !isFiltering && (
+              {/* {cat.id === "burgers" && !isFiltering && (
                 <div className="mt-6">
                   <BuildYourOwn />
                 </div>
-              )}
+              )} */}
             </section>
           ))}
         </div>
