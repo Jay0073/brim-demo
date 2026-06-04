@@ -69,8 +69,15 @@ export function Preloader() {
           aria-hidden
           className="h-40 w-40 object-contain [filter:invert(1)] sm:h-52 sm:w-52"
         />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={asset("/brim-logo.svg")} alt="BRIM" className="h-7 w-auto opacity-90" />
+        <div className="flex flex-col items-center gap-2">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={asset("/brim-logo.svg")} alt="BRIM" className="h-7 w-auto opacity-90" />
+          <span className="flex items-center gap-2 text-[0.5rem] font-semibold uppercase tracking-[0.35em] text-paper/40 sm:text-[0.55rem]">
+            <span className="h-px w-4 bg-white/20" aria-hidden />
+            Established In 2019
+            <span className="h-px w-4 bg-white/20" aria-hidden />
+          </span>
+        </div>
         <span className="text-[0.6rem] font-semibold uppercase tracking-[0.45em] text-paper/45">
           Tap to enter
         </span>

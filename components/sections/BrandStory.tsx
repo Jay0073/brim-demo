@@ -15,6 +15,7 @@
 // ─────────────────────────────────────────────────────────────────────────
 import { useRef, useState } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
+import { asset } from "@/lib/asset";
 
 type IconKey = "compass" | "award" | "box" | "flag" | "globe";
 
@@ -26,6 +27,8 @@ interface Milestone {
   icon: IconKey;
   metric: string;
   metricLabel: string;
+  /** Optional founder/person highlighted on this milestone. */
+  person?: { name: string; role: string; image: string };
 }
 
 // Brand timeline. Inlined like the other sections' copy — it's editorial, not
@@ -34,12 +37,17 @@ const MILESTONES: Milestone[] = [
   {
     year: "2019",
     title: "The Ignition Outpost",
-    subtitle: "Premium craft inception",
+    subtitle: "Where it began · one store",
     description:
-      "Brim is conceived in London on a single disruptive premise: smashed burgers are gourmet achievements, not mass-produced fast food. Eleven months go into formulating our proprietary Aberdeen Angus fat ratio and sourcing custom heavy-cast irons.",
+      "Founded by Amadul Hassan in Hemel Hempstead on a single belief — that halal food deserves to be premium, bold and unapologetically big. One empty unit, one heavy-cast iron and an obsession with quality: grass-fed beef, artisan-baked buns and signature sauces crafted in-house — a brand the UK had never seen before.",
     icon: "compass",
-    metric: "320+",
-    metricLabel: "Flavour prototypes tried",
+    metric: "1",
+    metricLabel: "Store it all started with",
+    person: {
+      name: "Amadul Hassan",
+      role: "Founder & CEO",
+      image: "/team/amadul-hassan.jpg",
+    },
   },
   {
     year: "2021",
@@ -282,6 +290,26 @@ export function BrandStory() {
                   <Icon name={event.icon} className="h-6 w-6" />
                 </span>
               </div>
+
+              {/* Founder — only on milestones with a person attached. */}
+              {event.person && (
+                <div className="relative mt-7 flex items-center gap-4">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={asset(event.person.image)}
+                    alt={event.person.name}
+                    className="h-16 w-16 shrink-0 rounded-full object-cover ring-2 ring-white/15"
+                  />
+                  <div>
+                    <span className="block font-display text-xl uppercase leading-none text-paper">
+                      {event.person.name}
+                    </span>
+                    <span className="mt-1.5 block text-[0.7rem] font-semibold uppercase tracking-[0.25em] text-ash">
+                      {event.person.role}
+                    </span>
+                  </div>
+                </div>
+              )}
 
               {/* Story copy. */}
               <div className="relative mt-8 space-y-4">
