@@ -1,19 +1,19 @@
-// Product detail page for a single menu item. Server component — the only
-// interactive pieces are the <AddToCartButton> islands and the gallery. Pure
-// solid-black theme. Used by app/menu/[slug]/page.tsx for every item.
+// Product detail page for a single menu item. Server component — the gallery is
+// the only interactive piece. Pure solid-black theme. Used by
+// app/menu/[slug]/page.tsx for every item.
 //
-// The buy column is deliberately rich (Halal + heat badges, "what's inside"
+// The facts column is deliberately rich (Halal + heat badges, "what's inside"
 // chips, a macro grid and allergens) so no item's page ever reads as empty —
 // the facts are derived per item in lib/menu-extras when not set in the JSON.
+// The menu is display-only: there is no ordering anywhere on the site.
 import Link from "next/link";
 import type { MenuItem, MenuCategory } from "@/lib/menu";
 import { priceOf, formatGBP } from "@/lib/pricing";
 import { asset } from "@/lib/asset";
-import { productFacts } from "@/lib/menu-extras";
+import { isHalal, productFacts } from "@/lib/menu-extras";
 import { SpiceMeter } from "./SpiceMeter";
 import { HalalBadge, HalalMark } from "./HalalBadge";
 import { ProductGallery, type GalleryImage } from "./ProductGallery";
-import { AddToCartButton } from "@/components/cart/AddToCartButton";
 
 // Burger items get a second "what's inside" anatomy shot in the gallery; other
 // categories (shakes, fries, drinks…) keep their single product photo.
@@ -74,11 +74,11 @@ export function ProductDetail({
           />
 
           {/* ── Buy column ─────────────────────────────────────────────── */}
-          <div className="flex flex-col">
+          <div className="flex min-w-0 flex-col">
             <p className="text-xs font-bold uppercase tracking-[0.3em] text-brim">
               {category.name}
             </p>
-            <h1 className="mt-3 font-display text-5xl uppercase leading-[0.9] text-paper sm:text-6xl">
+            <h1 className="mt-3 font-display text-[clamp(2.25rem,8vw,3rem)] uppercase leading-[0.98] text-paper [overflow-wrap:anywhere] sm:text-6xl">
               {item.name}
             </h1>
 
@@ -131,7 +131,7 @@ export function ProductDetail({
               <p className="text-xs font-semibold uppercase tracking-[0.25em] text-paper/45">
                 Nutrition <span className="text-paper/30">· per serving</span>
               </p>
-              <div className="mt-3 grid grid-cols-4 gap-2 sm:gap-3">
+              <div className="mt-3 grid grid-cols-2 gap-2 min-[480px]:grid-cols-4 sm:gap-3">
                 {[
                   { v: facts.nutrition.calories, l: "Calories" },
                   { v: facts.nutrition.protein, l: "Protein" },
@@ -193,26 +193,10 @@ export function ProductDetail({
               </div>
             )}
 
-            {/* Actions */}
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <AddToCartButton
-                slug={item.slug}
-                variant="full"
-                label="Add to cart"
-                className="bg-paper text-ink hover:bg-white/90"
-              />
-              <AddToCartButton
-                slug={item.slug}
-                variant="full"
-                buyNow
-                label="Buy now"
-                className="bg-brim text-ink hover:brightness-110"
-              />
-            </div>
-            <p className="mt-3 flex items-center gap-2 text-xs text-paper/40">
+            {facts.halal && <p className="mt-8 flex items-center gap-2 text-xs text-paper/40">
               <HalalMark size="h-5 w-5" icon="h-3.5 w-3.5" />
-              Strictly Halal · Smashed to order · Never frozen
-            </p>
+              Made with Halal meat
+            </p>}
           </div>
         </div>
 
@@ -229,19 +213,19 @@ export function ProductDetail({
                     href={`/menu/${rel.slug}`}
                     className="group flex h-full flex-col overflow-hidden rounded-2xl bg-white/[0.03] ring-1 ring-white/10 transition-all hover:-translate-y-1 hover:ring-white/25"
                   >
-                    <div className="relative aspect-[4/3] overflow-hidden bg-black">
+                    <div className="relative aspect-[3/2] overflow-hidden bg-white">
                       {rel.image && (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
                           src={asset(rel.image)}
                           alt={rel.name}
-                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          className="h-full w-full object-contain"
                         />
                       )}
-                      <HalalBadge className="absolute right-2 top-2 scale-90" />
+                      {isHalal(rel) && <HalalBadge className="absolute right-2 top-2 scale-90" />}
                     </div>
                     <div className="flex flex-1 flex-col gap-1 p-3.5">
-                      <h3 className="font-display text-lg uppercase leading-[0.95] text-paper">
+                      <h3 className="font-display text-base uppercase leading-tight text-paper [overflow-wrap:anywhere] sm:text-lg">
                         {rel.name}
                       </h3>
                       <span className="mt-auto pt-1 font-semibold text-brim">

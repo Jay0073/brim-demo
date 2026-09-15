@@ -7,14 +7,19 @@
 //  build directions / search / embed URLs. Components import from here, never
 //  from the JSON directly — types and URL logic stay in one place.
 //
-//  Reviews are curated demo data (no live Google Places call — this is a static
-//  export). To go live later, swap STORES for a fetched source and keep the
-//  same Store shape; the components don't care where the data comes from.
+//  Addresses, phones and hours are the branches' real published details. Ratings
+//  and REVIEWS are still curated demo data (no live Google Places call — this is
+//  a static export) and only exist for the four original branches; every card
+//  renders fine without them. To go live, swap STORES for a fetched source and
+//  keep the same Store shape; the components don't care where data comes from.
 // ─────────────────────────────────────────────────────────────────────────
 
 import locationData from "@/data/locations.json";
 
-export type Region = "UK" | "Pakistan";
+export type Region = "England" | "Scotland";
+
+/** Whether a branch is trading, or announced but not open yet. */
+export type StoreStatus = "open" | "coming-soon";
 
 export interface Review {
   author: string;
@@ -33,20 +38,22 @@ export interface Store {
   city: string;
   country: string;
   region: Region;
+  status: StoreStatus;
   address: string;
   lat: number;
   lng: number;
+  /** Empty when the branch hasn't published a number. */
   phone: string;
-  /** Opening hours, pre-formatted for display. */
+  /** Opening hours, pre-formatted for display. Empty when not published. */
   hours: string;
   /** Free-text query used for the "View on Google Maps" search link. */
   placeQuery: string;
-  /** Storefront / hero photo (remote, swap for /public asset when you have one). */
+  /** Storefront / hero photo. Empty falls back to the branded placeholder. */
   image: string;
-  /** Average star rating, one decimal. */
-  rating: number;
-  reviewCount: number;
-  reviews: Review[];
+  /** Average star rating, one decimal. Absent where we have no rating data. */
+  rating?: number;
+  reviewCount?: number;
+  reviews?: Review[];
 }
 
 // ── Typed views over the JSON data object ─────────────────────────────────
@@ -55,13 +62,22 @@ export interface Store {
 // in step when editing.
 export const STORES = locationData.stores as unknown as Store[];
 
-/** Region filter values, in display order (used by the toggle). */
-export const REGIONS: Region[] = ["UK", "Pakistan"];
+/** Status filter values, in display order (used by the toggle). Every branch is
+ *  in the UK now, so trading-status is the useful split, not geography. */
+export const STATUSES: StoreStatus[] = ["open", "coming-soon"];
 
-/** Stores in a region, or all of them when passed "All". */
-export function storesIn(region: Region | "All"): Store[] {
-  return region === "All" ? STORES : STORES.filter((s) => s.region === region);
+export const STATUS_LABEL: Record<StoreStatus, string> = {
+  open: "Open now",
+  "coming-soon": "Coming soon",
+};
+
+/** Stores with a given status, or all of them when passed "All". */
+export function storesIn(status: StoreStatus | "All"): Store[] {
+  return status === "All" ? STORES : STORES.filter((s) => s.status === status);
 }
+
+/** How many branches are actually trading (used in the page's counts). */
+export const OPEN_COUNT = STORES.filter((s) => s.status === "open").length;
 
 /** Deep link that opens turn-by-turn directions to the store. */
 export function directionsUrl(store: Store): string {

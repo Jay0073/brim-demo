@@ -6,14 +6,15 @@
       "neighborhood": "Lawn Lane",
       "city": "Hemel Hempstead",
       "country": "United Kingdom",
-      "region": "UK",
-      "address": "Lawn Lane, Hemel Hempstead, Hertfordshire, United Kingdom",
-      "lat": 51.7392,
-      "lng": -0.4717,
-      "phone": "+44 1442 256 980",
-      "hours": "12:00 – 23:00 · Mon–Sun",
+      "region": "England",
+      "status": "open",
+      "address": "30 Lawn Lane, Hemel Hempstead, HP3 9HL",
+      "lat": 51.74494,
+      "lng": -0.47157,
+      "phone": "01442 768 200",
+      "hours": "Sun–Thu 12:00 – 23:00 · Fri–Sat 12:00 – 00:00",
       "placeQuery": "Brim Burgers Hemel Hempstead",
-      "image": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAH6VT1MIXSmVXGcFLkBNetClQR_gevjfOMCNmn3Ww7-FRUVVZpvhW_bisv6ctP0CoIfvwU96qSNlcI2v3BHBBwiiYOmRMZmqewMlS-lgtWMFFNfctbAfp35skr5pRWog1bd7C-w=s1360-w1360-h1020-rw",
+      "image": "/locations/store-exterior.jpg",
       "rating": 4.6,
       "reviewCount": 412,
       "reviews": [
@@ -34,17 +35,18 @@
     {
       "id": "uk-luton",
       "name": "Brim Luton",
-      "neighborhood": "Kimpton Rd",
+      "neighborhood": "Kimpton Road",
       "city": "Luton",
       "country": "United Kingdom",
-      "region": "UK",
-      "address": "32 Kimpton Rd, Luton, LU2 0SX, United Kingdom",
-      "lat": 51.8783,
-      "lng": -0.4090,
-      "phone": "+44 1582 412 770",
+      "region": "England",
+      "status": "open",
+      "address": "32 Kimpton Rd, Luton, LU2 0SX",
+      "lat": 51.8749,
+      "lng": -0.3982,
+      "phone": "01582 958 860",
       "hours": "12:00 – 23:00 · Mon–Sun",
       "placeQuery": "Brim Burgers Luton",
-      "image": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGRJWMbaS7dVhR37q9edvHAoa-ooTcJbQAUN2r1n04yiMgJvr9bNbNMO2gIYN7hgMkkezaCwpQv7C8N0mMJRd1PEiYNFTx086LhtWjsiWgWjVOYSlgsyagd-MXjzzoiPMSZQI4=w289-h312-n-k-no",
+      "image": "/locations/store-counter.jpg",
       "rating": 4.7,
       "reviewCount": 526,
       "reviews": [
@@ -63,50 +65,20 @@
       ]
     },
     {
-      "id": "uk-stratford",
-      "name": "Brim Stratford",
-      "neighborhood": "Westfield Stratford",
-      "city": "London",
-      "country": "United Kingdom",
-      "region": "UK",
-      "address": "Westfield Stratford City, London E20 1EJ, United Kingdom",
-      "lat": 51.5434,
-      "lng": -0.0086,
-      "phone": "+44 20 8534 6610",
-      "hours": "10:00 – 23:00 · Mon–Sun",
-      "placeQuery": "Brim Burgers Westfield Stratford London",
-      "image": "/locations/uk-stratford.jpg",
-      "rating": 4.5,
-      "reviewCount": 1834,
-      "reviews": [
-        {
-          "author": "Leah R.",
-          "rating": 5,
-          "relativeTime": "1 week ago",
-          "text": "Perfect stop after shopping at Westfield. Juicy, messy, exactly what a smash burger should be."
-        },
-        {
-          "author": "Imran S.",
-          "rating": 4,
-          "relativeTime": "2 weeks ago",
-          "text": "Solid burgers and quick service even when the mall is packed. The loaded fries are the move."
-        }
-      ]
-    },
-    {
       "id": "uk-high-barnet",
       "name": "Brim High Barnet",
-      "neighborhood": "Barnet High St",
-      "city": "London",
+      "neighborhood": "High Street",
+      "city": "Barnet",
       "country": "United Kingdom",
-      "region": "UK",
-      "address": "119 High Street, Barnet, London EN5 5UZ, United Kingdom",
-      "lat": 51.6505,
-      "lng": -0.1990,
-      "phone": "+44 20 8449 3320",
-      "hours": "12:00 – 23:00 · Mon–Sun",
-      "placeQuery": "Brim Burgers High Barnet London",
-      "image": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEKcVhIWe8e9JTo2zKRJmhq56rGvi4Us33jcMq58aM6ICIjef5PT6bDtjWBBSdFh5gABD1yuaruDgR_ZR6zb09f1LvugzVVfP1MvYtMykk_f-uxw8pmEMFkkoW28mpBvRIC0sn7BQ=w289-h312-n-k-no",
+      "region": "England",
+      "status": "open",
+      "address": "119 High Street, Barnet, EN5 5UZ",
+      "lat": 51.65577,
+      "lng": -0.20219,
+      "phone": "0208 922 4832",
+      "hours": "Mon–Thu 12:00 – 23:00 · Sat–Sun 12:00 – 00:00",
+      "placeQuery": "Brim Burgers High Barnet",
+      "image": "/locations/store-classic.jpg",
       "rating": 4.8,
       "reviewCount": 389,
       "reviews": [
@@ -125,50 +97,20 @@
       ]
     },
     {
-      "id": "uk-dalston",
-      "name": "Brim Dalston",
-      "neighborhood": "Kingsland Rd",
-      "city": "London",
-      "country": "United Kingdom",
-      "region": "UK",
-      "address": "517 Kingsland Rd, London E8 4AR, United Kingdom",
-      "lat": 51.5460,
-      "lng": -0.0758,
-      "phone": "+44 20 7254 8890",
-      "hours": "12:00 – 00:00 · Mon–Sun",
-      "placeQuery": "Brim Burgers Dalston London",
-      "image": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHuS3ElWoK59YDtxkSFex6-_r1BDevzWLibn-1SU-Ush2CP_RITrJAXsc15IhdhvWtEvfezYpp5hJnLVwO0E3ee0Mf-ti8Gr-bPYY0oembymM7FkJWeQ7zajGVZ-q1nxkupxj8ZV2PW7s6-=w426-h240-k-no",
-      "rating": 4.7,
-      "reviewCount": 743,
-      "reviews": [
-        {
-          "author": "Priya N.",
-          "rating": 5,
-          "relativeTime": "6 days ago",
-          "text": "Kingsland Rd gem. The double with brim sauce is elite. Shakes thick enough to stand a straw in."
-        },
-        {
-          "author": "Marcus L.",
-          "rating": 4,
-          "relativeTime": "3 weeks ago",
-          "text": "Great flavour and proper portions. Only knocked a star as seating is tight at peak."
-        }
-      ]
-    },
-    {
       "id": "uk-hammersmith",
       "name": "Brim Hammersmith",
-      "neighborhood": "King St",
+      "neighborhood": "King Street",
       "city": "London",
       "country": "United Kingdom",
-      "region": "UK",
-      "address": "130 King St, London W6 0QU, United Kingdom",
-      "lat": 51.4929,
-      "lng": -0.2300,
-      "phone": "+44 20 8748 5540",
-      "hours": "12:00 – 23:00 · Mon–Sun",
+      "region": "England",
+      "status": "open",
+      "address": "130 King Street, Hammersmith, London, W6 0QU",
+      "lat": 51.49292,
+      "lng": -0.23301,
+      "phone": "",
+      "hours": "",
       "placeQuery": "Brim Burgers Hammersmith London",
-      "image": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHCFudMWtr5oEDA4qo2n_6VRFIcu__O2JWaBieCJAO_EwRJj9QHm_DhU4gWPO1zFXQcpSb6VU4fRSq_C4ecMOFAQ1G4Cb3KDHOEYWrFFGo4_MpWnL2eFSkqFOjPhZUYVHJBpRHr8mh-YtK7=w408-h324-k-no",
+      "image": "/locations/store-flagship.jpg",
       "rating": 4.6,
       "reviewCount": 658,
       "reviews": [
@@ -187,221 +129,68 @@
       ]
     },
     {
-      "id": "uk-kentish-town",
-      "name": "Brim Kentish Town",
-      "neighborhood": "Regis Rd",
+      "id": "uk-edgware-road",
+      "name": "Brim Edgware Road",
+      "neighborhood": "Edgware Road",
       "city": "London",
       "country": "United Kingdom",
-      "region": "UK",
-      "address": "JML House, Regis Rd, London NW5 3EW, United Kingdom",
-      "lat": 51.5520,
-      "lng": -0.1456,
-      "phone": "+44 20 7485 2200",
-      "hours": "12:00 – 23:00 · Mon–Sun",
-      "placeQuery": "Brim Burgers Kentish Town London",
-      "image": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGlJNMOQP3lCo5swcoO8kHmuI0pqiDdsJf6YsDVgEmYKE2v9C5pQgB1PkbrnQS5RtjayiTnNdGzZ4sVWeGVI1GS0kAnoX-os4k9SXLPAWSqzLrNhHMVr73RxAt5F99WAJ-VVdZ7qhKiRJtv=w426-h240-k-no",
-      "rating": 4.7,
-      "reviewCount": 421,
-      "reviews": [
-        {
-          "author": "Aleena F.",
-          "rating": 5,
-          "relativeTime": "1 week ago",
-          "text": "Regis Rd hidden gem. Big juicy burgers exactly as advertised. The chicken is criminally underrated."
-        },
-        {
-          "author": "Sam P.",
-          "rating": 4,
-          "relativeTime": "1 month ago",
-          "text": "Really good smash burger and a clean spot. Parking is tight but the food makes up for it."
-        }
-      ]
+      "region": "England",
+      "status": "open",
+      "address": "171 Edgware Road, London, W2 2HR",
+      "lat": 51.51731,
+      "lng": -0.16664,
+      "phone": "",
+      "hours": "",
+      "placeQuery": "Brim Burgers Edgware Road London",
+      "image": "/locations/store-dining.jpg"
     },
     {
-      "id": "uk-colchester",
-      "name": "Brim Colchester",
-      "neighborhood": "Town Centre",
-      "city": "Colchester",
+      "id": "uk-edinburgh",
+      "name": "Brim Edinburgh",
+      "neighborhood": "Nicolson Street",
+      "city": "Edinburgh",
       "country": "United Kingdom",
-      "region": "UK",
-      "address": "Colchester, Essex, United Kingdom",
-      "lat": 51.8896,
-      "lng": 0.8978,
-      "phone": "+44 1206 366 410",
-      "hours": "12:00 – 23:00 · Mon–Sun",
-      "placeQuery": "Brim Burgers Colchester",
-      "image": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEI5goolxJJN8SDIJMFMOa2akSe_Z4K1ebhv2JP7GdCoI-zfSlA7h4H-zX9Q6HSjauPT0ma4j3gosKac3ttxSg5XdG5eVDyypMJIWOUBTJVbuxA5oliVyk1wWnhpJjnZ3K4s2Uu=w408-h407-k-no",
-      "rating": 4.5,
-      "reviewCount": 287,
-      "reviews": [
-        {
-          "author": "Hamza S.",
-          "rating": 5,
-          "relativeTime": "3 days ago",
-          "text": "My new go-to in Colchester. Patty-to-bun ratio is spot on and the shakes are thick. Open late too."
-        },
-        {
-          "author": "Ellie T.",
-          "rating": 5,
-          "relativeTime": "2 weeks ago",
-          "text": "Finally proper Halal smash burgers in Essex. Friendly staff and quick service."
-        }
-      ]
+      "region": "Scotland",
+      "status": "open",
+      "address": "99 Nicolson Street, Edinburgh, EH8 9BY",
+      "lat": 55.94473,
+      "lng": -3.18407,
+      "phone": "",
+      "hours": "",
+      "placeQuery": "Brim Burgers Edinburgh",
+      "image": "/locations/store-exterior.jpg"
     },
     {
-      "id": "pk-gulberg-main",
-      "name": "Brim Gulberg",
-      "neighborhood": "Main Blvd Gulberg",
-      "city": "Lahore",
-      "country": "Pakistan",
-      "region": "Pakistan",
-      "address": "94D Main Blvd Gulberg, Lahore, Pakistan",
-      "lat": 31.5169,
-      "lng": 74.3484,
-      "phone": "+92 42 3577 1940",
-      "hours": "13:00 – 01:00 · Mon–Sun",
-      "placeQuery": "Brim Burgers Main Boulevard Gulberg Lahore",
-      "image": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAE3wcty2d4ROVIn-HNmZUTwrAIaIAjnoTJcX0HMMTRVQnjL5_v0nC3hbR3btEh0WVSAKdpBwMAY8oxKVUpDQcD6lxsJQs1S821z3oyO_j2Yjq_wTFXyMsLFiqE-WTRsN0ys_rOuvzFwqElZ=w408-h544-k-no",
-      "rating": 4.8,
-      "reviewCount": 2756,
-      "reviews": [
-        {
-          "author": "Zara H.",
-          "rating": 5,
-          "relativeTime": "4 days ago",
-          "text": "Main Boulevard needed this. Perfectly smashed patties, melty cheese, and a sauce I'd buy by the bottle."
-        },
-        {
-          "author": "Usman T.",
-          "rating": 5,
-          "relativeTime": "1 week ago",
-          "text": "Brought friends from out of town and they were blown away. Fast service, spotless place, and 100% Halal."
-        }
-      ]
+      "id": "uk-ilford-lane",
+      "name": "Brim Ilford Lane",
+      "neighborhood": "Ilford Lane",
+      "city": "Ilford",
+      "country": "United Kingdom",
+      "region": "England",
+      "status": "coming-soon",
+      "address": "Ilford Lane, Ilford, London",
+      "lat": 51.55524,
+      "lng": 0.07156,
+      "phone": "",
+      "hours": "",
+      "placeQuery": "Brim Burgers Ilford Lane",
+      "image": "/locations/store-counter.jpg"
     },
     {
-      "id": "pk-gulberg-mall-one",
-      "name": "Brim Mall One",
-      "neighborhood": "Mall 1, Gulberg III",
-      "city": "Lahore",
-      "country": "Pakistan",
-      "region": "Pakistan",
-      "address": "Shop 12, Ground Floor, Mall 1, Main Blvd Gulberg, Block D1, Gulberg III, Lahore, Pakistan",
-      "lat": 31.5102,
-      "lng": 74.3445,
-      "phone": "+92 42 3571 8820",
-      "hours": "13:00 – 01:00 · Mon–Sun",
-      "placeQuery": "Brim Burgers Mall 1 Gulberg III Lahore",
-      "image": "/locations/pk-gulberg-mall-one.jpg",
-      "rating": 4.7,
-      "reviewCount": 1942,
-      "reviews": [
-        {
-          "author": "Mahnoor I.",
-          "rating": 5,
-          "relativeTime": "5 days ago",
-          "text": "Big, juicy and delicious every single time. Gets packed in the evenings — go early or be ready to wait for a table."
-        },
-        {
-          "author": "Hassan R.",
-          "rating": 4,
-          "relativeTime": "3 weeks ago",
-          "text": "Great burgers and a nice spot inside the mall. Can get busy but well worth it."
-        }
-      ]
-    },
-    {
-      "id": "pk-dha-phase-6",
-      "name": "Brim DHA Phase 6",
-      "neighborhood": "Raya, DHA Phase 6",
-      "city": "Lahore",
-      "country": "Pakistan",
-      "region": "Pakistan",
-      "address": "Building No. 79, Ground Floor, Raya Commercial Phase 6, DHA, Lahore, Pakistan",
-      "lat": 31.4730,
-      "lng": 74.4290,
-      "phone": "+92 42 3789 5500",
-      "hours": "13:00 – 01:00 · Mon–Sun",
-      "placeQuery": "Brim Burgers Raya Commercial DHA Phase 6 Lahore",
-      "image": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGNooAUQrI_QXWvRl30yRkj32J43gtx4eoyOV3fJPjP31dEjr5nBgHviuawHTXl_DQeaXXcRWBt2ObIqWaYRZJvN2jJMjOpKmUXmXXzHTpXPYvO7UjyXB_zlFPjFfh3zFHKy-8I=s1360-w1360-h1020-rw",
-      "rating": 4.8,
-      "reviewCount": 1320,
-      "reviews": [
-        {
-          "author": "Ali Z.",
-          "rating": 5,
-          "relativeTime": "2 days ago",
-          "text": "Raya Commercial finally has a proper burger joint. Smashed thin, deeply savoury, and the fries are loaded right."
-        },
-        {
-          "author": "Fatima N.",
-          "rating": 5,
-          "relativeTime": "2 weeks ago",
-          "text": "My go-to in DHA. Patty-to-bun ratio is spot on and the shakes are thick. Open late too, which is a lifesaver."
-        }
-      ]
-    },
-    {
-      "id": "pk-model-town",
-      "name": "Brim Model Town",
-      "neighborhood": "Model Town Link Rd",
-      "city": "Lahore",
-      "country": "Pakistan",
-      "region": "Pakistan",
-      "address": "Model Town Link Rd, adjacent to KFC, Block G, Model Town, Lahore, Pakistan",
-      "lat": 31.4838,
-      "lng": 74.3160,
-      "phone": "+92 42 3591 2240",
-      "hours": "13:00 – 01:00 · Mon–Sun",
-      "placeQuery": "Brim Burgers Model Town Link Road Lahore",
-      "image": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEBu1Vi1dW-1d3F0hGu9d1Uca1uAcHWke2wh6s9F77Uu1acjaUWRm4VwAGfg3xH_RoWjO-xNBVp3Iz4lYFnBQYPMJVu2RwsE23zqQlHK_xgUFSjbRl9SOEaH4FTi-VOd9l9KymYc4Zwz0xZ=s1360-w1360-h1020-rw",
-      "rating": 4.6,
-      "reviewCount": 980,
-      "reviews": [
-        {
-          "author": "Bilal K.",
-          "rating": 5,
-          "relativeTime": "6 days ago",
-          "text": "Right next to KFC and honestly leaves it in the dust. Juicy, messy, and perfectly smashed."
-        },
-        {
-          "author": "Ayesha M.",
-          "rating": 4,
-          "relativeTime": "1 month ago",
-          "text": "Really good smash burgers and friendly staff. Parking can be tricky at peak hours."
-        }
-      ]
-    },
-    {
-      "id": "pk-islamabad",
-      "name": "Brim Islamabad",
-      "neighborhood": "Capital Territory",
-      "city": "Islamabad",
-      "country": "Pakistan",
-      "region": "Pakistan",
-      "address": "Islamabad, Pakistan",
-      "lat": 33.6844,
-      "lng": 73.0479,
-      "phone": "+92 51 2890 660",
-      "hours": "13:00 – 01:00 · Mon–Sun",
-      "placeQuery": "Brim Burgers Islamabad",
-      "image": "https://lh3.googleusercontent.com/gps-cs-s/APNQkAH2TMxG8gd3vOUn-mO-mhE_FW-DCI59l1m7up4YhbkwH3a-YGoDOnOVfVuTsxfZZpJtQHCUJ4zQqD3FbhUHS7nKG8584E-ImXFlRATfa6ctUXodDkdXTYMDODTpMSBkjgMh-2_GvL9-c0dz=s294-w294-h220-n-k-no",
-      "rating": 4.7,
-      "reviewCount": 1105,
-      "reviews": [
-        {
-          "author": "Hamza A.",
-          "rating": 5,
-          "relativeTime": "3 days ago",
-          "text": "Islamabad finally gets a Brim and it does not disappoint. Crispy edges, proper Halal beef, top-tier sauce."
-        },
-        {
-          "author": "Sana W.",
-          "rating": 5,
-          "relativeTime": "2 weeks ago",
-          "text": "Big juicy burgers exactly as advertised. Clean, modern space and quick service."
-        }
-      ]
+      "id": "uk-leicester",
+      "name": "Brim Leicester",
+      "neighborhood": "City centre",
+      "city": "Leicester",
+      "country": "United Kingdom",
+      "region": "England",
+      "status": "coming-soon",
+      "address": "Leicester",
+      "lat": 52.63423,
+      "lng": -1.13465,
+      "phone": "",
+      "hours": "",
+      "placeQuery": "Brim Burgers Leicester",
+      "image": "/locations/store-classic.jpg"
     }
   ]
 }

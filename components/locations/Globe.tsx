@@ -258,7 +258,7 @@ export function Globe({ markers, focusId, className = "" }: GlobeProps) {
         className="pointer-events-none absolute inset-[8%] rounded-full blur-2xl"
         style={{
           background:
-            "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.13), rgba(200,210,230,0.05) 45%, transparent 70%)",
+            "radial-gradient(circle at 50% 50%, rgba(10,10,10,0.07), rgba(10,10,10,0.03) 45%, transparent 70%)",
         }}
       />
       <canvas

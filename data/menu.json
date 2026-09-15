@@ -131,7 +131,7 @@
         {
           "slug": "oklahoma-onion-smash",
           "name": "Oklahoma Onion Smash",
-          "image": "/menu/oklahoma-onion-smash.webp",
+          "image": "/menu/oklahoma-onion-smash-landscape.webp",
           "description": "Onions smashed into a beef patty, cheese slice, gherkins, lettuce, caramelised onion, mustard & BRIM Burger Sauce in a brioche bun.",
           "tags": ["beef", "cheesy"],
           "keywords": ["onion", "smash"],
@@ -183,7 +183,7 @@
         {
           "slug": "chipotle-chicken",
           "name": "Chipotle Chicken",
-          "image": "/menu/chipotle-chicken.jpg",
+          "image": "/menu/chipotle-chicken-landscape.webp",
           "description": "Breaded chicken fillet, jalapeños, cheese slice, chipotle glaze, lettuce, sliced onions, BRIM Burger Sauce & Signature Sauce in a seeded brioche bun.",
           "tags": ["chicken", "cheesy", "spicy"],
           "spice": 1,
@@ -200,7 +200,7 @@
         {
           "slug": "big-juicy-sando",
           "name": "Big Juicy Sando",
-          "image": "/menu/big-juicy-sando.jpg",
+          "image": "/menu/big-juicy-sando-landscape.webp",
           "description": "Sliced brioche loaf filled with two beef patties, cheddar cheese, grilled onions & mushrooms, Signature Sauce and BRIM Burger Sauce.",
           "tags": ["beef", "cheesy", "spicy"],
           "spice": 1,
@@ -210,7 +210,7 @@
         {
           "slug": "hot-smoke-sando",
           "name": "The Hot Smoke Sando",
-          "image": "/menu/hot-smoke-sando.jpg",
+          "image": "/menu/hot-smoke-sando-landscape.webp",
           "description": "Sliced brioche loaf filled with two beef patties, cheddar cheese, smokey BBQ sauce, Signature Sauce and jalapeños.",
           "tags": ["beef", "cheesy", "spicy"],
           "spice": 2,
@@ -220,7 +220,7 @@
         {
           "slug": "brim-sando",
           "name": "Brim Sando",
-          "image": "/menu/brim-sando.jpg",
+          "image": "/menu/brim-sando-landscape.webp",
           "description": "Sliced brioche loaf filled with breaded chicken fillet or two beef patties, cheddar cheese, Signature Sauce, thin burger sauce and spring onions.",
           "tags": ["chicken", "beef", "cheesy"],
           "keywords": ["sando", "sandwich"],
@@ -311,7 +311,7 @@
         {
           "slug": "loaded-tots",
           "name": "Loaded Tots",
-          "image": "/menu/loaded-tots.jpg",
+          "image": "/menu/loaded-tots-landscape.webp",
           "description": "Crispy tots loaded with your choice of beef or chicken, hot cheese sauce, BRIM Burger Sauce & Signature Sauce, topped with crispy onions and chives.",
           "tags": ["beef", "chicken", "cheesy"],
           "badge": "Chicken or beef",
@@ -362,7 +362,7 @@
         {
           "slug": "dynamite-fries",
           "name": "Dynamite Fries",
-          "image": "/menu/dynamite-fries.jpg",
+          "image": "/menu/dynamite-fries-landscape.webp",
           "description": "Hot cheese sauce, jalapeño, Habañero Hot Sauce & crispy roasted onions, topped with chives.",
           "tags": ["veggie", "cheesy", "spicy"],
           "spice": 3,
@@ -392,7 +392,7 @@
         {
           "slug": "mozzarella-dippers",
           "name": "Mozzarella Dippers",
-          "image": "/menu/mozzarella-dippers.jpg",
+          "image": "/menu/mozzarella-dippers-landscape.webp",
           "description": "Crispy golden mozzarella dippers with a molten cheese pull.",
           "tags": ["veggie", "cheesy"],
           "keywords": ["mozzarella", "cheese"]
@@ -414,7 +414,7 @@
         {
           "slug": "dips",
           "name": "Dips",
-          "image": "/menu/dips.jpg",
+          "image": "/menu/dips-landscape.webp",
           "description": "Cool, classic, dunk-anything sauces.",
           "variants": ["BRIM Burger Sauce", "Sweet Chilli", "BBQ North"],
           "tags": [],
@@ -423,7 +423,7 @@
         {
           "slug": "dips-with-a-kick",
           "name": "With a Kick",
-          "image": "/menu/dips-with-a-kick.jpg",
+          "image": "/menu/dips-with-a-kick-landscape.webp",
           "description": "For when you want it to bite back.",
           "variants": ["Signature Sauce", "Wild West", "Habañero"],
           "tags": ["spicy"],
@@ -504,7 +504,7 @@
         {
           "slug": "san-sabastian-cheesecake",
           "name": "San Sabastian Cheesecake",
-          "image": "/menu/san-sabastian-cheesecake.jpg",
+          "image": "/menu/san-sabastian-cheesecake-landscape.webp",
           "description": "A baked vanilla cheesecake served with your choice of raspberry, salted caramel or chocolate sauce.",
           "variants": ["Raspberry", "Salted Caramel", "Chocolate"],
           "tags": ["sweet"],
@@ -520,7 +520,7 @@
         {
           "slug": "drinks",
           "name": "Drinks",
-          "image": "/menu/drinks.jpg",
+          "image": "/menu/drinks-landscape.webp",
           "description": "Ice-cold and ready.",
           "variants": [
             "Coca Cola",

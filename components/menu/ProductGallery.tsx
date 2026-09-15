@@ -34,7 +34,7 @@ export function ProductGallery({
   return (
     <div className="lg:sticky lg:top-28 lg:self-start">
       {/* Viewport */}
-      <div className="group relative aspect-square overflow-hidden rounded-3xl bg-white/[0.03] ring-1 ring-white/10">
+      <div className="group relative aspect-[3/2] overflow-hidden rounded-3xl bg-white ring-1 ring-white/10">
         {count === 0 ? (
           <div className="grid h-full w-full place-items-center">
             <span className="font-display text-9xl uppercase text-paper/10">
@@ -54,7 +54,7 @@ export function ProductGallery({
                 alt={i === 0 ? alt : `${alt} — what's inside`}
                 draggable={false}
                 className={`h-full w-full shrink-0 ${
-                  img.contain ? "bg-white/[0.02] object-contain p-3" : "object-cover"
+                  img.contain ? "bg-white/[0.02] object-contain p-3" : "object-contain"
                 }`}
               />
             ))}
@@ -86,12 +86,12 @@ export function ProductGallery({
 
         {count > 1 && (
           <>
-            {/* Arrows — always visible on touch, reveal on hover on desktop */}
+            {/* Arrows stay visible on touch screens, tablets and desktop */}
             <button
               type="button"
               onClick={() => go(index - 1)}
               aria-label="Previous image"
-              className="absolute left-3 top-1/2 z-10 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-black/60 text-paper ring-1 ring-white/15 backdrop-blur transition-all hover:bg-black/80 sm:opacity-0 sm:group-hover:opacity-100"
+              className="absolute left-3 top-1/2 z-10 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-black/60 text-paper ring-1 ring-white/15 backdrop-blur transition-all hover:bg-black/80"
             >
               <Chevron dir="left" />
             </button>
@@ -99,7 +99,7 @@ export function ProductGallery({
               type="button"
               onClick={() => go(index + 1)}
               aria-label="Next image"
-              className="absolute right-3 top-1/2 z-10 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-black/60 text-paper ring-1 ring-white/15 backdrop-blur transition-all hover:bg-black/80 sm:opacity-0 sm:group-hover:opacity-100"
+              className="absolute right-3 top-1/2 z-10 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-black/60 text-paper ring-1 ring-white/15 backdrop-blur transition-all hover:bg-black/80"
             >
               <Chevron dir="right" />
             </button>
@@ -140,7 +140,7 @@ export function ProductGallery({
               <img
                 src={asset(img.src)}
                 alt=""
-                className={`h-full w-full ${img.contain ? "bg-white/[0.03] object-contain p-1" : "object-cover"}`}
+                className={`h-full w-full ${img.contain ? "bg-white/[0.03] object-contain p-1" : "object-contain"}`}
               />
             </button>
           ))}

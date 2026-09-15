@@ -3,12 +3,16 @@ import type { SpiceLevel } from "@/lib/menu";
 const LABELS = ["", "Mild heat", "Got a kick", "Full fire"] as const;
 
 // A 3-step chilli meter. Filled chillies = current level; rest are dimmed.
+// `onLight` deepens the label so it keeps its contrast on a white surface —
+// the default orange is tuned for the dark pages.
 export function SpiceMeter({
   level,
   className = "",
+  onLight = false,
 }: {
   level: SpiceLevel;
   className?: string;
+  onLight?: boolean;
 }) {
   if (!level) return null;
   return (
@@ -26,7 +30,11 @@ export function SpiceMeter({
           </span>
         ))}
       </span>
-      <span className="text-[0.7rem] font-semibold uppercase tracking-wider text-brim">
+      <span
+        className={`text-[0.7rem] font-semibold uppercase tracking-wider ${
+          onLight ? "text-brim-deep" : "text-brim"
+        }`}
+      >
         {LABELS[level]}
       </span>
     </span>

@@ -39,6 +39,7 @@ jobs:
         run: npm run build
         env:
           GITHUB_PAGES: "true" # Applies the /brim-demo basePath for Pages hosting
+          NEXT_PUBLIC_FORM_AUTOMATION_URL: ${{ secrets.NEXT_PUBLIC_FORM_AUTOMATION_URL }}
 
       - name: Upload production-ready static assets
         uses: actions/upload-pages-artifact@v3

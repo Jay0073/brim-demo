@@ -10,6 +10,16 @@ import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { registerLenis } from "@/lib/scroll";
 
 export function SmoothScroll({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+
+  // The franchise journey is deliberately static: no smooth scrolling or
+  // route-specific scroll effects, even though the rest of the site uses them.
+  if (pathname === "/franchising") return <>{children}</>;
+
+  return <AnimatedSmoothScroll>{children}</AnimatedSmoothScroll>;
+}
+
+function AnimatedSmoothScroll({ children }: { children: React.ReactNode }) {
   const lenisRef = useRef<LenisRef>(null);
   const pathname = usePathname();
 

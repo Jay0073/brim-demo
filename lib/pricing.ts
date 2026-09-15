@@ -1,6 +1,6 @@
 // ─────────────────────────────────────────────────────────────────────────
 //  Demo pricing — the menu data carries no prices, so we synthesise sensible,
-//  STABLE ones for the cart/checkout demo. Price = a per-category base + a
+//  STABLE ones to display on the menu. Price = a per-category base + a
 //  deterministic jitter derived from the slug hash. Deterministic is the whole
 //  point: the same slug always yields the same price on the server and the
 //  client, so prices never trigger a hydration mismatch (no Math.random).

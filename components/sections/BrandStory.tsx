@@ -10,8 +10,8 @@
 //  motion via globals.css).
 //
 //  Entrance is a lightweight GSAP/ScrollTrigger reveal (no pinning), scoped
-//  with useGSAP so cleanup is automatic. Dark `bg-ink` so it pours straight
-//  into the footer below.
+//  with useGSAP so cleanup is automatic. Light `bg-paper` like the rest of the
+//  site — the chronicle panel is a white card on that base.
 // ─────────────────────────────────────────────────────────────────────────
 import { useRef, useState } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
@@ -36,13 +36,13 @@ interface Milestone {
 const MILESTONES: Milestone[] = [
   {
     year: "2019",
-    title: "The Ignition Outpost",
-    subtitle: "Where it began · one store",
+    title: "The Foundation",
+    subtitle: "The company takes shape",
     description:
-      "Founded by Amadul Hassan in Hemel Hempstead on a single belief — that halal food deserves to be premium, bold and unapologetically big. One empty unit, one heavy-cast iron and an obsession with quality: grass-fed beef, artisan-baked buns and signature sauces crafted in-house — a brand the UK had never seen before.",
+      "BRIM Burgers Ltd is incorporated in Hemel Hempstead. It is the groundwork for a bigger idea: a focused, modern burger brand capable of giving Halal food the quality, confidence and identity it deserves.",
     icon: "compass",
-    metric: "1",
-    metricLabel: "Store it all started with",
+    metric: "BRIM",
+    metricLabel: "The foundation is laid",
     person: {
       name: "Amadul Hassan",
       role: "Founder & CEO",
@@ -51,13 +51,13 @@ const MILESTONES: Milestone[] = [
   },
   {
     year: "2021",
-    title: "The London Criss-Cross",
-    subtitle: "Refining the boutique footprint",
+    title: "The First BRIM",
+    subtitle: "Hemel Hempstead · first serve",
     description:
-      "Perfecting the signature double-smashed 40-second lace crust. We establish boutique landmarks in Stratford and High Barnet. The strict monochrome branding and meticulous presentation instantly command premium pricing and real social notoriety.",
+      "After the pandemic closure of their earlier restaurant, brothers Amadul and Jawad Hassan turn a setback into a new beginning. They launch BRIM as a premium Halal smash-burger concept built around bold flavour, disciplined preparation and a sharp monochrome identity.",
     icon: "award",
-    metric: "2",
-    metricLabel: "Flagships established",
+    metric: "1",
+    metricLabel: "First BRIM store launched",
   },
   {
     year: "2023",
@@ -82,9 +82,9 @@ const MILESTONES: Milestone[] = [
   {
     year: "2025",
     title: "Overcoming Oceans",
-    subtitle: "International presence in PK",
+    subtitle: "Growing across the UK",
     description:
-      "To prove global adaptability, Brim opens state-of-the-art flagship hubs in Lahore (Gulberg) and Islamabad (F-11). The ultra-premium black design lands perfectly with international high-income audiences — the concept travels.",
+      "BRIM grows through carefully selected locations, a consistent operating standard and local teams who know their communities.",
     icon: "globe",
     metric: "2",
     metricLabel: "Overseas boutiques live",
@@ -178,28 +178,25 @@ export function BrandStory() {
     <section
       ref={rootRef}
       id="brand-story"
-      className="relative overflow-hidden bg-ink text-paper"
+      className="relative overflow-hidden bg-paper text-ink"
     >
-      {/* Brand hairline seam (matches Specials / Footer edges). */}
-      <div
-        aria-hidden
-        className="brim-stripes-fine absolute inset-x-0 top-0 h-2 opacity-80"
-      />
+      {/* Brand hairline seam (matches the section rules used site-wide). */}
+      <div aria-hidden className="absolute inset-x-0 top-0 h-px bg-ink/10" />
 
       <div className="mx-auto max-w-7xl px-6 py-20 sm:px-8 sm:py-28 lg:px-12">
         <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-12 lg:items-center lg:gap-16">
           {/* ── LEFT: heading + clickable year rail ─────────────────────── */}
           <div className="lg:col-span-5">
-            <p className="bs-reveal text-xs font-bold uppercase tracking-[0.4em] text-paper/70">
+            <p className="bs-reveal text-xs font-bold uppercase tracking-[0.4em] text-ink/45">
               Brand evolution
             </p>
             <h2 className="bs-reveal mt-4 max-w-md font-display text-5xl uppercase leading-[0.85] sm:text-6xl">
               Crafted with{" "}
-              <span className="text-ash">obsession</span>
+              <span className="text-ink/35">obsession</span>
             </h2>
-            <p className="bs-reveal mt-5 max-w-sm text-pretty text-sm leading-relaxed text-paper/55">
-              Seven years from a single London outpost to an international
-              boutique chain — smashed to order, every step audited.
+            <p className="bs-reveal mt-5 max-w-sm text-pretty text-sm leading-relaxed text-ink/60">
+              From a Hemel Hempstead beginning to an international brand —
+              smashed to order, with one standard across every market.
             </p>
 
             {/* The timeline: a vertical line with a clickable node per year.
@@ -208,7 +205,7 @@ export function BrandStory() {
               role="tablist"
               aria-label="Brand timeline"
               aria-orientation="vertical"
-              className="bs-reveal relative mt-10 space-y-1 border-l border-white/10 pl-7"
+              className="bs-reveal relative mt-10 space-y-1 border-l border-ink/10 pl-7"
             >
               {MILESTONES.map((m, i) => {
                 const selected = i === active;
@@ -227,15 +224,15 @@ export function BrandStory() {
                       aria-hidden
                       className={`absolute left-[-31px] top-1/2 h-2.5 w-2.5 -translate-y-1/2 rounded-full border transition-all duration-300 ${
                         selected
-                          ? "scale-125 border-paper bg-paper shadow-[0_0_14px_2px] shadow-paper/40"
-                          : "border-white/25 bg-ink group-hover:border-paper/60"
+                          ? "scale-125 border-ink bg-ink shadow-[0_0_14px_2px] shadow-ink/20"
+                          : "border-ink/25 bg-paper group-hover:border-ink/60"
                       }`}
                     />
                     <span
                       className={`block font-display text-xl tabular-nums tracking-tight transition-colors duration-200 ${
                         selected
-                          ? "text-paper"
-                          : "text-ash group-hover:text-paper/80"
+                          ? "text-ink"
+                          : "text-ink/45 group-hover:text-ink/75"
                       }`}
                     >
                       {m.year}
@@ -243,8 +240,8 @@ export function BrandStory() {
                     <span
                       className={`mt-0.5 block text-[0.8rem] tracking-tight transition-colors duration-200 ${
                         selected
-                          ? "font-semibold text-paper/70"
-                          : "text-paper/30 group-hover:text-paper/50"
+                          ? "font-semibold text-ink/70"
+                          : "text-ink/35 group-hover:text-ink/55"
                       }`}
                     >
                       {m.title}
@@ -262,31 +259,31 @@ export function BrandStory() {
               id="brand-story-panel"
               role="tabpanel"
               aria-label={`${event.year} — ${event.title}`}
-              className="animate-rise relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.02] p-8 sm:p-10"
+              className="animate-rise relative overflow-hidden rounded-3xl bg-white p-8 shadow-lg shadow-ink/5 ring-1 ring-ink/10 sm:p-10"
             >
               {/* Giant ghost year, clipped top-right (echoes the Specials tiles). */}
               <span
                 aria-hidden
-                className="pointer-events-none absolute -right-3 -top-10 select-none font-display text-[11rem] leading-none text-white/[0.035]"
+                className="pointer-events-none absolute -right-3 -top-10 select-none font-display text-[11rem] leading-none text-ink/[0.05]"
               >
                 {event.year.slice(2)}
               </span>
 
               {/* Header row: year marker + step counter + icon. */}
-              <div className="relative flex items-start justify-between gap-6 border-b border-white/5 pb-8">
+              <div className="relative flex items-start justify-between gap-6 border-b border-ink/10 pb-8">
                 <div>
-                  <span className="block font-display text-6xl leading-none tracking-tighter text-paper sm:text-7xl">
+                  <span className="block font-display text-6xl leading-none tracking-tighter text-ink sm:text-7xl">
                     {event.year}
                   </span>
-                  <span className="mt-3 block text-[0.65rem] font-semibold uppercase tracking-[0.35em] text-ash">
+                  <span className="mt-3 block text-[0.65rem] font-semibold uppercase tracking-[0.35em] text-ink/45">
                     Chronicle ·{" "}
-                    <span className="tabular-nums text-paper">
+                    <span className="tabular-nums text-ink">
                       {String(active + 1).padStart(2, "0")}
                     </span>
-                    <span className="text-ash"> / {String(MILESTONES.length).padStart(2, "0")}</span>
+                    <span className="text-ink/45"> / {String(MILESTONES.length).padStart(2, "0")}</span>
                   </span>
                 </div>
-                <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl border border-white/15 bg-white/5 text-paper">
+                <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl border border-ink/15 bg-paper text-ink">
                   <Icon name={event.icon} className="h-6 w-6" />
                 </span>
               </div>
@@ -298,13 +295,13 @@ export function BrandStory() {
                   <img
                     src={asset(event.person.image)}
                     alt={event.person.name}
-                    className="h-16 w-16 shrink-0 rounded-full object-cover ring-2 ring-white/15"
+                    className="h-16 w-16 shrink-0 rounded-full object-cover ring-2 ring-ink/10"
                   />
                   <div>
-                    <span className="block font-display text-xl uppercase leading-none text-paper">
+                    <span className="block font-display text-xl uppercase leading-none text-ink">
                       {event.person.name}
                     </span>
-                    <span className="mt-1.5 block text-[0.7rem] font-semibold uppercase tracking-[0.25em] text-ash">
+                    <span className="mt-1.5 block text-[0.7rem] font-semibold uppercase tracking-[0.25em] text-ink/45">
                       {event.person.role}
                     </span>
                   </div>
@@ -313,39 +310,39 @@ export function BrandStory() {
 
               {/* Story copy. */}
               <div className="relative mt-8 space-y-4">
-                <span className="block text-xs font-bold uppercase tracking-[0.3em] text-paper/70">
+                <span className="block text-xs font-bold uppercase tracking-[0.3em] text-ink/45">
                   {event.subtitle}
                 </span>
-                <h3 className="font-display text-3xl uppercase leading-[0.95] text-paper sm:text-4xl">
+                <h3 className="font-display text-3xl uppercase leading-[0.95] text-ink sm:text-4xl">
                   {event.title}
                 </h3>
-                <p className="max-w-2xl text-[0.95rem] leading-relaxed text-paper/60">
+                <p className="max-w-2xl text-[0.95rem] leading-relaxed text-ink/65">
                   {event.description}
                 </p>
               </div>
 
               {/* Headline metric + standing quality badge. */}
-              <div className="relative mt-8 grid grid-cols-1 gap-3 border-t border-white/5 pt-7 sm:grid-cols-2">
-                <div className="rounded-2xl border border-white/5 bg-ink/60 p-5">
-                  <span className="block font-display text-4xl tabular-nums leading-none text-paper">
+              <div className="relative mt-8 grid grid-cols-1 gap-3 border-t border-ink/10 pt-7 sm:grid-cols-2">
+                <div className="rounded-2xl border border-ink/10 bg-paper p-5">
+                  <span className="block font-display text-4xl tabular-nums leading-none text-ink">
                     {event.metric}
                   </span>
-                  <span className="mt-2.5 block text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-ash">
+                  <span className="mt-2.5 block text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-ink/45">
                     {event.metricLabel}
                   </span>
                 </div>
-                <div className="flex items-center justify-between gap-3 rounded-2xl border border-white/5 bg-ink/60 p-5">
+                <div className="flex items-center justify-between gap-3 rounded-2xl border border-ink/10 bg-paper p-5">
                   <div>
-                    <span className="block text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-ash">
+                    <span className="block text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-ink/45">
                       Quality standard
                     </span>
-                    <span className="mt-1.5 block text-sm font-bold tracking-wide text-paper">
+                    <span className="mt-1.5 block text-sm font-bold tracking-wide text-ink">
                       100% Halal · Audited
                     </span>
                   </div>
                   <span
                     aria-hidden
-                    className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-paper text-base text-ink"
+                    className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-ink text-base text-paper"
                   >
                     ✓
                   </span>

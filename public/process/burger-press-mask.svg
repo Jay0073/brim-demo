@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 667">
+  <!-- Outline of the original photograph; the second contour opens the handle. -->
+  <path fill="white" fill-rule="evenodd" d="
+    M199 128
+    C188 132 183 145 181 162
+    L158 328
+    C131 346 112 368 112 395
+    L112 455
+    C112 526 286 581 498 581
+    C713 581 887 526 887 455
+    L887 402
+    C887 370 868 345 827 329
+    L802 103
+    C800 83 789 70 777 70
+    L211 126 Z
+    M244 247
+    L734 188
+    L717 280
+    Q715 287 710 291
+    C578 261 397 264 244 301 Z
+  "/>
+</svg>

@@ -1,12 +1,12 @@
 "use client";
 
-// Locations — cinematic + interactive:
-//   • striped heading banner (the signature B/W diagonal frame),
+// Locations — cinematic + interactive, on the light paper base:
+//   • a plain heading (the old B/W diagonal stripe banner is gone),
 //   • a big, centred globe with a white location pin on the selected branch,
 //     and a compact "selected" card centred just beneath it,
 //   • a branch index on the left,
-//   • a full-width carousel of ALL branches below — Google reviews, Book a
-//     table + directions.
+//   • a full-width carousel of ALL branches below — address, hours, reviews
+//     where we have them, and directions.
 // Hovering the index previews a branch (spins the globe, swaps the card,
 // centres the carousel). Clicking the index or the compact card smooth-scrolls
 // down to that branch's full card in the carousel.
@@ -17,11 +17,21 @@ import { smoothScrollTo } from "@/lib/scroll";
 import { Globe, type GlobeMarker } from "./Globe";
 import { StoreCompactCard } from "./StoreCompactCard";
 import { StoreDetailCard } from "./StoreDetailCard";
-import { STORES, REGIONS, storesIn, type Region } from "@/lib/locations";
+import {
+  STORES,
+  STATUSES,
+  STATUS_LABEL,
+  OPEN_COUNT,
+  storesIn,
+  type StoreStatus,
+} from "@/lib/locations";
 
-type Filter = Region | "All";
-const FILTERS: Filter[] = ["All", ...REGIONS];
-const flagFor = (r: Region) => (r === "UK" ? "🇬🇧" : "🇵🇰");
+// Every branch is in the UK now, so the useful split is trading status rather
+// than geography.
+type Filter = StoreStatus | "All";
+const FILTERS: Filter[] = ["All", ...STATUSES];
+const filterLabel = (f: Filter) => (f === "All" ? "All" : STATUS_LABEL[f]);
+const COMING_COUNT = STORES.length - OPEN_COUNT;
 
 export function LocationsExperience() {
   const root = useRef<HTMLDivElement>(null);
@@ -88,43 +98,26 @@ export function LocationsExperience() {
   );
 
   return (
-    <div ref={root} className="relative min-h-dvh overflow-hidden bg-ink text-paper">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute left-1/2 top-[34%] h-[42rem] w-[42rem] -translate-x-1/2 rounded-full opacity-60 blur-3xl"
-        style={{ background: "radial-gradient(circle, rgba(210,220,240,0.10), transparent 60%)" }}
-      />
+    <div ref={root} className="relative min-h-dvh overflow-hidden bg-paper text-ink [color-scheme:light]">
 
       <div className="relative mx-auto max-w-7xl px-6 pb-24 pt-28 sm:pt-32">
-        {/* ── Striped heading banner ─────────────────────────────────── */}
+        {/* ── Heading ────────────────────────────────────────────────── */}
         <header className="relative isolate flex flex-col items-center py-8 text-center">
-          <div
-            aria-hidden
-            className="loc-band brim-stripes absolute inset-x-0 top-1/2 h-24 -translate-y-1/2 opacity-90"
-            style={{ transformOrigin: "center" }}
-          />
-          <div
-            aria-hidden
-            className="absolute inset-x-0 top-1/2 h-24 -translate-y-1/2"
-            style={{
-              background:
-                "linear-gradient(90deg, rgba(10,10,10,0) 0%, rgba(10,10,10,0.92) 26%, rgba(10,10,10,0.92) 74%, rgba(10,10,10,0) 100%)",
-            }}
-          />
-          <p className="loc-eyebrow relative text-[0.6rem] font-bold uppercase tracking-[0.35em] text-brim sm:text-xs sm:tracking-[0.45em]">
-            Locations · {STORES.length} stores · UK &amp; Pakistan
+          <div aria-hidden className="loc-band absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-ink/10" />
+          <p className="loc-eyebrow relative bg-paper px-4 text-[0.6rem] font-bold uppercase tracking-[0.35em] text-brim-deep sm:text-xs sm:tracking-[0.45em]">
+            Locations · {OPEN_COUNT} open · {COMING_COUNT} coming soon
           </p>
-          <h1 className="loc-title relative mt-3 font-display text-6xl uppercase leading-[0.82] text-paper [text-shadow:0_6px_40px_rgba(0,0,0,0.85)] sm:text-8xl">
+          <h1 className="loc-title relative mt-3 font-display text-6xl uppercase leading-[0.82] text-ink sm:text-8xl">
             Brim Near You
           </h1>
         </header>
 
-        {/* ── Region toggle ──────────────────────────────────────────── */}
+        {/* ── Status toggle ──────────────────────────────────────────── */}
         <div className="loc-toggle mt-2 flex justify-center">
           <div
             role="tablist"
-            aria-label="Filter stores by region"
-            className="glass-dark inline-flex rounded-full p-1"
+            aria-label="Filter stores by status"
+            className="inline-flex rounded-full bg-white p-1 ring-1 ring-ink/10"
           >
             {FILTERS.map((f) => {
               const on = filter === f;
@@ -135,10 +128,10 @@ export function LocationsExperience() {
                   aria-selected={on}
                   onClick={() => changeFilter(f)}
                   className={`rounded-full px-5 py-2 text-sm font-semibold transition-colors ${
-                    on ? "bg-paper text-ink" : "text-paper/70 hover:text-paper"
+                    on ? "bg-ink text-paper" : "text-ink/55 hover:text-ink"
                   }`}
                 >
-                  {f}
+                  {filterLabel(f)}
                 </button>
               );
             })}
@@ -149,12 +142,12 @@ export function LocationsExperience() {
         <div className="mt-12 grid gap-8 lg:grid-cols-[minmax(0,16rem)_minmax(0,1fr)_minmax(0,23rem)] lg:items-center">
           {/* INDEX */}
           <nav className="order-2 lg:order-none" aria-label="Store directory">
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-ash">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-ink/45">
               Branches
             </p>
             <ul
               data-lenis-prevent
-              className="flex max-h-[25rem] flex-col overflow-y-auto overflow-x-hidden pr-1 [scrollbar-color:rgba(255,255,255,0.2)_transparent] [scrollbar-width:thin] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/20 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar]:w-1.5"
+              className="flex max-h-[25rem] flex-col overflow-y-auto overflow-x-hidden pr-1 [scrollbar-color:rgba(10,10,10,0.2)_transparent] [scrollbar-width:thin] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-ink/20 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar]:w-1.5"
             >
               {stores.map((s, i) => {
                 const on = s.id === activeId;
@@ -167,13 +160,13 @@ export function LocationsExperience() {
                       aria-pressed={on}
                       className={`group relative flex w-full items-center gap-3 border-l-2 py-3 pl-4 pr-2 text-left transition-all ${
                         on
-                          ? "border-brim bg-white/[0.04]"
-                          : "border-white/10 hover:border-white/40 hover:bg-white/[0.02]"
+                          ? "border-brim bg-white"
+                          : "border-ink/10 hover:border-ink/30 hover:bg-white/60"
                       }`}
                     >
                       <span
                         className={`font-display text-xs tabular-nums ${
-                          on ? "text-brim" : "text-ash/50"
+                          on ? "text-brim-deep" : "text-ink/35"
                         }`}
                       >
                         {String(i + 1).padStart(2, "0")}
@@ -181,19 +174,23 @@ export function LocationsExperience() {
                       <span className="min-w-0 flex-1">
                         <span
                           className={`block truncate font-display text-lg leading-tight transition-colors ${
-                            on ? "text-paper" : "text-paper/80 group-hover:text-paper"
+                            on ? "text-ink" : "text-ink/75 group-hover:text-ink"
                           }`}
                         >
                           {s.name}
                         </span>
-                        <span className="block truncate text-xs text-ash">
-                          {s.city} <span aria-hidden>{flagFor(s.region)}</span> · ★{" "}
-                          {s.rating.toFixed(1)}
+                        <span className="block truncate text-xs text-ink/50">
+                          {s.city}
+                          {s.status === "coming-soon"
+                            ? " · Coming soon"
+                            : s.rating !== undefined
+                              ? ` · ★ ${s.rating.toFixed(1)}`
+                              : ""}
                         </span>
                       </span>
                       <span
                         aria-hidden
-                        className={`text-brim transition-all ${
+                        className={`text-brim-deep transition-all ${
                           on
                             ? "translate-x-0 opacity-100"
                             : "-translate-x-1 opacity-0 group-hover:opacity-60"
@@ -215,11 +212,11 @@ export function LocationsExperience() {
               focusId={activeId}
               className="mx-auto w-full max-w-2xl"
             />
-            <p aria-live="polite" className="mt-1 text-center text-sm text-ash">
+            <p aria-live="polite" className="mt-1 text-center text-sm text-ink/55">
               {active ? (
                 <>
                   Pointing at{" "}
-                  <span className="font-semibold text-paper">{active.name}</span> ·{" "}
+                  <span className="font-semibold text-ink">{active.name}</span> ·{" "}
                   {active.city}
                 </>
               ) : (
@@ -242,13 +239,13 @@ export function LocationsExperience() {
           </div>
         </div>
 
-        {/* ── Carousel: all branches + reviews, on a WHITE panel (the dark
-            cards sit on white here; the globe stage above stays dark). ──── */}
+        {/* ── Carousel: all branches. The cards are white on the paper base,
+            so there's no panel behind them any more. ─────────────────── */}
         <section ref={carouselRef} className="loc-carousel mt-16 scroll-mt-24" aria-label="All branches">
-          <div className="rounded-[2rem] bg-white px-5 py-7 text-ink sm:px-8 sm:py-9">
+          <div className="border-t border-ink/10 pt-10">
             <div className="mb-5 flex items-end justify-between gap-4">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brim">
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brim-deep">
                   Every Brim · {stores.length} branches
                 </p>
                 <h2 className="mt-1 font-display text-2xl uppercase leading-none text-ink sm:text-3xl">
@@ -261,7 +258,7 @@ export function LocationsExperience() {
                   type="button"
                   onClick={() => scrollTrack(-1)}
                   aria-label="Scroll branches left"
-                  className="grid h-10 w-10 place-items-center rounded-full text-ink ring-1 ring-ink/15 transition-colors hover:bg-ink hover:text-paper"
+                  className="grid h-10 w-10 place-items-center rounded-full bg-white text-ink ring-1 ring-ink/15 transition-colors hover:bg-ink hover:text-paper"
                 >
                   <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
                     <path d="m14 6-6 6 6 6" />
@@ -271,7 +268,7 @@ export function LocationsExperience() {
                   type="button"
                   onClick={() => scrollTrack(1)}
                   aria-label="Scroll branches right"
-                  className="grid h-10 w-10 place-items-center rounded-full text-ink ring-1 ring-ink/15 transition-colors hover:bg-ink hover:text-paper"
+                  className="grid h-10 w-10 place-items-center rounded-full bg-white text-ink ring-1 ring-ink/15 transition-colors hover:bg-ink hover:text-paper"
                 >
                   <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
                     <path d="m10 6 6 6-6 6" />
@@ -281,10 +278,10 @@ export function LocationsExperience() {
             </div>
             <div
               ref={trackRef}
-              className="flex snap-x snap-mandatory gap-5 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              className="flex snap-x snap-mandatory items-stretch gap-5 overflow-x-auto pb-4 pt-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
               {stores.map((s, i) => (
-                <div key={s.id} data-id={s.id} className="snap-center">
+                <div key={s.id} data-id={s.id} className="flex snap-center">
                   <StoreDetailCard
                     store={s}
                     index={i}

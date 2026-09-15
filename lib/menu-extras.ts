@@ -29,10 +29,11 @@ export interface ProductFacts {
   ingredients: string[];
 }
 
-// The whole brand is strictly Halal — every food item carries the mark unless a
-// JSON flag explicitly says otherwise.
+// Product badges highlight the brand's Halal meat offering, rather than marking
+// drinks, desserts and vegetarian sides. Explicit item flags take precedence.
+const MEAT_HOT_DOGS = new Set(["classic-hot-dog", "loaded-dog", "smokin-dog", "street-dog"]);
 export function isHalal(item: MenuItem): boolean {
-  return item.halal ?? true;
+  return item.halal ?? (item.tags.some(tag => tag === "beef" || tag === "chicken") || MEAT_HOT_DOGS.has(item.slug));
 }
 
 // Heat label from explicit `heat`, else mapped from the 0–3 spice level.
