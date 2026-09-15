@@ -14,7 +14,7 @@ const PRINCIPLES = [
   ["01", "Made with intent", "Grass-fed beef, artisan-baked buns and signature sauces—chosen to make every burger unmistakably BRIM."],
   ["02", "Halal without compromise", "A fully Halal, alcohol-free food experience where trust is part of the product, never a footnote."],
   ["03", "Smashed to order", "Fresh preparation, high heat and disciplined technique create the crust, texture and theatre behind every serve."],
-  ["04", "Built to travel", "A bold British-born concept with the systems and cultural relevance to connect across the UK and Pakistan."],
+  ["04", "Built to travel", "A bold British-born concept with the systems and cultural relevance to connect across the UK."],
 ] as const;
 
 export default function AboutPage() {
@@ -144,12 +144,12 @@ export default function AboutPage() {
                 <p className="text-xs font-bold uppercase tracking-[0.35em] text-ink/45">One team · Two markets</p>
                 <h2 className="mt-5 font-display text-5xl uppercase leading-[0.86]">Born in Britain. Growing beyond.</h2>
                 <p className="mt-6 text-sm leading-relaxed text-ink/60">
-                  From Hemel Hempstead to stores across the UK and Pakistan, BRIM grows through local teams, carefully selected sites and one shared operating standard.
+                  From Hemel Hempstead to stores across the UK, BRIM grows through local teams, carefully selected sites and one shared operating standard.
                 </p>
               </div>
               <div className="mt-10 grid grid-cols-2 border-t border-ink/10 pt-6">
                 <div><strong className="font-display text-4xl">UK</strong><span className="mt-1 block text-[0.65rem] uppercase tracking-wider text-ink/45">Home market</span></div>
-                <div className="border-l border-ink/10 pl-6"><strong className="font-display text-4xl">PK</strong><span className="mt-1 block text-[0.65rem] uppercase tracking-wider text-ink/45">International market</span></div>
+                <div className="border-l border-ink/10 pl-6"><strong className="font-display text-4xl">UK</strong><span className="mt-1 block text-[0.65rem] uppercase tracking-wider text-ink/45">Our home market</span></div>
               </div>
             </div>
           </div>

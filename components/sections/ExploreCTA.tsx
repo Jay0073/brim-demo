@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const CTAS = [
   { href: "/menu", label: "Craving yet? Explore the menu" },
-  { href: "/locations", label: "Find your nearest Brim — UK & PK" },
+  { href: "/locations", label: "Find your nearest Brim — UK" },
 ];
 
 export function ExploreCTA() {

@@ -82,9 +82,9 @@ const MILESTONES: Milestone[] = [
   {
     year: "2025",
     title: "Overcoming Oceans",
-    subtitle: "International presence in PK",
+    subtitle: "Growing across the UK",
     description:
-      "To prove global adaptability, Brim opens state-of-the-art flagship hubs in Lahore (Gulberg) and Islamabad (F-11). The ultra-premium black design lands perfectly with international high-income audiences — the concept travels.",
+      "BRIM grows through carefully selected locations, a consistent operating standard and local teams who know their communities.",
     icon: "globe",
     metric: "2",
     metricLabel: "Overseas boutiques live",

@@ -6,14 +6,13 @@ export const SITE = {
   shortName: "BRIM",
   tagline: "Smashed. Halal. Unforgettable.",
   description:
-    "100% grass-fed, strictly Halal smash burgers. Franchises across the UK & Pakistan.",
+    "100% grass-fed, strictly Halal smash burgers. Franchises across the UK.",
   contact: {
     email: "info@brimburgers.com",
     franchiseEmail: "franchise@brimburgers.com",
     phone: "0203 442 9794",
     phoneHours: "Office hours · 9–5",
-    address:
-      "1c Amberside, Wood Lane, Hemel Hempstead, Hertfordshire, United Kingdom, HP2 4TP",
+    address: "1c Amberside, Wood Lane, Hemel Hempstead, Hertfordshire, United Kingdom, HP2 4TP",
   },
 } as const;
 
@@ -21,6 +20,6 @@ export const SITE = {
 export const NAV_LINKS = [
   { label: "Menu", href: "/menu" },
   { label: "Locations", href: "/locations" },
-  { label: "About", href: "/about" },
   { label: "Franchising", href: "/franchising" },
+  { label: "Contact", href: "/contact" },
 ] as const;

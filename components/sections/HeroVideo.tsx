@@ -1,82 +1,143 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
-// Landing hero. Two layouts from one DOM order:
-//   • below xl — a vertical stack: eyebrows, headline, CTA, badges, then the
-//     burger in normal flow underneath. Nothing overlaps, nothing is clipped.
-//   • xl and up — the burger goes absolute bottom-right at its original
-//     geometry (88% tall, 56% wide, nudged 3% off the bottom) and the headline
-//     runs behind it, which is the intended poster composition. Do not give
-//     that box a full height: the image is object-contain, so a taller box
-//     scales the burger up and swallows "Juicy one."
-//
-// "Juicy one." is filled with `text-paper`, not `text-transparent`. Against the
-// paper background the fill is invisible so it still reads as outline type, but
-// where the line crosses the burger the letters stay solid and legible instead
-// of dissolving into the photo.
-//
-// The section is min-height, never a fixed height: the old `h-dvh` +
-// `overflow-hidden` clipped the second headline line and let the middle block
-// overlap the rows above and below it on any short viewport.
+const SLIDES = [
+  {
+    eyebrow: "Smashed · halal · never frozen",
+    title: "Big flavour.|Fully Brim.",
+    copy: "Freshly smashed burgers, loaded fries and bold flavours—made for a proper meal.",
+    image: "/hero/brim-meal-hero.png",
+    alt: "BRIM smash burger, fries and cola",
+    imagePosition: "object-[62%_center]",
+  },
+  {
+    eyebrow: "Crispy · cheesy · no shortcuts",
+    title: "Loaded to|the Brim.",
+    copy: "Golden fries, melted cheese and every topping worth getting stuck into.",
+    image: "/hero/brim-loaded-hero.png",
+    alt: "Loaded fries with cheese and toppings",
+    imagePosition: "object-[65%_center]",
+  },
+  {
+    eyebrow: "Golden crunch · proper bite",
+    title: "Crunch meets|juicy.",
+    copy: "Crispy chicken, fresh toppings and a burger built to disappear fast.",
+    image: "/hero/brim-chicken-hero.png",
+    alt: "Crispy chicken burger with fries and cola",
+    imagePosition: "object-[66%_center]",
+  },
+  {
+    eyebrow: "Thick shakes · sweet finish",
+    title: "Save room|for more.",
+    copy: "Big shakes and sweet finishes for the part of the meal you never skip.",
+    image: "/hero/brim-shakes-hero.png",
+    alt: "Chocolate and strawberry milkshakes",
+    imagePosition: "object-[64%_center]",
+  },
+] as const;
+
+const SLIDE_DURATION = 6000;
+
 export function HeroVideo() {
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (isPaused || reducedMotion.matches) return;
+
+    const timer = window.setInterval(() => {
+      setActiveSlide((current) => (current + 1) % SLIDES.length);
+    }, SLIDE_DURATION);
+
+    return () => window.clearInterval(timer);
+  }, [isPaused]);
+
+  const slide = SLIDES[activeSlide];
+
   return (
     <section
       id="hero"
-      className="relative flex min-h-[100svh] flex-col overflow-hidden bg-paper text-ink"
+      aria-roledescription="carousel"
+      aria-label="Featured BRIM menu"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      onFocusCapture={() => setIsPaused(true)}
+      onBlurCapture={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) setIsPaused(false);
+      }}
+      className="relative isolate h-dvh min-h-[42rem] overflow-hidden bg-[#ead4af] text-ink"
     >
-      <div className="relative z-10 mx-auto flex w-full max-w-[100rem] flex-1 flex-col px-6 pb-8 pt-24 sm:px-10 sm:pt-28 xl:px-[8vw] xl:pb-10">
-        <div className="flex items-start justify-between gap-6">
-          <p className="text-[0.6rem] font-bold uppercase tracking-[0.35em] text-ink/50 sm:text-[0.65rem] sm:tracking-[0.42em]">
-            British born · Fully Halal
-          </p>
-          <p className="hidden shrink-0 text-[0.6rem] font-bold uppercase tracking-[0.3em] text-ink/40 sm:block sm:tracking-[0.35em]">
-            Hemel Hempstead · Since 2021
-          </p>
+      {SLIDES.map((item, index) => (
+        <div
+          key={item.image}
+          aria-hidden={index !== activeSlide}
+          className={`absolute inset-0 transition-[opacity,transform] duration-700 ease-out motion-reduce:transition-none ${
+            index === activeSlide
+              ? "scale-100 opacity-100"
+              : "pointer-events-none scale-[1.035] opacity-0"
+          }`}
+        >
+          <Image
+            src={item.image}
+            alt=""
+            fill
+            priority={index === 0}
+            sizes="100vw"
+            className={`object-cover ${item.imagePosition}`}
+          />
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,248,235,0.98)_0%,rgba(255,248,235,0.9)_31%,rgba(255,248,235,0.3)_56%,transparent_75%)]"
+          />
         </div>
+      ))}
 
-        <div className="flex flex-1 flex-col justify-center py-8 sm:py-10">
-          {/* Fluid from 3rem to 12.5rem — the old fixed 20vw overflowed the
-              viewport horizontally on small screens. */}
-          <h1 className="font-display uppercase leading-[0.73] tracking-[-0.07em]">
-            <span className="block whitespace-nowrap text-[clamp(3rem,13vw,9rem)] xl:text-[clamp(8rem,12.5vw,12.5rem)]">The big</span>
-            <span className="block whitespace-nowrap text-[clamp(3rem,13vw,9rem)] text-paper [-webkit-text-stroke:1px_rgba(10,10,10,0.85)] sm:[-webkit-text-stroke:1.5px_rgba(10,10,10,0.85)] xl:text-[clamp(8rem,12.5vw,12.5rem)]">
-              Juicy one.
-            </span>
+      <div className="relative z-10 mx-auto flex h-full max-w-[120rem] items-center px-6 pb-10 pt-24 sm:px-12 sm:pb-14 lg:px-[clamp(3rem,8vw,10rem)]">
+        <div key={slide.image} className="brim-hero-copy max-w-xl">
+          <p className="text-xs font-bold uppercase tracking-[0.34em] text-ink/55">
+            {slide.eyebrow}
+          </p>
+          <h1 className="mt-5 font-display text-[clamp(3.9rem,8vw,8.7rem)] uppercase leading-[0.78] tracking-[-0.065em]">
+            {slide.title.split("|").map((line) => (
+              <span key={line} className="block">
+                {line}
+              </span>
+            ))}
           </h1>
-
-          {/* Capped at xl so the copy never slides under the burger. */}
-          <div className="mt-7 flex max-w-2xl flex-col gap-5 sm:mt-9 sm:flex-row sm:items-center sm:gap-9 xl:max-w-[42%] xl:flex-col xl:items-start xl:gap-4">
-            <Link
-              href="/menu"
-              className="group inline-flex w-fit items-center gap-6 rounded-full bg-ink px-6 py-3.5 text-sm font-bold uppercase tracking-[0.14em] text-paper transition-transform duration-300 hover:scale-[1.03] sm:gap-8 sm:px-7 sm:py-4"
-            >
-              Taste the difference
-              <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-            </Link>
-            <p className="max-w-xs text-sm leading-relaxed text-ink/55">
-              Grass-fed beef. Smashed to order. Stacked with no interest in being ordinary.
-            </p>
-          </div>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[0.6rem] font-bold uppercase tracking-[0.2em] text-ink/45 sm:gap-x-6 sm:text-[0.62rem] sm:tracking-[0.24em]">
-          <span>100% Halal</span><span aria-hidden>•</span>
-          <span>Freshly smashed</span><span aria-hidden>•</span>
-          <span>UK &amp; Pakistan</span>
+          <p className="mt-7 max-w-sm text-base leading-relaxed text-ink/65 sm:text-lg">
+            {slide.copy}
+          </p>
+          <Link
+            href="/menu"
+            className="mt-8 inline-flex items-center gap-5 rounded-full bg-ink px-7 py-4 text-sm font-bold uppercase tracking-[0.14em] text-paper transition-transform hover:scale-[1.03]"
+          >
+            Explore the menu <span aria-hidden>→</span>
+          </Link>
         </div>
       </div>
 
-      {/* In flow on small screens, absolute on the right from xl up. */}
-      <div className="pointer-events-none relative z-0 h-[34vh] min-h-[11rem] w-full shrink-0 sm:h-[40vh] xl:absolute xl:-bottom-[3%] xl:right-[1%] xl:top-auto xl:h-[88%] xl:min-h-0 xl:w-[56%]">
-        <Image
-          src="/hero/brim-burger-cutout-v2.png"
-          alt="BRIM signature smash burger"
-          fill
-          priority
-          sizes="(min-width: 1024px) 56vw, 100vw"
-          className="object-contain object-bottom"
-        />
+      <div className="absolute bottom-8 left-6 z-20 flex items-center gap-2 sm:bottom-10 sm:left-12 lg:left-[clamp(3rem,8vw,10rem)]">
+        {SLIDES.map((item, index) => (
+          <button
+            key={item.image}
+            type="button"
+            aria-label={`Show slide ${index + 1}: ${item.title.replace("|", " ")}`}
+            aria-pressed={index === activeSlide}
+            onClick={() => setActiveSlide(index)}
+            className={`h-2 rounded-full transition-[width,background-color] duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink ${
+              index === activeSlide ? "w-10 bg-ink" : "w-2 bg-ink/35 hover:bg-ink/60"
+            }`}
+          />
+        ))}
       </div>
+
+      <p className="sr-only" aria-live="polite">
+        Slide {activeSlide + 1} of {SLIDES.length}: {slide.title.replace("|", " ")}
+      </p>
     </section>
   );
 }
